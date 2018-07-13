@@ -1,0 +1,127 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<dom-module id="payment-status">
+    <template>
+        <style>
+         :host {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            width: 430px;
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-right: -50%;
+            transform: translate(-50%, -50%);
+            height: 450px;
+            padding: 40px;
+            padding-top: 20px;
+            border: 1px solid #c7c2c2;
+            border-radius:8px;
+        }
+
+        span {
+            font-size: 16px;
+        }
+
+        .detailSec{
+            padding: 15px;
+        }
+
+        paper-button {
+            color: #fff;
+            background-color: #42417A;
+            width: 200px;
+            border-radius: 10px;
+            margin-top: 50px;
+            height: 40px;
+            float:left;
+        }
+
+        iron-image {
+            width: 32px;
+            height: 32px;
+            margin-left: 45%
+        }
+
+        paper-button {
+            --paper-button: {
+                @apply(--layout-vertical);
+                @apply(--layout-center-center);
+            };
+            font-size:14px;
+        }
+
+        #transactionButton{
+            margin-left: 15px;
+        }
+
+        .centerTxt{
+            text-align: center;
+        }
+        hr{
+            width:420px;
+            height:5px;
+            background-color:#FF6600;
+            margin-bottom: 20px;
+        }
+        </style>
+        <iron-localstorage name="transactionDetails" value="{{transactionDetails}}" on-iron-localstorage-load-empty="initializeStorage"></iron-localstorage>
+        <h2>Transaction Status</h2>
+         <hr size="30">
+        <template is="dom-if" if="{{showSuccess}}">
+            <iron-image src="../images/success.png"></iron-image>
+            <h2 class="centerTxt">Success!</h2>
+        </template>
+        <template is="dom-if" if="{{showError}}">
+            <iron-image src="../images/error.png"></iron-image>
+            <h2 class="centerTxt">Failed!</h2>
+        </template>
+        <div>
+            <div class="detailSec"> <span>Transaction ID: </span><span>{{transactionId}}</span></div>
+            <div class="detailSec"> <span>Amount: </span><span>{{transactionAmount}}</span></div>
+            <div class="detailSec"> <span>Transaction Type: </span><span>{{transactionType}}</span></div>
+        </div>
+        <div>
+        <paper-button nolink on-click="_makeTransaction">
+            Make new Payment
+        </paper-button>
+        <paper-button id="transactionButton" nolink on-click="_makeTransaction">
+            Transaction history
+        </paper-button>
+    </div>
+    </template>
+    <script>
+    class paymentStatus extends Polymer.Element {
+        static get is() { return 'payment-status' }
+        static get properties() {
+            return {
+                showSuccess: {
+                    type: Boolean,
+                    value: true,
+                },
+                showError: {
+                    type: Boolean,
+                    value: false,
+                }
+            }
+        }
+        ready() {
+            super.ready();
+            Polymer.RenderStatus.afterNextRender(this, function() {
+                this._getTransactionStatus()
+            })
+        }
+
+        _getTransactionStatus() {
+            let status = this.transactionDetails;
+        }
+    }
+
+    window.customElements.define(paymentStatus.is, paymentStatus);
+    </script>
+</dom-module>

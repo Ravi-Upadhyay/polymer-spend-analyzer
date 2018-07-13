@@ -1,0 +1,81 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="common-header">
+    <template>
+        <style>
+            :host{
+                width: 100%;
+                height: 100px;
+                display:flex;
+                display: -webkit-flex;
+                flex-direction: column;
+                -ms-flex-direction: row;
+                background-color: #ffffff;
+                box-shadow: 0px 2px 1px 2px #b1b1b1;
+            }
+            .h-container {
+                width: 100%;
+                height: 100px;
+                display: flex;
+                display: -webkit-flex;
+                flex-direction: row;
+                -ms-flex-direction: row;
+                background-color: #ffffff;
+            }
+            .logo-wrapper {
+                display: flex;
+                display: -webkit-flex;
+                margin-left: 8.33%;
+                width: 16.66%;
+                align-items: center;
+            }
+            .logo-wrapper img {
+                flex-shrink: 1;
+            }
+            .menu-wrapper {
+                display: flex;
+                display: -webkit-flex;
+                width: 49.98%;
+                /* align-items: center; */
+                /* justify-content: center; */
+            }
+            .menu-wrapper span {
+                flex: 1 1;
+                display: flex;
+                display: -webkit-flex;
+                justify-content: center;
+                align-items: center;
+            }
+        </style>
+
+        <div class="h-container">
+            
+            <div class="logo-wrapper">
+                <img src="src/images/ing-logo-sm-88x270-mobile.png" alt="Logo-ING" height="85px"/>
+            </div>
+
+            <div class="menu-wrapper">
+                <span>Payments</span>
+                <span>Transactions</span>
+                <span>Analser</span>
+                <span>Analser</span>
+                <span>Analser</span>
+            </div>
+
+        </div>
+    </template>
+
+    <script>
+        class CommonHeader extends Polymer.Element {
+            static get is(){
+                return "common-header";
+            }
+
+            constructor() {
+                super();
+            }
+            
+        }
+        customElements.define(CommonHeader.is,CommonHeader);
+    </script>
+</dom-module>

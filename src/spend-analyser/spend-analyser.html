@@ -1,0 +1,44 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../components/make-payment.html">
+<link rel="import" href="../components/payment-status.html">
+<link rel="import" href="../components/payment-history.html">
+<link rel="import" href="../components/payment-analyser.html">
+<link rel="import" href="../components/common-header.html">
+
+<dom-module id="spend-analyser">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <!-- <h2>Hello [[prop1]]!</h2> -->
+    <common-header></common-header>
+    <make-payment></make-payment>
+    <!--<payment-status></payment-status>-->
+    <!--<payment-history></payment-history>-->
+    <!--<payment-analyser></payment-analyser>-->
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class SpendAnalyser extends Polymer.Element {
+      static get is() { return 'spend-analyser'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'spend-analyser'
+          }
+        };
+      }
+    }
+
+    window.customElements.define(SpendAnalyser.is, SpendAnalyser);
+  </script>
+</dom-module>

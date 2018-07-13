@@ -1,0 +1,7 @@
+{
+  "name": "spend-analyser",
+  "short_name": "spend-analyser",
+  "description": "It tracks all the transactions from time to time",
+  "start_url": "/",
+  "display": "standalone"
+}

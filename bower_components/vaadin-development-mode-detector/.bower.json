@@ -1,0 +1,33 @@
+{
+  "name": "vaadin-development-mode-detector",
+  "description": "Element for detecting that an application using Vaadin Elements is running in devlopment mode",
+  "main": "vaadin-development-mode-detector.html",
+  "license": "Apache2",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.0.0"
+  },
+  "devDependencies": {
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+  },
+  "resolutions": {
+    "polymer": "^2.0.0"
+  },
+  "homepage": "https://github.com/vaadin/vaadin-development-mode-detector",
+  "version": "1.1.0-alpha2",
+  "_release": "1.1.0-alpha2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.1.0-alpha2",
+    "commit": "6fdefabc40338533a7c62033e3269127a736ebac"
+  },
+  "_source": "https://github.com/vaadin/vaadin-development-mode-detector.git",
+  "_target": "^1.1.0-alpha2",
+  "_originalSource": "vaadin/vaadin-development-mode-detector"
+}
