@@ -1,7 +1,15 @@
+<!-- 
+** HEADER COMPONENT
+* This will contain common header throughout the application
+* Here we will try to keep stucture well managed so maximum activities
+  will be performed at parent component.
+-->
+
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 
 <dom-module id="common-header">
     <template>
+        <!-- #1. SECTION-1: STYLES -->
         <style>
             :host{
                 width: 100%;
@@ -36,8 +44,6 @@
                 display: flex;
                 display: -webkit-flex;
                 width: 49.98%;
-                /* align-items: center; */
-                /* justify-content: center; */
             }
             .menu-wrapper span {
                 flex: 1 1;
@@ -46,8 +52,16 @@
                 justify-content: center;
                 align-items: center;
             }
+
+            .logout-wrapper {
+                display: flex;
+                display: -webkit-flex;
+                width: 8.33%;
+                margin-left: 16.66%;
+            }
         </style>
 
+        <!-- #2. SECTION-2: TEMPLATE -->
         <div class="h-container">
             
             <div class="logo-wrapper">
@@ -55,15 +69,24 @@
             </div>
 
             <div class="menu-wrapper">
-                <span><a href="http://localhost:8081/payments">Payments</a></span>
-                <span><a href="http://localhost:8081/transactions">Transactions</a></span>
-                <span><a href="http://localhost:8081/analyser">Analser</a></span>
+                <template is="dom-if" if="{{isLoggedIn}}">
+                    <template is="dom-repeat" items={{menu}}>
+                        <span><a href="{{_generateURL(rootPath,item.slug)}}">[[item.display]]</a></span>
+                    </template>
+                </template>
+            </div>
+
+            <div class="logout-wrapper">
+                <template is="dom-if" if="{{isLoggedIn}}">
+                    <button on-click="_logout">Logout</button>
+                </template>
             </div>
 
         </div>
     </template>
 
     <script>
+        // #3. SECTION-3: JS-CONTROLLER-MODEL
         class CommonHeader extends Polymer.Element {
             static get is(){
                 return "common-header";
@@ -71,12 +94,44 @@
 
             static get properties(){
                 return {
-                    
+                    isLoggedIn  : {
+                        type        : Boolean,
+                        notify      : true
+                    },
+                    menu        : {
+                        type        : Array
+                    },
+                    rootPath    : {
+                        type        : String
+                    },
+                    selected    : {
+                        type        : String
+                    },
+                    logout      : {
+                        type        : Object
+                    }
                 }
+            }
+
+            _generateURL(rootPath, slug) {
+                return `${rootPath}${slug}`;
+            }
+
+            _logout(){
+                console.log(`clicked on logout, ${this.isLoggedIn}`);
+                // this.isLoggedIn = false;
+                // window.location = ``
+                this.logout();
             }
 
             constructor() {
                 super();
+                var that = this;
+                // window.setInterval(function(){
+                // console.log(`INSIDE COMMON-HEADER: isLoggedIn: ${that.isLoggedIn}, 
+                //             menu: ${that.menu}, rootPath: ${that.rootPath}, 
+                //             selected: ${that.selected}`)
+                // },6000);
             }
             
         }

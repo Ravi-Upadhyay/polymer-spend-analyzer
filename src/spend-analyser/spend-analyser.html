@@ -1,17 +1,25 @@
+<!-- 
+** SPEND-ANALYSER:
+
+* This component will is root and host of application
+* Routing is included here
+-->
+
+
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 
+<!-- IMPORT DEPENDENCIES -->
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 
-
+<!-- IMPORT COMPONENTS -->
 <link rel="import" href="../components/make-payment.html">
 <link rel="import" href="../components/payment-status.html">
 <link rel="import" href="../components/payment-history.html">
 <link rel="import" href="../components/payment-analyser.html">
 <link rel="import" href="../components/login-form.html">
-
 <link rel="import" href="../components/common-header.html">
 
 <dom-module id="spend-analyser">
@@ -21,44 +29,39 @@
         display: block;
       }
     </style>
-      <!-- <app-location
-        route="{{route}}"
-        url-space-regex="^[[rootPath]]">
-      </app-location> -->
+
+<!-- FOR ROUTING PURPOSE (APP-ROUTE) -->
       <app-location
         route="{{route}}">
       </app-location>
   
-      <!-- <app-route
-          route="{{route}}"
-          pattern="[[rootPath]]:page"
-          data="{{routeData}}"
-          tail="{{subroute}}">
-      </app-route> -->
       <app-route
           route="{{route}}"
           pattern="/:page"
           data="{{routeData}}"
-          tail="{{subroute}}">
+          tail="{{subroute}}"
+          active="{{pageActive}}">
       </app-route>
 
-    <!-- <h2>Hello [[prop1]]!</h2> -->
-    <common-header></common-header>
+<!-- APP-STRUCTURE -->
+    <common-header 
+    is-logged-in="{{isLoggedIn}}" 
+    menu="[[myMenu]]" 
+    root-path="[[rootPath]]" 
+    selected="[[page]]"
+    logout="[[_logout]]"></common-header>
+    
+<!-- PAGES/COMPONENTS BASED ON ROUTE     -->
     <iron-pages
         selected="[[page]]"
         attr-for-selected="name"
         role="main">
-      <login-form name="login"></login-form>
+      <login-form name="login" user-details="{{userDetails}}" login-success="[[_login]]"></login-form>
       <make-payment name="payments"></make-payment>
       <payment-history name="transactions"></payment-history>
       <payment-analyser name="analyser"></payment-analyser>
       <!-- <my-view404 name="view404"></my-view404> -->
     </iron-pages>
-
-    <!-- <make-payment></make-payment> -->
-    <!--<payment-status></payment-status>-->
-    <!--<payment-history></payment-history>-->
-    <!--<payment-analyser></payment-analyser>-->
 
   </template>
 
@@ -73,21 +76,30 @@
         // console.log(route);
         var that = this;
         window.setInterval(function(){
-          console.log(that.route);
-          console.log(that.rootPath);
-          console.log(that.routeData);
-          console.log(that.subroute);
-          console.log(that.page);
+        console.log(`route: ${JSON.stringify(that.route)}`);
+        console.log(`rootPath: ${that.rootPath}`);
+        console.log(`routeData: ${JSON.stringify(that.routeData)}`);
+        console.log(`subRoute: ${JSON.stringify(that.subroute)}`);
+        console.log(`page: ${that.page}`);
+        console.log(`activePage: ${that.pageActive}`);
+        console.log(`isLoggedIn: ${that.isLoggedIn}`);
         }, 5000);
+        // console.log(`route: ${that.route}`);
+        // console.log(`rootPath: ${that.rootPath}`);
+        // console.log(`routeData: ${that.routeData}`);
+        // console.log(`subRoute: ${that.subroute}`);
+        // console.log(`page: ${that.page}`);
+        // console.log(`activePage: ${that.pageActive}`);
       }
       
       static get is() { return 'spend-analyser'; }
 
       static get properties() {
         return {
-          prop1: {
-            type: String,
-            value: 'spend-analyser'
+          isLoggedIn : {
+            type  : Boolean,
+            notify: true,
+            value : true,
           },
           page: {
             type: String,
@@ -99,24 +111,35 @@
           // This shouldn't be neccessary, but the Analyzer isn't picking up
           // Polymer.Element#rootPath
           rootPath: String,
-          myRoutes : {
-            type  : Object,
-            value : {
-              menuItems : {
-                payments    : "make-payment.html",
-                transactions: "payment-history.html",
-                analyser    : "payment-analyser.html",
+          myMenu  : {
+            type  : Array,
+            value : [
+              {
+                "display" : "Payments",
+                "name"    : "payments",
+                "slug": "payments"
               },
-              login    : "login-form.html",
-              status   : "payment-status.html"
-            }
+              {
+                "display" : "Transactions",
+                "name"    : "transactions",
+                "slug": "transactions"                
+              },
+              {
+                "display" : "Analyser",
+                "name"    : "analyser",
+                "slug": "analyser"                
+              },
+            ]
+          },
+          userDetails : {
+            type      : Object
           }
         }
       }
 
       static get observers() {
         return [
-          '_routePageChanged(routeData.page)',
+          '_routePageChanged(routeDetails.page)'
         ];
       }
 
@@ -124,11 +147,22 @@
         // If no page was found in the route data, page will be an empty string.
         // Default to 'view1' in that case.
         this.page = page || 'login';
-
+        // this.routeData.page = 'login';
+        // if(!page) window.location.href = this.rootPath + 'login';
         // Close a non-persistent drawer when the page & route are changed.
         // if (!this.$.drawer.persistent) {
         //   this.$.drawer.close();
         // }
+      }
+      
+      _login(){
+        console.log('loggedin');
+      }
+
+      _logout(){
+        window.location = `${this.rootPath}login`
+        this.isLoggedIn = false;
+        alert('function called from SA');
       }
     }
   
