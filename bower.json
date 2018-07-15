@@ -17,7 +17,8 @@
     "vaadin-grid": "^5.0.4",
     "amcharts": "^3.15.2",
     "app-route": "PolymerElements/app-route#^2.1.2",
-    "iron-pages": "PolymerElements/iron-pages#^2.1.1"
+    "iron-pages": "PolymerElements/iron-pages#^2.1.1",
+    "iron-form": "PolymerElements/iron-form#^2.4.0"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",

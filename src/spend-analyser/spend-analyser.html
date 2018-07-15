@@ -10,6 +10,8 @@
 <link rel="import" href="../components/payment-status.html">
 <link rel="import" href="../components/payment-history.html">
 <link rel="import" href="../components/payment-analyser.html">
+<link rel="import" href="../components/login-form.html">
+
 <link rel="import" href="../components/common-header.html">
 
 <dom-module id="spend-analyser">
@@ -46,6 +48,7 @@
         selected="[[page]]"
         attr-for-selected="name"
         role="main">
+      <login-form name="login"></login-form>
       <make-payment name="payments"></make-payment>
       <payment-history name="transactions"></payment-history>
       <payment-analyser name="analyser"></payment-analyser>
@@ -120,7 +123,7 @@
       _routePageChanged(page) {
         // If no page was found in the route data, page will be an empty string.
         // Default to 'view1' in that case.
-        this.page = page || 'payments';
+        this.page = page || 'login';
 
         // Close a non-persistent drawer when the page & route are changed.
         // if (!this.$.drawer.persistent) {
