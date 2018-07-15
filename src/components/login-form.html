@@ -1,9 +1,10 @@
-<!-- IMPORT DEPENDENCIES -->
+
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/polymer/lib/utils/gestures.html">
 <link rel="import" href="../../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
+
 
 <dom-module id="login-form">
   <template>
@@ -60,28 +61,28 @@
             margin-top: 1rem;
         }
     </style>
-
+    <!-- <h2>Hello [[prop1]]!</h2> -->
     <div class="container">
         <h2 class="heading"><b>Login</b></h2>
         <hr>
         <iron-form id="myForm"> 
-            <form>
-                <div class="input">
-                    <label><b>Username</b></label>
-                    <paper-input type="text" label="Username" no-label-float value="{{username}}" required></paper-input>
-                </div>
-                <div class="input">
-                    <label class="label"><b>Password</b></label>
-                    <paper-input type="password" label="Password" no-label-float value="{{password}}" required></paper-input>
-                </div>
-                <span class="forgot-pwd"><a href="#" style="text-decoration: none">Forgot password?</a></span>
-            <!-- <iron-ajax id="ajax" method="post" url="https://jsonplaceholder.typicode.com/posts" handle-as="json" last-response="{{ajaxResponse}}" on-response="handleRequest"
-                    on-response="handleResponse" on-error="handleError"></iron-ajax> -->
-                <iron-request id="xhr"></iron-request>
-                <!-- <app-location route="{{route}}"></app-location> -->
-            <button id="submit" on-click="login">Login</button>
-            </form>
-        </iron-form>
+        <form>
+            <div class="input">
+                <label><b>Username</b></label>
+                <paper-input type="text" label="Username" no-label-float value="{{username}}" required></paper-input>
+            </div>
+            <div class="input">
+                <label class="label"><b>Password</b></label>
+                <paper-input type="password" label="Password" no-label-float value="{{password}}" required></paper-input>
+            </div>
+            <span class="forgot-pwd"><a href="#" style="text-decoration: none">Forgot password?</a></span>
+          <!-- <iron-ajax id="ajax" method="post" url="https://jsonplaceholder.typicode.com/posts" handle-as="json" last-response="{{ajaxResponse}}" on-response="handleRequest"
+                on-response="handleResponse" on-error="handleError"></iron-ajax> -->
+            <iron-request id="xhr"></iron-request>
+            <app-location route="{{route}}"></app-location>
+          <button id="submit" on-click="login">Login</button>
+        </form>
+     </iron-form>
     </div>
   </template>
 
@@ -92,7 +93,6 @@
      */
     class LoginForm extends Polymer.Element {
       static get is() { return 'login-form'; }
-
       static get properties() {
         return {
           username: {
@@ -105,16 +105,12 @@
           },
           userDetails: {
               type: Object,
-              notify: true,
               value: {}
           },
           ajaxResponse: {
-            type: String,
-            value: []
-          },
-          loginSuccess : {
-              type      : Object
-          }
+          type: String,
+          value: []
+        }
         };
       }
 

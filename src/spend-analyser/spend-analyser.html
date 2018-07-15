@@ -56,7 +56,7 @@
         selected="[[page]]"
         attr-for-selected="name"
         role="main">
-      <login-form name="login" user-details="{{userDetails}}" login-success="[[_login]]"></login-form>
+      <login-form name="login"></login-form>
       <make-payment name="payments"></make-payment>
       <payment-history name="transactions"></payment-history>
       <payment-analyser name="analyser"></payment-analyser>
@@ -130,16 +130,13 @@
                 "slug": "analyser"                
               },
             ]
-          },
-          userDetails : {
-            type      : Object
           }
         }
       }
 
       static get observers() {
         return [
-          '_routePageChanged(routeDetails.page)'
+          '_routePageChanged(routeData.page)'
         ];
       }
 
@@ -153,10 +150,6 @@
         // if (!this.$.drawer.persistent) {
         //   this.$.drawer.close();
         // }
-      }
-      
-      _login(){
-        console.log('loggedin');
       }
 
       _logout(){
