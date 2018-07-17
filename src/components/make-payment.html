@@ -8,9 +8,10 @@
 <link rel="import" href="../../bower_components/neon-animation/web-animations.html">
 <link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
 <script src="../../bower_components/web-animations-js/web-animations.min.js"></script>
+<link rel="import" href="common-styles.html">
 <dom-module id="make-payment">
     <template>
-        <style>
+        <style include="common-styles">
          :host {
             /* height: 100vh; */
             display: flex;
@@ -85,8 +86,7 @@
 
         hr {
             width: 420px;
-            height: 5px;
-            background-color: #FF6600;
+            height: 5px;            
         }
 
         input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
@@ -99,7 +99,7 @@
         }
         </style>
         <h2>Make Payment</h2>
-        <hr size="30">
+        <hr class="primaryBgColor" size="30">
         <iron-localstorage name="transactionDetails" value="{{transactionDetails}}" on-iron-localstorage-load-empty="initializeStorage"></iron-localstorage>
         <iron-ajax id="transaction" method="post" handle-as="json" on-response="_handleResponse" loading="{{loading}}"></iron-ajax>
         <paper-spinner-lite active="[[loading]]"></paper-spinner-lite>
