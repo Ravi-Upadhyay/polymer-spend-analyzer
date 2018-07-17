@@ -6,107 +6,114 @@
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-selection-column.html">
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-sorter.html">
 
-<script src="../../bower_components/amcharts/dist/amcharts/amcharts.js"></script>
-<script src="../../bower_components/amcharts/dist/amcharts/themes/light.js"></script>
-<script src="../../bower_components/amcharts/dist/amcharts/serial.js"></script>
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="bar-chart-component.html">
 
 <dom-module id="payment-analyser">
     <template>
         <style include="shared-styles">
-            #chartdiv {
-                width: 50%;
-                height: 500px;
-                margin:0 auto;
-            }	
-            h3{
+            :host{
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 26px;
+            }
+            	
+            h4{
                 text-align:center;
             }
+            #analyser_grid{
+                width: 55%;
+                margin: 0 auto;
+            }            
             .amcharts-chart-div a{
                 display: none !important;
-            }
+            }     
+            
         </style>
-        <iron-ajax auto url="src/data/analyser.json" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax>
+        <iron-ajax id="analyser" handle-as="json" last-response="{{activities}}" on-response="_handleResponse"></iron-ajax>
 
-        <h3> Account Activity Analysis <h3>
+        <h4> Account Activity Analysis </h4>
 
-        <vaadin-grid id="grid" theme="row-dividers" items="[[users]]" page-size="10" height-by-rows column-reordering-allowed multi-sort>
+        <vaadin-grid id="analyser_grid" theme="row-dividers" items="[[activities]]" page-size="10" height-by-rows column-reordering-allowed>
+            <vaadin-grid-column width="9em" items="[[activities]]">
+                <template class="header">#</template>
+                <template>[[displayIndex(index)]]</template>
+            </vaadin-grid-column>
             <vaadin-grid-column width="9em">
-                <template class="header">
-                    <vaadin-grid-sorter path="month">Month</vaadin-grid-sorter>
-                </template>
+                <template class="header">Month</template>
                 <template>[[item.month]]</template>
             </vaadin-grid-column>
 
             <vaadin-grid-column width="9em">
-                <template class="header">
-                    <vaadin-grid-sorter path="totalTransaction">Total Transaction</vaadin-grid-sorter>
-                </template>
-                <template>[[item.totalTransaction]]</template>
+                <template class="header">Total Transaction</template>
+                <template>[[addCurrency(item.totalTransaction)]]</template>
             </vaadin-grid-column>
     
             <vaadin-grid-column width="9em">
-                <template class="header">
-                    <vaadin-grid-sorter path="debit">Debit</vaadin-grid-sorter>
-                </template>
-                <template>[[item.debit]]</template>
+                <template class="header">Debit</template>
+                <template>[[addCurrency(item.debit)]]</template>
             </vaadin-grid-column>
     
             <vaadin-grid-column width="9em">
-                <template class="header">
-                    <vaadin-grid-sorter path="credit">Credit</vaadin-grid-sorter>
-                </template>
-                <template>[[item.credit]]</template>
+                <template class="header">Credit</template>
+                <template>[[addCurrency(item.credit)]]</template>
             </vaadin-grid-column>            
-        </vaadin-grid>
-        <!-- <div id="pages">
-            <button on-click="_prev">&lt;</button>
-            <template is="dom-repeat" items="[[pages]]">
-            <button on-click="_select" selected$="[[_isSelected(page, item)]]">[[item]]</button>
-            </template>
-            <button on-click="_next">&gt;</button>
-        </div> -->
-        <h3>Spend Analyser</h3>
-        <div id="chartdiv"></div>
+        </vaadin-grid>     
+
+        <h4>Spend Analyser</h4>
+        <barchart-component transactions=[[transactions]]></barchart-component>
+        
     </template>
     <script>
         class paymentAnalyser extends Polymer.Element{
+
             static get is(){ return 'payment-analyser'}
             static get properties(){
                 return  {
-                   spendChart : {}
+                   spendChart : {},
+                   transactions: {
+                       type:Array,
+                   }
                 }
             }
-
+            
             ready(){
                 super.ready();
                 Polymer.RenderStatus.afterNextRender(this,function(){
-                    this._getChartData();                    
+                    this._getTransactionData();                    
                 })
             }
+            
+            //Increment by 1 to index in dom-repeat
+            displayIndex(index){
+                return index + 1;
+            }            
 
-            _getChartData(){
-                var chartData = [{
-                    'month':'Jan',
-                    'credit' : '2000',
-                    'debit' : '500'
-                },{
-                    'month':'Feb',
-                    'credit' : '3000',
-                    'debit' : '100'
-                },{
-                    'month':'Feb',
-                    'credit' : '10000',
-                    'debit' : '3500'
-                }];
-                this._generateChart(chartData);
+            // Add currency
+            addCurrency(amount){
+                return '$' + amount;
             }
-            // Generate chart from chart data
-            _generateChart(data){                
-                var Chart = this.$.chartdiv;
-                    
 
+            //Get transaction data ffrom API
+            _getTransactionData(){
+                var ajax = this.$.analyser;
+                ajax.url = "src/data/analyser.json";
+                ajax.generateRequest(); //trigger the iron-ajax                
+            }
+
+            //Store the response 
+            _handleResponse(event,request){
+                this.transactions = request.response;
+                console.log(this.transactions);
+                this.transactionsLoaded = true;
+                 //this.configureChart(this.transactions);
+                //this._generateChart(this.transactions);
+            }
+
+            // Generate chart from transaction data
+            _generateChart(data){                
+                var Chart = this.$.chartdiv;                 
                 this.spendChart = AmCharts.makeChart(Chart, {
-                    "theme": "light",
+                    "theme": "light", 
                     "type": "serial",
                     //"fontSize" : 14,
                     "dataProvider":data,
@@ -118,39 +125,27 @@
                         "autoGridCount" :false
                     }],
                     // set startDuration to 0 on older browsers
-                    "startDuration": this._supportSVG()? 1 : 0,
+                    "startDuration": this._supportSVG()? 1 : 0,                                 
+                    "depth3D": 60,
+                    "angle": 30,
+                    "categoryField": "month",                    
                     "graphs": [{
                         "balloonText": "Credit in [[category]]: <b>[[value]]</b>",
-                        "fillAlphas": 0.9,
-                        "lineAlpha": 0.2,
+                        "fillAlphas": 0.9,                       
                         "title": "Credit",
                         "type": "column",
-                        "fixedColumnWidth": 50,
-                        //"colorField": "Ccolor", //chnage color
+                        "fixedColumnWidth": 50,//adjusts with of the column
+                        //"colorField": "Ccolor", //change color
                         "valueField": "credit"
                     }, {
                         "balloonText": "Debit in [[category]]: <b>[[value]]</b>",
-                        "fillAlphas": 0.9,
-                        "lineAlpha": 0.2,
+                        "fillAlphas": 0.9,                       
                         "title": "Debit",
                         "type": "column",
-                        //"colorField": "Dcolor",//chnage color
+                        //"colorField": "Dcolor",//change color
                         "fixedColumnWidth": 50,
                         "valueField": "debit"
-                    }],
-                    "plotAreaFillAlphas": 0.1,                
-                    "depth3D": 60,
-                    "angle": 30,
-                    "categoryField": "month",
-                    "categoryAxis": {
-                        "gridPosition": "start"
-                    },    
-                    legend: {
-                        useGraphSettings: true
-                    },
-                    "export": {
-                        "enabled": true
-                    }
+                    }]                     
                 });                
             }
             // Check for SVG support in old browser
