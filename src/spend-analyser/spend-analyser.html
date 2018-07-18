@@ -4,8 +4,6 @@
 * This component will is root and host of application
 * Routing is included here
 -->
-
-
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 
 <!-- IMPORT DEPENDENCIES -->
@@ -21,6 +19,8 @@
 <link rel="import" href="../components/payment-analyser.html">
 <link rel="import" href="../components/login-form.html">
 <link rel="import" href="../components/common-header.html">
+<link rel="import" href="../components/footer.html">
+<link rel="import" href="../components/copyright.html">
 
 <dom-module id="spend-analyser">
   <template>
@@ -63,6 +63,8 @@
       <!-- <my-view404 name="view404"></my-view404> -->
     </iron-pages>
 
+    <footer-component></footer-component>
+    <copyright-component></copyright-component>
   </template>
 
   <script>
@@ -109,7 +111,7 @@
                 "slug": "transactions"                
               },
               {
-                "display" : "Analyser",
+                "display" : "Spend Analyser",
                 "name"    : "analyser",
                 "slug": "analyser"                
               },
