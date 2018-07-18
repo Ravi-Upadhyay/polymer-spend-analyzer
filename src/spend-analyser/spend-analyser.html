@@ -44,12 +44,14 @@
       </app-route>
 
 <!-- APP-STRUCTURE -->
+<!-- HEADER COMPONENT INDEPENDENT OF ROUTE -->
     <common-header 
-    is-logged-in="{{isLoggedIn}}" 
-    menu="[[myMenu]]" 
-    root-path="[[rootPath]]" 
-    selected="[[page]]"
-    logout="[[_logout]]"></common-header>
+      is-logged-in="{{isLoggedIn}}" 
+      menu="[[myMenu]]" 
+      root-path="[[rootPath]]" 
+      selected="[[page]]"
+      logout="[[_logout]]">
+    </common-header>
     
 <!-- PAGES/COMPONENTS BASED ON ROUTE     -->
     <iron-pages
@@ -63,6 +65,7 @@
       <!-- <my-view404 name="view404"></my-view404> -->
     </iron-pages>
 
+<!-- FOOTER COMPONENT INDEPENDENT OF ROUTE -->
     <footer-component></footer-component>
     <copyright-component></copyright-component>
   </template>
