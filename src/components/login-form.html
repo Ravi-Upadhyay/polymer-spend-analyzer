@@ -1,10 +1,16 @@
+<!-- 
+** LOGIN COMPONENT
+* Component will contain login form 
+* Takes user input and generate ajax call to authenticate
+* After sucessful authentication will call function on parent.
+-->
 
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/polymer/lib/utils/gestures.html">
+
 <link rel="import" href="../../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
-
 
 <dom-module id="login-form">
   <template>
@@ -68,19 +74,17 @@
         <iron-form id="myForm"> 
         <form>
             <div class="input">
-                <label><b>Username</b></label>
-                <paper-input type="text" label="Username" no-label-float value="{{username}}" required></paper-input>
+                <label><b>Login id</b></label>
+                <paper-input type="text" label="Username" id="username" no-label-float value="{{username}}" on-change="_removeInvalid" required></paper-input>
             </div>
             <div class="input">
                 <label class="label"><b>Password</b></label>
-                <paper-input type="password" label="Password" no-label-float value="{{password}}" required></paper-input>
+                <paper-input type="password" label="Password" id="password" no-label-float value="{{password}}" on-change="_removeInvalid" required></paper-input>
             </div>
-            <span class="forgot-pwd"><a href="#" style="text-decoration: none">Forgot password?</a></span>
-          <!-- <iron-ajax id="ajax" method="post" url="https://jsonplaceholder.typicode.com/posts" handle-as="json" last-response="{{ajaxResponse}}" on-response="handleRequest"
-                on-response="handleResponse" on-error="handleError"></iron-ajax> -->
+            <!-- <span class="forgot-pwd"><a href="#" style="text-decoration: none">Forgot password?</a></span> -->
             <iron-request id="xhr"></iron-request>
-            <app-location route="{{route}}"></app-location>
-          <button id="submit" on-click="login">Login</button>
+            <!-- <app-location route="{{route}}"></app-location> -->
+          <button id="submit" on-click="login" disabled="[[loginBtnDisabled]]">Login</button>
         </form>
      </iron-form>
     </div>
@@ -95,51 +99,80 @@
       static get is() { return 'login-form'; }
       static get properties() {
         return {
-          username: {
+            loginSuccess : {
+                type: Object,
+            },
+            username: {
+                type    : String,
+                value   : ""
+            },
+            password: {
+                type    : String,
+                value   : ""
+            },
+            loginBtnDisabled : {
+                type    : Boolean,
+                value   : true,
+                computed: '_toggleLoginBtn(username,password)'
+            },
+            userDetails: {
+                type: Object,
+                value: {}
+            },
+            ajaxResponse: {
             type: String,
-            value: ""
-          },
-          password: {
-              type: String,
-              value: ""
-          },
-          userDetails: {
-              type: Object,
-              value: {}
-          },
-          ajaxResponse: {
-          type: String,
-          value: []
-        }
+            value: []
+            }
         };
       }
 
+      constructor(){
+          super();
+        //   window.setTimeout(()=> console.log(this.loginSuccess),5000);
+        window.setInterval(()=>{
+            console.log(`From LF, isLoggedIn: ${this.isLoggedIn}`);
+            console.log(this.context);
+            },5000);
+
+      }
+
       login() {
-          console.log('inside login');
           this.userDetails = {
               loginId: this.username,
               password: this.password
           }
-          console.log(this.userDetails);
-        //   this.$.ajax.body = this.userDetails;
-        //   this.$.ajax.generateRequest();
         var post_req = this.$.xhr;
-        // post_req.send({url: "https://jsonplaceholder.typicode.com/posts", method: "post", body: this.userDetails});
         post_req.send({url: "src/data/login-success.json"});
-        post_req.completes.then(function(argReceived){
-            console.log(argReceived.response);
-            if(response.status){
-                localStorage.setItem('user', response.data[0]);
-                this.set('route.path', '/make-transaction.html');
-                //todo: route to make payments
-                // localStorage.setItem('user', undefined);
+        post_req.completes.then((argReceived) => {
+            let response    = JSON.parse(argReceived.response);
+            let status      = response.status;
+            if(status){
+                this.loginSuccess(response.data[0])
             }
             else{
-                //todo: invalid credentials
+                //TODO: display proper message somewhere
+                this.$.username.invalid = true;
+                this.$.password.invalid = true;
+                this.password = "";
             }
         }, function(){
             console.log('I am failed');
+            //TODO: display proper page, unable to hit server properly 500
         });
+      }
+
+      _toggleLoginBtn(loginId, password){
+          // FUNCTION: This function will validate loginId and password should
+          // have some value before they hit api 
+          if((loginId.length > 4) && (password.length > 8)) return false;
+          else return true;
+      }
+
+      _removeInvalid(){
+        // FUNCTION: This function will take care, if we have inputs in invalid state
+        // We need to remove that state when user changes the value
+        this.$.username.invalid = false;
+        this.$.password.invalid = false;
       }
     }
 

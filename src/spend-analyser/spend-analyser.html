@@ -55,8 +55,8 @@
     <iron-pages
         selected="[[page]]"
         attr-for-selected="name"
-        role="main">
-      <login-form name="login"></login-form>
+        role="main"> 
+      <login-form name="login" login-success="[[_loginSuccess]]"></login-form>
       <make-payment name="payments"></make-payment>
       <payment-history name="transactions"></payment-history>
       <payment-analyser name="analyser"></payment-analyser>
@@ -73,33 +73,17 @@
     class SpendAnalyser extends Polymer.Element {
       constructor() {
         super();
-        // console.log(route);
-        var that = this;
-        window.setInterval(function(){
-        console.log(`route: ${JSON.stringify(that.route)}`);
-        console.log(`rootPath: ${that.rootPath}`);
-        console.log(`routeData: ${JSON.stringify(that.routeData)}`);
-        console.log(`subRoute: ${JSON.stringify(that.subroute)}`);
-        console.log(`page: ${that.page}`);
-        console.log(`activePage: ${that.pageActive}`);
-        console.log(`isLoggedIn: ${that.isLoggedIn}`);
-        }, 5000);
-        // console.log(`route: ${that.route}`);
-        // console.log(`rootPath: ${that.rootPath}`);
-        // console.log(`routeData: ${that.routeData}`);
-        // console.log(`subRoute: ${that.subroute}`);
-        // console.log(`page: ${that.page}`);
-        // console.log(`activePage: ${that.pageActive}`);
+        //TODO: Removed tasks from here, May need in case of troubleshooting
       }
       
       static get is() { return 'spend-analyser'; }
-
+      
       static get properties() {
         return {
           isLoggedIn : {
             type  : Boolean,
-            notify: true,
-            value : true,
+            value : false,
+            computed: '_isLoggedInCheck()'
           },
           page: {
             type: String,
@@ -152,14 +136,25 @@
         // }
       }
 
+      _isLoggedInCheck(){
+        let user = sessionStorage.getItem('user');
+        return user ? true : false;
+      }
+
+      _loginSuccess(user){
+        // FUNCTION: After authentication at login-form control will be redirected
+        // so in case of successful login action can be taken here   
+        sessionStorage.setItem('user',user);
+        window.location = 'payments';
+      }
+
       _logout(){
-        window.location = `${this.rootPath}login`
+        window.location.href = `${this.rootPath}login`;
+        sessionStorage.removeItem('user');
         this.isLoggedIn = false;
-        alert('function called from SA');
       }
     }
   
-
     window.customElements.define(SpendAnalyser.is, SpendAnalyser);
   </script>
 </dom-module>
