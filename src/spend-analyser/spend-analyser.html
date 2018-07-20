@@ -11,6 +11,7 @@
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/page-title/page-title.html">
 
 <!-- IMPORT COMPONENTS -->
 <link rel="import" href="../components/make-payment.html">
@@ -50,16 +51,25 @@
     root-path="[[rootPath]]" 
     selected="[[page]]"
     logout="[[_logout]]"></common-header>
+
+    <!-- SET PAGE TITLE AS PER THE PAGE --> 
+
+    <page-title base-title="Spend Analyzer" 
+      page-title="[[page]]"></page-title>
     
 <!-- PAGES/COMPONENTS BASED ON ROUTE     -->
     <iron-pages
         selected="[[page]]"
         attr-for-selected="name"
-        role="main"> 
-      <login-form name="login" login-success="[[_loginSuccess]]"></login-form>
-      <make-payment name="payments"></make-payment>
-      <payment-history name="transactions"></payment-history>
-      <payment-analyser name="analyser"></payment-analyser>
+        selected-item="{{selectedPage}}"
+        role="main">
+      <login-form title='Login' name="login"></login-form>
+      <make-payment title='Make Payment'  name="payments"></make-payment>
+      <payment-status title='Payment Status'  name="status"></payment-status>
+      <payment-history title='Transactions'  name="transactions"></payment-history>
+      <payment-analyser title='Spend Analyzer'  name="analyser"></payment-analyser>
+
+
       <!-- <my-view404 name="view404"></my-view404> -->
     </iron-pages>
 
