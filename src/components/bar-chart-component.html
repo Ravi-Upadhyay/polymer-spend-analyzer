@@ -20,13 +20,6 @@
     </template>
     <script>
         class barchartComponent extends Polymer.Element{
-            constructor(){
-                super();
-                var that = this;
-                window.setTimeout(function(){
-                    console.log(that.transactions);
-                },10000);
-            }
             static get is(){ return 'barchart-component'}
             static get properties(){
                 return  {
@@ -45,11 +38,9 @@
                 })
             }
             
-
             // Configure chart from transaction data
             _configureChart(){                 
-                var chart = this.$.chartdiv; 
-                console.log('hiii',chart); 
+                let chart = this.$.chartdiv;                 
                 this.spendChart = AmCharts.makeChart(chart, {
                     "theme": "light", 
                     "type": "serial",                    
@@ -83,11 +74,7 @@
                         "fixedColumnWidth": 50,
                         "valueField": "debit"
                     }]                     
-                });  
-                
-                
-
-                
+                });                
             }
             // Check for SVG support in old browser
             _supportSVG(){
