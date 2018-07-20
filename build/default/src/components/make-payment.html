@@ -1,0 +1,198 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/paper-spinner/paper-spinner-lite.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/neon-animation/web-animations.html">
+<link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
+<script src="../../bower_components/web-animations-js/web-animations.min.js"></script>
+<dom-module id="make-payment">
+    <template>
+        <style>
+         :host {
+            /* height: 100vh; */
+            display: flex;
+            flex-direction: column;
+            width: 430px;
+            margin: 0;
+            /* position: absolute; */
+            /* top: 50%;
+            left: 50%;
+            margin-right: -50%;
+            transform: translate(-50%, -50%); */
+            height: 450px;
+            padding: 40px;
+            padding-top: 20px;
+            border: 1px solid #c7c2c2;
+            border-radius: 8px;
+        }
+
+         :root {
+            --paper-input-container: {
+                position: relative;
+            }
+            ;
+
+            --paper-input-error: {
+                position: absolute;
+                width: 100%;
+            }
+        }
+
+        .floated-label-placeholder {
+            color: #000 !important;
+            font-weight: bold !important;
+        }
+
+        .vertical-section-container {
+            max-width: 500px;
+        }
+        paper-dropdown-menu,
+        paper-button,
+        paper-input {
+            width: 400px;
+            margin-right: 20px;
+            padding: 10px
+        }
+
+        paper-button {
+            padding: 10px;
+            margin: 0 auto;
+            margin-top: 20px;
+        }
+
+        paper-dropdown-menu paper-item {
+            --paper-item-selected-weight: 700;
+            --paper-item-focused-before: {
+                background: #fff;
+            }
+            ;
+        }
+
+        paper-item {
+            cursor: pointer;
+        }
+
+        paper-button {
+            color: #fff;
+            background-color: #42417A;
+            width: 200px;
+            border-radius: 10px;
+            margin-top: 50px;
+        }
+
+        hr {
+            width: 420px;
+            height: 5px;
+            background-color: #FF6600;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+ 
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        </style>
+        <h2>Make Payment</h2>
+        <hr size="30">
+        <iron-localstorage name="transactionDetails" value="{{transactionDetails}}" on-iron-localstorage-load-empty="initializeStorage"></iron-localstorage>
+        <iron-ajax id="transaction" method="post" handle-as="json" on-response="_handleResponse" loading="{{loading}}"></iron-ajax>
+        <paper-spinner-lite active="[[loading]]"></paper-spinner-lite>
+        <paper-dropdown-menu id="type" label="Select transaction type" always-float-label="">
+            <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content" selected="{{selectedType}}">
+                <template is="dom-repeat" items="[[transactionType]]">
+                    <paper-item value$="[[item.type]]">[[item.type]]</paper-item>
+                </template>
+            </paper-listbox>
+        </paper-dropdown-menu>
+        <paper-input on-keyup="_clearError" label="Enter amount" id="amount" type="number" always-float-label="" error-message="{{amountError}}" value="{{amount}}">
+            <div slot="prefix">$ &nbsp;</div>
+        </paper-input>
+        <paper-input label="Enter description" id="desc" always-float-label="" error-message="{{amountError}}" value="{{desc}}">
+            <div></div>
+        </paper-input>
+        <paper-button nolink="" on-click="_makeTransaction">
+            Make Payment
+        </paper-button>
+    </template>
+    <script>class makePayment extends Polymer.Element {
+  static get is() {
+    return 'make-payment';
+  }
+
+  static get properties() {
+    return {
+      transactionType: {
+        type: Array,
+        value: [{
+          type: 'Debit',
+          value: 0
+        }, {
+          type: 'Credit',
+          value: 1
+        }]
+      },
+      loading: {
+        type: Boolean,
+        value: false,
+        notify: true
+      },
+      selectedType: {
+        type: String,
+        value: 'Debit' // now initial works !! 
+
+      },
+      transactionDetails: {
+        type: Array,
+        value: () => {
+          return [];
+        }
+      }
+    };
+  }
+
+  initializeStorage() {
+    this.transactionDetails = [];
+  }
+
+  _clearError() {
+    this.$.amount.invalid = false; //remove message error
+  }
+
+  _makeTransaction() {
+    var amount = this.amount;
+    var selectedType = this.selectedType;
+    var ajax = this.$.transaction;
+    this.amountError = "Hi Hello";
+    ajax.url = 'api url';
+    this.$.amount.invalid = true; //show message error
+
+    ajax.body = {
+      "amount": amount,
+      "transactionType": selectedType
+    };
+    ajax.generateRequest(); // triggers the iron-ajax
+  }
+
+  _handleResponse(response) {
+    console.log('response', response.detail.__data.response.data);
+    console.log(this.transactionDetails);
+    var data = response.detail.__data.response.data; //spot data
+
+    if (data.transactionStatus === 'fail') {
+      this.transactionDetails = ['Fail'];
+    } else {
+      //get historic data from crypto api
+      this.transactionDetails = ['success', data];
+    }
+  }
+
+}
+
+window.customElements.define(makePayment.is, makePayment);</script>
+</dom-module>

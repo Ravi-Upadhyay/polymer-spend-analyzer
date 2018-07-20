@@ -1,0 +1,149 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/lib/utils/gestures.html">
+<link rel="import" href="../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+
+
+<dom-module id="login-form">
+  <template>
+    <style>
+        input[type=text], input[type=password] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: block;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-sizing: border-box;
+            float: center;
+        }
+        form {
+            border: 3px solid #f1f1f1;
+            padding: 25px 50px 50px 50px;
+        }
+        .container {
+            /* border: 1px solid #666; */
+            border-radius: 10px;
+            width: 400px;
+            -webkit-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
+            -moz-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
+            box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
+            transform: translateY(20%);
+            margin: auto auto;
+        }
+        .heading {
+            padding-top: 25px;
+            padding-left: 50px;
+        }
+        hr {
+            width: 78%;
+            border: 2px solid #ff6200;
+            border-radius: 5px;
+        }
+        #submit {
+            display: block;
+            padding: 10px 25px 10px 25px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 35px;
+            margin-bottom: 0;
+            border-radius: 10px;
+            background-color:midnightblue;
+            color: white;
+            border: 1px solid midnightblue;
+        }
+        #submit:hover {
+            cursor: pointer;
+        }
+        .input {
+            margin-top: 1rem;
+        }
+    </style>
+    <!-- <h2>Hello [[prop1]]!</h2> -->
+    <div class="container">
+        <h2 class="heading"><b>Login</b></h2>
+        <hr>
+        <iron-form id="myForm"> 
+        <form>
+            <div class="input">
+                <label><b>Username</b></label>
+                <paper-input type="text" label="Username" no-label-float="" value="{{username}}" required=""></paper-input>
+            </div>
+            <div class="input">
+                <label class="label"><b>Password</b></label>
+                <paper-input type="password" label="Password" no-label-float="" value="{{password}}" required=""></paper-input>
+            </div>
+            <span class="forgot-pwd"><a href="#" style="text-decoration: none">Forgot password?</a></span>
+          <!-- <iron-ajax id="ajax" method="post" url="https://jsonplaceholder.typicode.com/posts" handle-as="json" last-response="{{ajaxResponse}}" on-response="handleRequest"
+                on-response="handleResponse" on-error="handleError"></iron-ajax> -->
+            <iron-request id="xhr"></iron-request>
+            <app-location route="{{route}}"></app-location>
+          <button id="submit" on-click="login">Login</button>
+        </form>
+     </iron-form>
+    </div>
+  </template>
+
+  <script>/**
+ * @customElement
+ * @polymer
+ */
+class LoginForm extends Polymer.Element {
+  static get is() {
+    return 'login-form';
+  }
+
+  static get properties() {
+    return {
+      username: {
+        type: String,
+        value: ""
+      },
+      password: {
+        type: String,
+        value: ""
+      },
+      userDetails: {
+        type: Object,
+        value: {}
+      },
+      ajaxResponse: {
+        type: String,
+        value: []
+      }
+    };
+  }
+
+  login() {
+    console.log('inside login');
+    this.userDetails = {
+      loginId: this.username,
+      password: this.password
+    };
+    console.log(this.userDetails); //   this.$.ajax.body = this.userDetails;
+    //   this.$.ajax.generateRequest();
+
+    var post_req = this.$.xhr; // post_req.send({url: "https://jsonplaceholder.typicode.com/posts", method: "post", body: this.userDetails});
+
+    post_req.send({
+      url: "src/data/login-success.json"
+    });
+    post_req.completes.then(function (argReceived) {
+      console.log(argReceived.response);
+
+      if (response.status) {
+        localStorage.setItem('user', response.data[0]);
+        this.set('route.path', '/make-transaction.html'); //todo: route to make payments
+        // localStorage.setItem('user', undefined);
+      } else {//todo: invalid credentials
+        }
+    }, function () {
+      console.log('I am failed');
+    });
+  }
+
+}
+
+window.customElements.define(LoginForm.is, LoginForm);</script>
+</dom-module>

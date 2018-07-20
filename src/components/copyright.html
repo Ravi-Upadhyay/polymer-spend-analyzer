@@ -1,0 +1,40 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="copyright-component">
+    <template>
+        <style>           
+            .copyright{
+                text-align: center;                
+                font-size: 14px;
+                position: relative;
+                bottom: 0px;
+                width: 100%;
+                background-color: #f4f4f4;
+                height: 30px;           
+            }
+            .copyright p{
+                vertical-align: middle;
+                margin-top: 6px;
+            }
+        </style>
+        <div class="copyright">
+            <p>Dummy products,color schemes and logo for illustrative/learning purpose only</p>
+        </div>
+    </template>
+    <script>
+        class copyrightComponent extends Polymer.Element{
+            static get is(){ return 'copyright-component'}
+            static get properties(){
+                
+            }
+
+            ready(){
+                super.ready();
+                Polymer.RenderStatus.afterNextRender(this,function(){
+                    
+                })
+            }
+        };
+        window.customElements.define(copyrightComponent.is,copyrightComponent);
+    </script>
+</dom-module>
