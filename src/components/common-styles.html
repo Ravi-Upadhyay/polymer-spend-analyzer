@@ -1,4 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
 <dom-module id="common-styles">
     <template>
         
@@ -6,6 +7,60 @@
           .primaryBgColor{
               background-color:#ff6600;
           }
+          .secondaryBgColor{
+              background-color: #42417a;
+          }
+          
+          /* STYLE-Secondary color inspiered links: This is being used at header similarily 
+          can be obtained for primary coloured links */
+
+          .secondaryLinkButton {
+            display: flex;
+            display: -webkit-flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, Helvetica, sans-serif;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            height:2.5em;
+            width: 80%;
+            border-radius: 5px;
+          }
+
+          .secondaryLinkButton:hover {
+              opacity:0.8;
+          }
+
+          .secondaryLinkButtonActive {
+            background-color: #42417a;
+            color: #ffffff;
+          }
+          .secondaryLinkButtonInactive {
+            background-color: #ffffff;
+            color: #42417a;
+          }
+          
+          .primaryButton {
+            display: flex;
+            display: -webkit-flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            height:2.5em;
+            border-radius:5px;
+            background-color: #ff6600;
+            color:#ffffff;
+            border: none;
+            width:90%;
+          }
+
+          .primaryButton:hover {
+            opacity: 0.8;
+          }
+
           
         </style>
     </template>

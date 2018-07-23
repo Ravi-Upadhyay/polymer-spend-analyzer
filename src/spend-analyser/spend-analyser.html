@@ -30,20 +30,25 @@
         display: block;
       }
     </style>
+<!-- SET PAGE TITLE AS PER THE PAGE --> 
+
+  <page-title base-title="Spend Analyzer" 
+    page-title="[[page]]">
+  </page-title>
 
 <!-- FOR ROUTING PURPOSE (APP-ROUTE) -->
-      <app-location
-        route="{{route}}">
-      </app-location>
-  
-      <app-route
-          route="{{route}}"
-          pattern="/:page"
-          data="{{routeData}}"
-          tail="{{subroute}}"
-          active="{{pageActive}}">
-      </app-route>
+    <app-location
+      route="{{route}}">
+    </app-location>
 
+    <app-route
+        route="{{route}}"
+        pattern="/:page"
+        data="{{routeData}}"
+        tail="{{subroute}}"
+        active="{{pageActive}}">
+    </app-route>
+    
 <!-- APP-STRUCTURE -->
     <common-header 
       is-logged-in="{{isLoggedIn}}" 
@@ -52,11 +57,6 @@
       selected="[[page]]"
       logout="[[_logout]]">
     </common-header>
-
-    <!-- SET PAGE TITLE AS PER THE PAGE --> 
-
-    <page-title base-title="Spend Analyzer" 
-      page-title="[[page]]"></page-title>
     
 <!-- PAGES/COMPONENTS BASED ON ROUTE     -->
     <iron-pages
@@ -96,7 +96,7 @@
           isLoggedIn : {
             type  : Boolean,
             value : false,
-            computed: '_isLoggedInCheck()'
+            // computed: '_isLoggedInCheck()'
           },
           page: {
             type: String,
@@ -126,7 +126,7 @@
                 "display" : "Spend Analyser",
                 "name"    : "analyser",
                 "slug": "analyser"                
-              },
+              }
             ]
           }
         }
@@ -140,7 +140,10 @@
       }
 
       _routeChanged(path){
-        alert();
+        // alert('route path changed');
+        let user = sessionStorage.getItem('user');
+        let isLoggedIn =  user ? true : false;
+        this.set('isLoggedIn',isLoggedIn);
       }
 
       _routePageChanged(page) {
@@ -155,10 +158,10 @@
         // }
       }
 
-      _isLoggedInCheck(){
-        let user = sessionStorage.getItem('user');
-        return user ? true : false;
-      }
+      // _isLoggedInCheck(){
+      //   let user = sessionStorage.getItem('user');
+      //   return user ? true : false;
+      // }
 
       _loginSuccess(user){
         // FUNCTION: After authentication at login-form control will be redirected
@@ -169,7 +172,8 @@
       }
 
       _logout(){
-        window.location.href = `${this.rootPath}login`;
+        // window.location.href = `${this.rootPath}login`;
+        this.set('route.path','/login');
         sessionStorage.removeItem('user');
         this.isLoggedIn = false;
       }
