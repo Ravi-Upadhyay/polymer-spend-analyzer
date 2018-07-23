@@ -20,23 +20,31 @@
         }        
         </style>
 
-        <iron-ajax auto url="src/data/history.json" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax>
+        <!-- <iron-ajax auto url="src/data/history.json" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax> -->
+        <iron-ajax auto method="GET" url="http://192.168.43.120:8080/user/1000/transactions" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax>
 
         <h3> Most Recent Transaction <h3>
 
-        <vaadin-grid id="grid" theme="row-dividers" items="[[users.transactionHistory]]" page-size="10" height-by-rows column-reordering-allowed multi-sort>
+        <vaadin-grid id="grid" theme="row-dividers" items="[[users.data]]" page-size="10" height-by-rows column-reordering-allowed multi-sort>
             <vaadin-grid-column width="9em">
                 <template class="header">
                     <vaadin-grid-sorter path="transactionDetails">Transaction Details</vaadin-grid-sorter>
                 </template>
-                <template>[[item.transactionDetails]]</template>
+                <template>[[item.transactionId]]</template>
+            </vaadin-grid-column>
+            
+            <vaadin-grid-column width="9em">
+                <template class="header">
+                    <vaadin-grid-sorter path="transactionDetails">Transaction Details</vaadin-grid-sorter>
+                </template>
+                <template>[[item.description]]</template>
             </vaadin-grid-column>
 
             <vaadin-grid-column width="9em">
                 <template class="header">
                     <vaadin-grid-sorter path="transactionType">Transaction Type</vaadin-grid-sorter>
                 </template>
-                <template>[[item.transactionType]]</template>
+                <template>[[item.paymentType]]</template>
             </vaadin-grid-column>
     
             <vaadin-grid-column width="9em">
@@ -50,14 +58,14 @@
                 <template class="header">
                     <vaadin-grid-sorter path="amount">Amount</vaadin-grid-sorter>
                 </template>
-                <template>[[item.amount]]</template>
+                <template>[[item.transactionAmount]]</template>
             </vaadin-grid-column>
 
             <vaadin-grid-column width="9em" flex-grow="2">
                 <template class="header">
                     <vaadin-grid-sorter path="balance">Balance</vaadin-grid-sorter>
                 </template>
-                <template>[[item.balance]]</template>
+                <template>[[item.closingBalance]]</template>
             </vaadin-grid-column>
         </vaadin-grid>
         <div id="pages">
@@ -87,7 +95,8 @@
       }
 
       handleResponse(event,request){
-        this.items = request.response.transactionHistory;
+        console.log(request);
+        this.items = request.response.data;
       }
 
       ready(){

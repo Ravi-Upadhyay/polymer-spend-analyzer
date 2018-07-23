@@ -6,7 +6,6 @@
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-selection-column.html">
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-sorter.html">
 
-<link rel="import" href="../../bower_components/polymer/lib/elements/dom-if.html">
 <link rel="import" href="bar-chart-component.html">
 
 <dom-module id="payment-analyser">
@@ -15,8 +14,7 @@
             :host{
                 font-family: Arial, Helvetica, sans-serif;
                 font-size: 26px;
-            }
-            	
+            }            	
             h4{
                 text-align:center;
             }
@@ -26,8 +24,7 @@
             }            
             .amcharts-chart-div a{
                 display: none !important;
-            }     
-            
+            }            
         </style>
         <iron-ajax id="analyser" handle-as="json" last-response="{{activities}}" on-response="_handleResponse"></iron-ajax>
 
@@ -61,11 +58,9 @@
 
         <h4>Spend Analyser</h4>
         <barchart-component transactions=[[transactions]]></barchart-component>
-        
     </template>
     <script>
         class paymentAnalyser extends Polymer.Element{
-
             static get is(){ return 'payment-analyser'}
             static get properties(){
                 return  {
@@ -95,7 +90,7 @@
 
             //Get transaction data ffrom API
             _getTransactionData(){
-                var ajax = this.$.analyser;
+                let ajax = this.$.analyser;
                 ajax.url = "src/data/analyser.json";
                 ajax.generateRequest(); //trigger the iron-ajax                
             }
@@ -104,54 +99,7 @@
             _handleResponse(event,request){
                 this.transactions = request.response;
                 console.log(this.transactions);
-                this.transactionsLoaded = true;
-                 //this.configureChart(this.transactions);
-                //this._generateChart(this.transactions);
-            }
-
-            // Generate chart from transaction data
-            _generateChart(data){                
-                var Chart = this.$.chartdiv;                 
-                this.spendChart = AmCharts.makeChart(Chart, {
-                    "theme": "light", 
-                    "type": "serial",
-                    //"fontSize" : 14,
-                    "dataProvider":data,
-                    "valueAxes": [{
-                        "stackType": "3d",
-                        "unit": "",
-                        "position": "left",
-                        "title": "",
-                        "autoGridCount" :false
-                    }],
-                    // set startDuration to 0 on older browsers
-                    "startDuration": this._supportSVG()? 1 : 0,                                 
-                    "depth3D": 60,
-                    "angle": 30,
-                    "categoryField": "month",                    
-                    "graphs": [{
-                        "balloonText": "Credit in [[category]]: <b>[[value]]</b>",
-                        "fillAlphas": 0.9,                       
-                        "title": "Credit",
-                        "type": "column",
-                        "fixedColumnWidth": 50,//adjusts with of the column
-                        //"colorField": "Ccolor", //change color
-                        "valueField": "credit"
-                    }, {
-                        "balloonText": "Debit in [[category]]: <b>[[value]]</b>",
-                        "fillAlphas": 0.9,                       
-                        "title": "Debit",
-                        "type": "column",
-                        //"colorField": "Dcolor",//change color
-                        "fixedColumnWidth": 50,
-                        "valueField": "debit"
-                    }]                     
-                });                
-            }
-            // Check for SVG support in old browser
-            _supportSVG(){
-                return !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', "svg").createSVGRect;
-            }
+            }           
         };
         window.customElements.define(paymentAnalyser.is,paymentAnalyser);
     </script>
