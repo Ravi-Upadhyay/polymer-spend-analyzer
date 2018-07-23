@@ -64,7 +64,7 @@
         attr-for-selected="name"
         selected-item="{{selectedPage}}"
         role="main">
-      <login-form title='Login' name="login"></login-form>
+      <login-form title='Login' name="login" login-success="[[_loginSuccess]]"></login-form>
       <make-payment title='Make Payment'  name="payments"></make-payment>
       <payment-status title='Payment Status'  name="status"></payment-status>
       <payment-history title='Transactions'  name="transactions"></payment-history>
