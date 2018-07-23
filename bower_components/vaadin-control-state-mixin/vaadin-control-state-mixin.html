@@ -5,13 +5,17 @@ This program is available under Apache License Version 2.0, available at https:/
 -->
 
 <script>
+  /**
+   * @namespace Vaadin
+   */
   window.Vaadin = window.Vaadin || {};
 
   /**
    * A private mixin to avoid problems with dynamic properties and Polymer Analyzer.
    * No need to expose these properties in the API docs.
+   * @polymerMixin
    */
-  Vaadin.TabIndexMixin = superClass => class VaadinTabIndexMixin extends superClass {
+  const TabIndexMixin = superClass => class VaadinTabIndexMixin extends superClass {
     static get properties() {
       var properties = {
         /**
@@ -41,8 +45,9 @@ This program is available under Apache License Version 2.0, available at https:/
    * Polymer.IronControlState is not a proper 2.0 class, also, its tabindex
    * implementation fails in the shadow dom, so we have this for vaadin elements.
    * @polymerMixin
+   * @memberof Vaadin
    */
-  Vaadin.ControlStateMixin = superClass => class VaadinControlStateMixin extends Vaadin.TabIndexMixin(superClass) {
+  Vaadin.ControlStateMixin = superClass => class VaadinControlStateMixin extends TabIndexMixin(superClass) {
     static get properties() {
       return {
         /**
@@ -89,6 +94,20 @@ This program is available under Apache License Version 2.0, available at https:/
       // Issue to watch out: when incorrect, <vaadin-combo-box> refocuses the
       // input field on iOS after “Done” is pressed.
       super.ready();
+
+      // This fixes the bug in Firefox 61 (https://bugzilla.mozilla.org/show_bug.cgi?id=1472887)
+      // where focusout event does not go out of shady DOM because composed property in the event is not true
+      const ensureEventComposed = e => {
+        if (!e.composed) {
+          e.target.dispatchEvent(new CustomEvent(e.type, {
+            bubbles: true,
+            composed: true,
+            cancelable: false
+          }));
+        }
+      };
+      this.shadowRoot.addEventListener('focusin', ensureEventComposed);
+      this.shadowRoot.addEventListener('focusout', ensureEventComposed);
 
       this.addEventListener('keydown', e => {
         if (!e.defaultPrevented && e.shiftKey && e.keyCode === 9) {

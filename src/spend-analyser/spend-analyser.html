@@ -46,11 +46,12 @@
 
 <!-- APP-STRUCTURE -->
     <common-header 
-    is-logged-in="{{isLoggedIn}}" 
-    menu="[[myMenu]]" 
-    root-path="[[rootPath]]" 
-    selected="[[page]]"
-    logout="[[_logout]]"></common-header>
+      is-logged-in="{{isLoggedIn}}" 
+      menu="[[myMenu]]" 
+      root-path="[[rootPath]]" 
+      selected="[[page]]"
+      logout="[[_logout]]">
+    </common-header>
 
     <!-- SET PAGE TITLE AS PER THE PAGE --> 
 
@@ -63,7 +64,7 @@
         attr-for-selected="name"
         selected-item="{{selectedPage}}"
         role="main">
-      <login-form title='Login' name="login"></login-form>
+      <login-form title='Login' name="login" login-success="[[_loginSuccess]]"></login-form>
       <make-payment title='Make Payment'  name="payments"></make-payment>
       <payment-status title='Payment Status'  name="status"></payment-status>
       <payment-history title='Transactions'  name="transactions"></payment-history>
@@ -104,6 +105,7 @@
           },
           routeData: Object,
           subroute: Object,
+          route: Object,
           // This shouldn't be neccessary, but the Analyzer isn't picking up
           // Polymer.Element#rootPath
           rootPath: String,
@@ -132,8 +134,13 @@
 
       static get observers() {
         return [
-          '_routePageChanged(routeData.page)'
+          '_routePageChanged(routeData.page)',
+          '_routeChanged(route.path)'
         ];
+      }
+
+      _routeChanged(path){
+        alert();
       }
 
       _routePageChanged(page) {
@@ -157,7 +164,8 @@
         // FUNCTION: After authentication at login-form control will be redirected
         // so in case of successful login action can be taken here   
         sessionStorage.setItem('user',user);
-        window.location = 'payments';
+        // window.location = 'payments';
+        this.set('route.path','/payments');
       }
 
       _logout(){

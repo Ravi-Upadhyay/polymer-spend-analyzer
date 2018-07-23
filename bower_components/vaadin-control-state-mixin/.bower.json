@@ -26,35 +26,17 @@
   "devDependencies": {
     "iron-test-helpers": "^2.0.0",
     "web-component-tester": "^6.1.5",
-    "webcomponentsjs": "^1.0.0",
-    "iron-form": "^2.0.0",
-    "iron-input": "^2.0.0",
-    "paper-button": "^2.0.0",
-    "paper-input": "^2.0.0",
-    "vaadin-button": "master",
-    "vaadin-checkbox": "master",
-    "vaadin-combo-box": "master",
-    "vaadin-date-picker": "master",
-    "vaadin-dropdown-menu": "master",
-    "vaadin-item": "master",
-    "vaadin-list-box": "master",
-    "vaadin-radio-button": "master",
-    "vaadin-text-field": "master"
+    "webcomponentsjs": "^1.0.0"
   },
   "dependencies": {
     "polymer": "^2.0.0"
   },
-  "resolutions": {
-    "vaadin-button": "master",
-    "vaadin-item": "master",
-    "vaadin-text-field": "master"
-  },
-  "version": "2.0.3",
-  "_release": "2.0.3",
+  "version": "2.1.0",
+  "_release": "2.1.0",
   "_resolution": {
     "type": "version",
-    "tag": "v2.0.3",
-    "commit": "ed701aff0bde83ab0b0f97deb4e033052aa69996"
+    "tag": "v2.1.0",
+    "commit": "84ebe3de5c82c025db6428353fa24a408e7ff9ea"
   },
   "_source": "https://github.com/vaadin/vaadin-control-state-mixin.git",
   "_target": "^2.0.0",
