@@ -1,0 +1,63 @@
+  :host {
+           height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        span {
+            font-size: 16px;
+        }
+
+        .detailSec div{
+            padding: 15px;
+        }
+
+         .container {
+            width: 33.33%;
+            border-radius: 10px;
+            -webkit-box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.75);
+            -moz-box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.75);
+            box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.75);
+            margin: 0 auto;
+            margin-top: 50px;
+            background-color: #ffffff;
+            padding: 25px;
+        }
+
+        paper-button {
+            color: #fff;
+            background-color: #42417A;
+            width: 200px;
+            border-radius: 10px;
+            margin-top: 50px;
+            height: 40px;
+            float:left;
+        }
+
+        iron-image {
+            width: 32px;
+            height: 32px;
+            margin-left: 45%
+        }
+
+        paper-button {
+            --paper-button: {
+                @apply(--layout-vertical);
+                @apply(--layout-center-center);
+            };
+            font-size:14px;
+        }
+
+        #transactionButton{
+            margin-left: 35px;
+        }
+
+        .centerTxt{
+            text-align: center;
+        }
+        hr{
+            width:420px;
+            height:5px;
+            background-color:#FF6600;
+            margin-bottom: 20px;
+        }

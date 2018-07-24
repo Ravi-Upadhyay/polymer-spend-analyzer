@@ -6,98 +6,58 @@
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../../bower_components/polymer/lib/elements/dom-if.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="common-styles.html">
 <dom-module id="payment-status">
     <template>
-        <style>
-         :host {
-           height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        span {
-            font-size: 16px;
-        }
-
+        <style include="common-styles">
         .detailSec div{
-            padding: 15px;
+            padding: 10px;
         }
-
-         .container {
-            width: 33.33%;
-            border-radius: 10px;
-            -webkit-box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.75);
-            -moz-box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.75);
-            box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.75);
-            margin: 0 auto;
-            margin-top: 50px;
-            background-color: #ffffff;
-            padding: 25px;
+        .btnPrl{
+            width:100%;
+            margin:1.25em auto 0 auto;
         }
-
-        paper-button {
-            color: #fff;
-            background-color: #42417A;
-            width: 200px;
-            border-radius: 10px;
-            margin-top: 50px;
-            height: 40px;
-            float:left;
-        }
-
         iron-image {
             width: 32px;
             height: 32px;
             margin-left: 45%
-        }
-
-        paper-button {
-            --paper-button: {
-                @apply(--layout-vertical);
-                @apply(--layout-center-center);
-            };
-            font-size:14px;
-        }
-
-        #transactionButton{
-            margin-left: 35px;
-        }
-
+        }  
         .centerTxt{
             text-align: center;
-        }
-        hr{
-            width:420px;
-            height:5px;
-            background-color:#FF6600;
-            margin-bottom: 20px;
-        }
+        }      
         </style>
         <iron-localstorage name="transactionDetails" value="{{transactionDetails}}" on-iron-localstorage-load-empty="initializeStorage"></iron-localstorage>
-        <div class='container'>
-        <h2>Payment Status</h2>
-         <hr size="30">
-        <template is="dom-if" if="{{showSuccess}}">
-            <iron-image src="src/images/success.png"></iron-image>
-            <h2 class="centerTxt">Success!</h2>
-        </template>
-        <template is="dom-if" if="{{showError}}">
-            <iron-image src="src/images/error.png"></iron-image>
-            <h2 class="centerTxt">Failed!</h2>
-        </template>
-        <div class="detailSec">
-            <div > <span>Transaction ID: </span><span>{{transactionId}}</span></div>
-            <div > <span>Amount: </span><span>{{transactionAmount}}</span></div>
-            <div > <span>Transaction Type: </span><span>{{transactionType}}</span></div>
-        </div>
-        <div>
-             <app-location route="{{route}}"></app-location>
-        <paper-button nolink on-click="_navigateToPayment">
-            Make new payment
-        </paper-button>
-        <paper-button id="transactionButton" nolink on-click="_navigateToAlanyzer">
-            Transaction history
-        </paper-button>
+       
+        <div class='container fntFamily boxShadow'>
+        <h2 class="heading">Payment Status</h2>
+        <hr>
+
+        <iron-form>
+            <form>
+                <template is="dom-if" if="{{showSuccess}}">
+                        <iron-image src="src/images/success.png"></iron-image>
+                        <h2 class="centerTxt">Success!</h2>
+                </template>
+                <template is="dom-if" if="{{showError}}">
+                    <iron-image src="src/images/error.png"></iron-image>
+                    <h2 class="centerTxt">Failed!</h2>
+                </template>
+                <div class="detailSec">
+                    <div > <span>Transaction ID: </span><span>{{transactionId}}</span></div>
+                    <div > <span>Amount: </span><span>{{transactionAmount}}</span></div>
+                    <div > <span>Transaction Type: </span><span>{{transactionType}}</span></div>
+                </div>
+                <div>
+                    <app-location route="{{route}}"></app-location>
+                    <paper-button class="btnPrl" nolink on-click="_navigateToPayment">
+                        Make new payment
+                    </paper-button>
+                    <paper-button  class="btnPrl" id="transactionButton" nolink on-click="_navigateToAlanyzer">
+                        Transaction history
+                    </paper-button>
+                </div>
+            </form>
+        </iron-form>
     </div>
 </div>
     </template>

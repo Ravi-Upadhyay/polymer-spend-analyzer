@@ -1,18 +1,19 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="common-styles.html">
 
 <dom-module id="footer-component">
     <template>
-        <style>
+        <style include="common-styles">
             .footer{
-                width: 100%;
-                height: 35px;
+                width: 100%;                
                 background-color: #ff6600;
                 position: relative;
                             }    
             .footer div{
                 position: absolute;
-                left: 50%;
-                top:15%;
+                left: 50%;   
+                top: 50%;
+                transform: translateX(-50%) translateY(-50%);                
             }            
             .footer img{
                 height: 25px;
@@ -24,7 +25,7 @@
                 margin-top:10px;
             }
         </style>
-        <div class="footer content">
+        <div class="footer content height50">
             <div>
                 <img src="src/images/twitter-icon.png"/>
                 <img src="src/images/fb-icon.png"/>
