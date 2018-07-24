@@ -30,7 +30,8 @@
             <iron-localstorage name="transactionDetails" value="{{transactionDetails}}" on-iron-localstorage-load-empty="initializeStorage"></iron-localstorage>
 
             <!-- Ajax component to make a post request to payment API -->
-            <iron-ajax id="transaction" method="post" handle-as="json" on-response="_handleResponse" loading="{{loading}}"></iron-ajax>
+            <iron-ajax id="transaction" method="post" content-type="application/json" handle-as="json" on-response="_handleResponse" loading="{{loading}}"></iron-ajax>
+            <paper-spinner-lite active="[[loading]]"></paper-spinner-lite>
             
             <iron-form id="myForm">
                 <form>
@@ -117,13 +118,13 @@
             var paymentType = this.selectedType
             var description = this.description
             var ajax = this.$.transaction;
-            ajax.url = 'api url';
-            ajax.body = {
-                "customerId": "xxx",
+            ajax.url = 'http://192.168.43.120:8080/user/1000/makepayment';
+            ajax.body = JSON.stringify({
+                "customerId": "1000",
                 "amount": amount,
                 "paymentType": paymentType,
                 "description": description
-            }
+            });
             ajax.generateRequest(); // triggers the iron-ajax
         }
 

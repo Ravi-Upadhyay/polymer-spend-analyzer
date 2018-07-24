@@ -45,6 +45,7 @@
       </app-route>
 
 <!-- APP-STRUCTURE -->
+<!-- HEADER COMPONENT INDEPENDENT OF ROUTE -->
     <common-header 
     is-logged-in="{{isLoggedIn}}" 
     menu="[[myMenu]]" 
@@ -63,7 +64,7 @@
         attr-for-selected="name"
         selected-item="{{selectedPage}}"
         role="main">
-      <login-form title='Login' name="login"></login-form>
+      <login-form title='Login' name="login" login-success="[[_loginSuccess]]"></login-form>
       <make-payment title='Make Payment'  name="payments"></make-payment>
       <payment-status title='Payment Status'  name="status"></payment-status>
       <payment-history title='Transactions'  name="transactions"></payment-history>
@@ -73,6 +74,7 @@
       <!-- <my-view404 name="view404"></my-view404> -->
     </iron-pages>
 
+<!-- FOOTER COMPONENT INDEPENDENT OF ROUTE -->
     <footer-component></footer-component>
     <copyright-component></copyright-component>
   </template>
