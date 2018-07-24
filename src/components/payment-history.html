@@ -1,23 +1,21 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="shared-styles.html">
+
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-selection-column.html">
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-sorter.html">
 
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="common-styles.html">
+
 <dom-module id="payment-history">
     <template>
+        <style include="common-styles">
+         
+        </style>
         <style include="shared-styles">
-        :host {
-            display: block;
-            padding: 10px;
-            text-align: center;
-        }
-        
-        h3{
-            text-align:center;
-        }        
+         
         </style>
 
         <!-- <iron-ajax auto url="src/data/history.json" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax> -->

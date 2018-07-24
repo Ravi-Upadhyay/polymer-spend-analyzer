@@ -1,23 +1,14 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="common-styles.html">
 
 <dom-module id="copyright-component">
     <template>
-        <style>           
-            .copyright{
-                text-align: center;                
-                font-size: 14px;
-                position: relative;
-                bottom: 0px;
-                width: 100%;
-                background-color: #f4f4f4;
-                height: 30px;           
-            }
-            .copyright p{
-                vertical-align: middle;
-                margin-top: 6px;
-            }
+        <style include="common-styles">           
+            .copyright{                
+                text-align:center;               
+            }            
         </style>
-        <div class="copyright">
+        <div class="copyright fnt14 fntFamily">
             <p>Dummy products,color schemes and logo for illustrative/learning purpose only</p>
         </div>
     </template>

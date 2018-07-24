@@ -1,66 +1,74 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 
-<link rel="import" href="shared-styles.html">
+
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-selection-column.html">
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-sorter.html">
 
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="common-styles.html">
 <link rel="import" href="bar-chart-component.html">
 
 <dom-module id="payment-analyser">
     <template>
-        <style include="shared-styles">
-            :host{
-                font-family: Arial, Helvetica, sans-serif;
-                font-size: 26px;
-            }            	
-            h4{
-                text-align:center;
-            }
-            #analyser_grid{
-                width: 55%;
-                margin: 0 auto;
-            }            
+        <style include="common-styles">                  
             .amcharts-chart-div a{
                 display: none !important;
-            }     
-
-
-       
+            }          
+        </style>
+        <style include="shared-styles">
+         vaadin-grid#analyser_grid{
+            border: 1px solid #000;
+            -webkit-font-smoothing: antialiased;
+             --divider-color: #0e0d0d;
+        }
+            --vaadin-grid-cell  {
+                border: 1px solid #000;
+                box-sizing: border-box;
+            }
+            --vaadin-grid-header-cell {
+                border-bottom: 1px solid #080808;
+            }
+            vaadin-grid#border {
+                border-bottom: 1px solid #080808;                
+            }
         </style>
         <iron-ajax id="analyser" handle-as="json" last-response="{{activities}}" on-response="_handleResponse"></iron-ajax>
+        <div class="container">
+            <h2 class="centerText"> Account Activity Analysis </h2>
 
-        <h4> Account Activity Analysis </h4>
+            <vaadin-grid id="analyser_grid" theme="row-dividers" items="[[activities]]" page-size="10" height-by-rows column-reordering-allowed>
+                <vaadin-grid-column items="[[activities]]" id="border">
+                    <template class="header"><strong>#</strong></template>
+                    <template>
+                        <div class="vaadinCol">[[displayIndex(index)]]</div>
+                    </template>
+                </vaadin-grid-column>
+                <vaadin-grid-column>
+                    <template class="header"><strong>Month</strong></template>
+                    <template>[[item.month]]</template>
+                </vaadin-grid-column>
 
-        <vaadin-grid id="analyser_grid" theme="row-dividers" items="[[activities]]" page-size="10" height-by-rows column-reordering-allowed>
-            <vaadin-grid-column width="9em" items="[[activities]]">
-                <template class="header">#</template>
-                <template>[[displayIndex(index)]]</template>
-            </vaadin-grid-column>
-            <vaadin-grid-column width="9em">
-                <template class="header">Month</template>
-                <template>[[item.month]]</template>
-            </vaadin-grid-column>
+                <vaadin-grid-column>
+                    <template class="header"><strong>Total Transaction</strong></template>
+                    <template>[[addCurrency(item.totalTransaction)]]</template>
+                </vaadin-grid-column>
+        
+                <vaadin-grid-column>
+                    <template class="header"><strong>Debit</strong></template>
+                    <template>[[addCurrency(item.debit)]]</template>
+                </vaadin-grid-column>
+        
+                <vaadin-grid-column>
+                    <template class="header"><strong>Credit</strong></template>
+                    <template class="border">[[addCurrency(item.credit)]]</template>
+                </vaadin-grid-column>            
+            </vaadin-grid>     
 
-            <vaadin-grid-column width="9em">
-                <template class="header">Total Transaction</template>
-                <template>[[addCurrency(item.totalTransaction)]]</template>
-            </vaadin-grid-column>
-    
-            <vaadin-grid-column width="9em">
-                <template class="header">Debit</template>
-                <template>[[addCurrency(item.debit)]]</template>
-            </vaadin-grid-column>
-    
-            <vaadin-grid-column width="9em">
-                <template class="header">Credit</template>
-                <template>[[addCurrency(item.credit)]]</template>
-            </vaadin-grid-column>            
-        </vaadin-grid>     
-
-        <h4>Spend Analyser</h4>
-        <barchart-component transactions=[[transactions]]></barchart-component>
+            <h2 class="centerText">Spend Analyser</h2>
+            <barchart-component transactions=[[transactions]]></barchart-component>
+        </div>
     </template>
     <script>
         class paymentAnalyser extends Polymer.Element{
