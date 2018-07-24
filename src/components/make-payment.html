@@ -56,7 +56,7 @@
 
                     <div>
                         <h4 class="label">Enter description</h4>
-                        <paper-input id="desc" no-label-float error-message="{{amountError}}" value="{{desc}}">
+                        <paper-input id="description" no-label-float error-message="{{amountError}}" value="{{description}}">
                         <div></div>
                         </paper-input>
                     </div>
@@ -89,6 +89,10 @@
                     type: Boolean,
                     value: false,
                     notify: true
+                },
+                description: {
+                    type: String,
+                    value: ''
                 },
                 selectedType: {
                     type: String,
