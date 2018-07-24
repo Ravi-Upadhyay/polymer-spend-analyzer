@@ -160,6 +160,9 @@
         let user = sessionStorage.getItem('user');
         let isLoggedIn =  user ? true : false;
         this.set('isLoggedIn',isLoggedIn);
+        if(!this.isLoggedIn){
+          this.set('route.path','/login');
+        }
       }
 
       _routePageChanged(page) {
