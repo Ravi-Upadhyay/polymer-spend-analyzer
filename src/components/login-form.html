@@ -16,7 +16,7 @@
 <dom-module id="login-form">
   <template>
     <style include="common-styles">
-         .btnPrl{
+        .btnPrl{
             width: 50%;
          }        
         
@@ -35,19 +35,20 @@
         <iron-form id="myForm"> 
         <form>
             <div>
-                <h4 class="label">Enter user id</h4>
+                <h4 class="label">Enter User Id</h4>
                 <paper-input type="text" label="User id" id="username" no-label-float value="{{username}}" on-change="_removeInvalid" required></paper-input>
             </div>
+
             <div>
                 <h4 class="label">Enter Password</h4>
                 <paper-input type="password" label="Enter Password" id="password" no-label-float value="{{password}}" on-change="_removeInvalid" required></paper-input>
             </div>
-            <!--<div style="margin-top: 0.6rem;"><a href="#">Forgot password?</a></div>-->
+
             <iron-request id="xhr"></iron-request>
 
             <paper-button class="btnPrl" on-click="login" disabled="[[loginBtnDisabled]]">
-                    LOGIN
-                </paper-button>        
+                LOGIN
+            </paper-button>        
          
         </form>
      </iron-form>
@@ -56,10 +57,7 @@
   </template>
 
   <script>
-    /**
-     * @customElement
-     * @polymer
-     */
+
     class LoginForm extends Polymer.Element {
       static get is() { return 'login-form'; }
       static get properties() {
@@ -91,36 +89,24 @@
         };
       }
 
-      constructor(){
-          super();
-        //   window.setTimeout(()=> console.log(this.loginSuccess),5000);
-        // window.setInterval(()=>{
-        //     // console.log(`From LF, isLoggedIn: ${this.isLoggedIn}`);
-        //     // console.log(this.context);
-        //     },5000);
-
-      }
-
       login() {
-          this.userDetails = {
-              loginId: this.username,
-              password: this.password
-          }
+        this.userDetails = {
+            loginId: this.username,
+            password: this.password
+        }
         let that = this;
         let bodyData = JSON.stringify(that.userDetails);
         var post_req = this.$.xhr;
         
-        // post_req.send({url: "src/data/login-success.json"});
-        //post_req._encodeBodyObject(bodyData, "application/json");
-        post_req.send({url: "http://192.168.43.120:8080/user/login", method: "post", headers: {
-        'content-type': 'application/json'
-      }, body: bodyData});
+        post_req.send({url: "src/data/login-success.json"});
+    //     post_req.send({url: "http://192.168.43.120:8080/user/login", method: "post", headers: {
+    //     'content-type': 'application/json'
+    //   }, body: bodyData});
         post_req.completes.then((argReceived) => {
             let response    = JSON.parse(argReceived.response);
             let status      = response.status;
             if(status){
-                console.log(response);
-                this.loginSuccess(response.data[0])
+                this.loginSuccess(response.data[0]);
             }
             else{
                 //TODO: display proper message somewhere
@@ -129,7 +115,6 @@
                 this.password = "";
             }
         }, function(){
-            console.log('I am failed');
             //TODO: display proper page, unable to hit server properly 500
         });
       }
@@ -137,8 +122,8 @@
       _toggleLoginBtn(loginId, password){
           // FUNCTION: This function will validate loginId and password should
           // have some value before they hit api 
-        //   if((loginId.length > 4) && (password.length > 8)) return false;
-        //   else return true;
+           if((loginId.length >= 2) && (password.length >= 2)) return false;
+           else return true;
       }
 
       _removeInvalid(){

@@ -59,20 +59,22 @@
                     "categoryField": "month",                    
                     "graphs": [{
                         "balloonText": "Credit in [[category]]: <b>[[value]]</b>",
-                        "fillAlphas": 0.9,                       
+                        "fillAlphas": 1,                       
                         "title": "Credit",
                         "type": "column",
                         "fixedColumnWidth": 50,//adjusts with of the column
-                        //"colorField": "Ccolor", //change color
-                        "valueField": "credit"
+                        "colorField": "Ccolor", //change color
+                        "valueField": "credit",
+                        "lineColorField":"Ccolor"
                     }, {
                         "balloonText": "Debit in [[category]]: <b>[[value]]</b>",
-                        "fillAlphas": 0.9,                       
+                        "fillAlphas": 1,                       
                         "title": "Debit",
                         "type": "column",
-                        //"colorField": "Dcolor",//change color
+                        "colorField": "Dcolor",//change color
                         "fixedColumnWidth": 50,
-                        "valueField": "debit"
+                        "valueField": "debit",
+                        "lineColorField":"Dcolor"
                     }]                     
                 });                
             }

@@ -1,108 +1,123 @@
 {
-	"transactionHistory": [{
-			"transactionDetails": "TXN002",
+	"data": [{
+			"transactionId": "TXN002",
 			"transactionDate" : "23-05-2018 23:12:11",
-			"transactionType": "Debit",
-			"amount": "100",
-			"balance": "10259"
+			"paymentType": "Debit",
+			"transactionAmount": "100",
+			"closingBalance": "10259",
+			"description" : "Travel"
 		},
 		{
-			"transactionDetails": "TXN002",
+			"transactionId": "TXN002",
 			"transactionDate" : "25-05-2018 23:12:11",
-			"transactionType": "Debit",
-			"amount": "100",
-			"balance": "10159"
+			"paymentType": "Debit",
+			"transactionAmount": "100",
+			"closingBalance": "10159",
+			"description" : "Food"
 		},
 		{
-			"transactionDetails": "TXN002",
+			"transactionId": "TXN002",
 			"transactionDate" : "26-05-2018 10:12:11",
-			"transactionType": "Debit",
-			"amount": "100",
-			"balance": "10359"
+			"paymentType": "Debit",
+			"transactionAmount": "100",
+			"closingBalance": "10359",
+			"description" : "Medicine"
 		},
 		{
-			"transactionDetails": "TXN002",
+			"transactionId": "TXN002",
 			"transactionDate" : "23-05-2018 23:12:11",
-			"transactionType": "Credit",
-			"amount": "100",
-			"balance": "10259"
+			"paymentType": "Credit",
+			"transactionAmount": "100",
+			"closingBalance": "10259",
+			"description" : "Loan"
 		},
 		{
-			"transactionDetails": "TXN002",
+			"transactionId": "TXN002",
 			"transactionDate" : "23-05-2018 23:12:11",
-			"transactionType": "Credit",
-			"amount": "100",
-			"balance": "10259"
+			"paymentType": "Credit",
+			"transactionAmount": "100",
+			"closingBalance": "10259",
+			"description" : "Food"
 		},
 		{
-			"transactionDetails": "TXN002",
+			"transactionId": "TXN002",
 			"transactionDate" : "23-05-2018 23:12:11",
-			"transactionType": "Debit",
-			"amount": "100",
-			"balance": "10259"
+			"paymentType": "Debit",
+			"transactionAmount": "100",
+			"closingBalance": "10259",
+			"description" : "Shopping"
 		},
 		{
-			"transactionDetails": "TXN002",
+			"transactionId": "TXN002",
 			"transactionDate" : "23-05-2018 23:12:11",
-			"transactionType": "Debit",
-			"amount": "100",
-			"balance": "10259"
+			"paymentType": "Debit",
+			"transactionAmount": "100",
+			"closingBalance": "10259",
+			"description" : ""
 		},
 		{
-			"transactionDetails": "TXN002",
+			"transactionId": "TXN002",
 			"transactionDate" : "23-05-2018 23:12:11",
-			"transactionType": "Debit",
-			"amount": "100",
-			"balance": "10259"
+			"paymentType": "Debit",
+			"transactionAmount": "100",
+			"closingBalance": "10259",
+			"description" : ""
 		},
 		{
-			"transactionDetails": "TXN002",
+			"transactionId": "TXN002",
 			"transactionDate" : "23-05-2018 23:12:11",
-			"transactionType": "Debit",
-			"amount": "100",
-			"balance": "10259"
+			"paymentType": "Debit",
+			"transactionAmount": "100",
+			"closingBalance": "10259",
+			"description" : ""
 		},
 		{
-			"transactionDetails": "TXN002",
+			"transactionId": "TXN002",
 			"transactionDate" : "23-05-2018 23:12:11",
-			"transactionType": "Debit",
-			"amount": "100",
-			"balance": "10259"
+			"paymentType": "Debit",
+			"transactionAmount": "100",
+			"closingBalance": "10259",
+			"description" : ""
 		},
 		{
-			"transactionDetails": "TXN002",
+			"transactionId": "TXN002",
 			"transactionDate" : "23-05-2018 23:12:11",
-			"transactionType": "Debit",
-			"amount": "100",
-			"balance": "10259"
+			"paymentType": "Debit",
+			"transactionAmount": "100",
+			"closingBalance": "10259",
+			"description" : ""
 		},
 		{
-			"transactionDetails": "TXN002",
+			"transactionId": "TXN002",
 			"transactionDate" : "23-05-2018 23:12:11",
-			"transactionType": "Debit",
-			"amount": "100",
-			"balance": "10259"
+			"paymentType": "Debit",
+			"transactionAmount": "100",
+			"closingBalance": "10259",
+			"description" : ""
 		},
 		{
-			"transactionDetails": "TXN002",
+			"transactionId": "TXN002",
 			"transactionDate" : "23-05-2018 23:12:11",
-			"transactionType": "Debit",
-			"amount": "100",
-			"balance": "10259"
+			"paymentType": "Debit",
+			"transactionAmount": "100",
+			"closingBalance": "10259",
+			"description" : ""
 		},
 		{
-			"transactionDetails": "TXN002",
+			"transactionId": "TXN002",
 			"transactionDate" : "23-05-2018 23:12:11",
-			"transactionType": "Debit",
-			"amount": "100",
-			"balance": "10259"
+			"paymentType": "Debit",
+			"transactionAmount": "100",
+			"closingBalance": "10259",
+			"description" : ""
 		},
 		{
-			"transactionDetails": "TXN002",
+			"transactionId": "TXN002",
 			"transactionDate" : "23-05-2018 23:12:11",
-			"transactionType": "Debit",
-			"amount": "100",
-			"balance": "10259"
+			"paymentType": "Debit",
+			"transactionAmount": "100",
+			"closingBalance": "10259",
+			"description" : ""
 		}
 	],
 		"size": 200

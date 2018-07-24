@@ -120,7 +120,7 @@
          this.set("route.path", "/status")
             var amount = this.amount
             var paymentType = this.selectedType
-            var description = this.description
+            var description = this.description.toUpperCase();
             var ajax = this.$.transaction;
             ajax.url = 'http://192.168.43.120:8080/user/1000/makepayment';
             ajax.body = JSON.stringify({
@@ -138,7 +138,6 @@
         }
 
         _handleResponse(response) {
-            console.log('response', response.detail.__data.response.data);
             var data = response.detail.__data.response.data;
             //spot data
             if (data.status) {

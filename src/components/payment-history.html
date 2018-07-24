@@ -12,58 +12,62 @@
 <dom-module id="payment-history">
     <template>
         <style include="common-styles">
-         
+          vaadin-grid-sorter{
+            font-weight:bold;
+          }      
+           
         </style>
         <style include="shared-styles">
          
         </style>
 
-        <!-- <iron-ajax auto url="src/data/history.json" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax> -->
+        <!-- <iron-ajax auto url="src/data/history.json" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax>  -->
         <iron-ajax auto method="GET" url="http://192.168.43.120:8080/user/1000/transactions" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax>
 
-        <h3> Most Recent Transaction <h3>
-
-        <vaadin-grid id="grid" theme="row-dividers" items="[[users.data]]" page-size="10" height-by-rows column-reordering-allowed multi-sort>
-            <vaadin-grid-column width="9em">
+        
+        <div class="container fntFamily">
+            <h2 class="centerText"> Most Recent Transaction </h2>
+        <vaadin-grid id="grid" class="gridBorder" theme="row-dividers" items="[[users.data]]" page-size="10" height-by-rows column-reordering-allowed multi-sort>
+            <vaadin-grid-column>
                 <template class="header">
-                    <vaadin-grid-sorter path="transactionDetails">Transaction Details</vaadin-grid-sorter>
+                    <vaadin-grid-sorter path="transactionDetails">Transaction Id</vaadin-grid-sorter>
                 </template>
                 <template>[[item.transactionId]]</template>
             </vaadin-grid-column>
             
-            <vaadin-grid-column width="9em">
+            <vaadin-grid-column>
                 <template class="header">
-                    <vaadin-grid-sorter path="transactionDetails">Transaction Details</vaadin-grid-sorter>
+                    <vaadin-grid-sorter path="transactionDescription">Transaction Description</vaadin-grid-sorter>
                 </template>
                 <template>[[item.description]]</template>
             </vaadin-grid-column>
 
-            <vaadin-grid-column width="9em">
+            <vaadin-grid-column>
                 <template class="header">
                     <vaadin-grid-sorter path="transactionType">Transaction Type</vaadin-grid-sorter>
                 </template>
                 <template>[[item.paymentType]]</template>
             </vaadin-grid-column>
     
-            <vaadin-grid-column width="9em">
+            <vaadin-grid-column>
                 <template class="header">
                     <vaadin-grid-sorter path="transactionDate">Transaction Date</vaadin-grid-sorter>
                 </template>
                 <template>[[item.transactionDate]]</template>
             </vaadin-grid-column>
     
-            <vaadin-grid-column width="9em">
+            <vaadin-grid-column>
                 <template class="header">
                     <vaadin-grid-sorter path="amount">Amount</vaadin-grid-sorter>
                 </template>
-                <template>[[item.transactionAmount]]</template>
+                <template>[[addCurrency(item.transactionAmount)]]</template>
             </vaadin-grid-column>
 
-            <vaadin-grid-column width="9em" flex-grow="2">
+            <vaadin-grid-column>
                 <template class="header">
                     <vaadin-grid-sorter path="balance">Balance</vaadin-grid-sorter>
                 </template>
-                <template>[[item.closingBalance]]</template>
+                <template>[[addCurrency(item.closingBalance)]]</template>
             </vaadin-grid-column>
         </vaadin-grid>
         <div id="pages">
@@ -73,6 +77,7 @@
             </template>
             <button on-click="_next">&gt;</button>
         </div>
+      </div>
     </template>
 
   <script>
@@ -92,8 +97,12 @@
         };
       }
 
+      // Add currency
+      addCurrency(amount){
+        return '$' + amount;
+      }
+
       handleResponse(event,request){
-        console.log(request);
         this.items = request.response.data;
       }
 
