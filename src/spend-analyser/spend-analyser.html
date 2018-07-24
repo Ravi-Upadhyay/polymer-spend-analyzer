@@ -22,6 +22,7 @@
 <link rel="import" href="../components/common-header.html">
 <link rel="import" href="../components/footer.html">
 <link rel="import" href="../components/copyright.html">
+<link rel="import" href="../components/view-404.html">
 
 <dom-module id="spend-analyser">
   <template>
@@ -77,12 +78,14 @@
           selected="[[page]]"
           attr-for-selected="name"
           selected-item="{{selectedPage}}"
+          fallback-selection="view404"
           role="main">
         <login-form title='Login' name="login" login-success="[[_loginSuccess]]"></login-form>
         <make-payment title='Make Payment'  name="payments"></make-payment>
         <payment-status title='Payment Status'  name="status"></payment-status>
         <payment-history title='Transactions'  name="transactions"></payment-history>
         <payment-analyser title='Spend Analyzer'  name="analyser"></payment-analyser>
+        <view-404 title='Not Found 404' name="view404"></view-404>
 
 
           <!-- <my-view404 name="view404"></my-view404> -->
