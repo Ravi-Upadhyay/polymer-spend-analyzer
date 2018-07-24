@@ -138,7 +138,7 @@
                 <div slot="prefix">$ &nbsp</div>
             </paper-input>
 
-            <paper-input label="Enter description" id="desc" always-float-label error-message="{{amountError}}" value="{{desc}}">
+            <paper-input label="Enter description" id="description" always-float-label error-message="{{amountError}}" value="{{description}}">
                 <div></div>
             </paper-input>
 
@@ -167,6 +167,10 @@
                     type: Boolean,
                     value: false,
                     notify: true
+                },
+                description: {
+                    type: String,
+                    value: ''
                 },
                 selectedType: {
                     type: String,
