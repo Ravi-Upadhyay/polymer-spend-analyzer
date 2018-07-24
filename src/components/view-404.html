@@ -1,0 +1,22 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="common-styles.html">
+
+<dom-module id="view-404">
+    <template>
+        <style include="common-styles">
+        .container404{
+            height:100px;
+        }
+        </style>
+
+        <div class="container404">
+            <h1>Page Not Found</h1>
+        </div>
+    </template>
+    <script>
+        class View404 extends Polymer.Element  {
+        }
+
+        window.customElements.define('view-404',View404);
+    </script>
+</dom-module>

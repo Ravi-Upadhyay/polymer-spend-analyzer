@@ -83,11 +83,12 @@
             </div>
             <!-- <span class="forgot-pwd"><a href="#" style="text-decoration: none">Forgot password?</a></span> -->
             <iron-request id="xhr"></iron-request>
-            <!-- <app-location route="{{route}}"></app-location> -->
+            
           <button id="submit" on-click="login" disabled="[[loginBtnDisabled]]">Login</button>
         </form>
      </iron-form>
     </div>
+    <app-location route="{{route}}"></app-location>
   </template>
 
   <script>
@@ -128,6 +129,11 @@
 
       constructor(){
           super();
+        //   window.setTimeout(()=> console.log(this.loginSuccess),5000);
+        // window.setInterval(()=>{
+        //     // console.log(`From LF, isLoggedIn: ${this.isLoggedIn}`);
+        //     // console.log(this.context);
+        //     },5000);
 
       }
 

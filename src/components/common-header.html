@@ -6,11 +6,13 @@
 -->
 
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="common-styles.html">
+
 
 <dom-module id="common-header">
     <template>
         <!-- #1. SECTION-1: STYLES -->
-        <style>
+        <style include="common-styles">
             :host{
                 width: 100%;
                 height: 100px;
@@ -29,6 +31,7 @@
                 flex-direction: row;
                 -ms-flex-direction: row;
                 background-color: #ffffff;
+                border-bottom: 1px solid #b1b1b1;
             }
             .logo-wrapper {
                 display: flex;
@@ -58,6 +61,14 @@
                 display: -webkit-flex;
                 width: 8.33%;
                 margin-left: 16.66%;
+                justify-content: center;
+                align-items: center;
+            }
+            .logo-wrapper button {
+                flex: 1 1;
+                display: flex;
+                display: -webkit-flex;
+                width: 90%;   
             }
         </style>
 
@@ -71,18 +82,20 @@
             <div class="menu-wrapper">
                 <template is="dom-if" if="{{isLoggedIn}}">
                     <template is="dom-repeat" items={{menu}}>
-                        <span><a href="{{_generateURL(rootPath,item.slug)}}">[[item.display]]</a></span>
+                        <span><a class$="secondaryLinkButton [[item.class]]" href="{{_generateURL(rootPath,item.slug)}}">[[item.display]]</a></span>
                     </template>
                 </template>
             </div>
 
             <div class="logout-wrapper">
                 <template is="dom-if" if="{{isLoggedIn}}">
-                    <button on-click="_logout">Logout</button>
+                    <button on-click="_logout" class="primaryButton">Logout</button>
                 </template>
             </div>
 
         </div>
+
+        <app-location route="{{route}}"></app-location>
     </template>
 
     <script>
@@ -109,8 +122,32 @@
                     },
                     logout      : {
                         type        : Object
+                    },
+                    route       : {
+                        type        : Object
                     }
                 }
+            }
+
+            static get observers() {
+                return [
+                '_routeChanged(route.path)'
+                ];
+            }
+
+            _routeChanged(path){
+                let page = path.substring(1);
+                
+                this.menu.forEach((item, index)=>{
+                    if(page === item.slug){
+                        item.class = 'secondaryLinkButtonActive';
+                    }
+                    else{
+                        item.class = 'secondaryLinkButtonInactive';
+                    }
+                    console.log(this.menu);
+                    this.notifyPath(`menu.${index}.class`);
+                });
             }
 
             _generateURL(rootPath, slug) {
