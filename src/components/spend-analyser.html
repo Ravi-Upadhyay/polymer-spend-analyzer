@@ -5,6 +5,8 @@
 * Routing is included here
 -->
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/lib/utils/import-href.html">
+
 
 <!-- IMPORT DEPENDENCIES -->
 <link rel="import" href="../../bower_components/app-route/app-location.html">
@@ -14,15 +16,17 @@
 <link rel="import" href="../../bower_components/page-title/page-title.html">
 
 <!-- IMPORT COMPONENTS -->
-<link rel="import" href="../components/make-payment.html">
-<link rel="import" href="../components/payment-status.html">
-<link rel="import" href="../components/payment-history.html">
-<link rel="import" href="../components/payment-analyser.html">
-<link rel="import" href="../components/login-form.html">
-<link rel="import" href="../components/common-header.html">
-<link rel="import" href="../components/footer.html">
-<link rel="import" href="../components/copyright.html">
-<link rel="import" href="../components/view-404.html">
+<link rel="lazy-import" href="make-payment.html">
+<link rel="lazy-import" href="payment-status.html">
+<link rel="lazy-import" href="payment-history.html">
+<link rel="lazy-import" href="payment-analyser.html">
+<link rel="lazy-import" href="login-form.html">
+<link rel="lazy-import" href="view-404.html">
+
+<link rel="import" href="common-header.html">
+<link rel="import" href="footer.html">
+<link rel="import" href="copyright.html">
+
 
 <dom-module id="spend-analyser">
   <template>
@@ -116,7 +120,8 @@
           },
           page: {
             type: String,
-            reflectToAttribute: true
+            reflectToAttribute: true,
+            observer: '_pageChanged',
           },
           routeData: Object,
           subroute: Object,
@@ -151,8 +156,30 @@
           '_routeChanged(route.path)'
         ];
       }
+      _pageChanged(page) {
+        // FUNCTION: Enable lazy loading for performance
+        // based on page attribute we will tell which file to load, NOTE: not working on
+        // routeChanged
+        const pathMap = {
+          "login"       : "login-form.html",
+          "payments"    : "make-payment.html",
+          "status"      : "payment-status.html",
+          "transactions": "payment-history.html",
+          "analyser"    : "payment-analyser.html"
+        };
 
+        const fileName = pathMap[page] ? pathMap[page] : "view-404.html";
+
+        const resolvedPageUrl = this.resolveUrl(fileName);
+
+        Polymer.importHref(
+          resolvedPageUrl,
+          null,
+          null,
+          true);
+      }
       _routeChanged(path){
+
         let user = sessionStorage.getItem('user');
         let isLoggedIn =  user ? true : false;
         this.set('isLoggedIn',isLoggedIn);
@@ -177,6 +204,19 @@
         this.set('route.path','/login');
         sessionStorage.removeItem('user');
         this.isLoggedIn = false;
+      }
+
+      _fileNameFinder(path){
+        let pathMap = {
+          "login"       : "login-form.html",
+          "payments"    : "make-payment.html",
+          "status"      : "payment-status.html",
+          "transactions": "payment-history.html",
+          "analyser"    : "payment-analyser.html"
+        };
+
+        let fileName = pathMap.path ? pathMap.path : "view-404.html";
+        return fileName;
       }
     }
   
