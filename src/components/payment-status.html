@@ -1,5 +1,8 @@
+<!-- 
+** STATUS COMPONENT
+* This will be a component to show the payment status
+-->
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../../bower_components/polymer/lib/elements/dom-if.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
@@ -7,29 +10,29 @@
     <template>
         <style>
          :host {
-            height: 100vh;
+           height: 100vh;
             display: flex;
             flex-direction: column;
-            width: 430px;
-            margin: 0;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            margin-right: -50%;
-            transform: translate(-50%, -50%);
-            height: 450px;
-            padding: 40px;
-            padding-top: 20px;
-            border: 1px solid #c7c2c2;
-            border-radius:8px;
         }
 
         span {
             font-size: 16px;
         }
 
-        .detailSec{
+        .detailSec div{
             padding: 15px;
+        }
+
+         .container {
+            width: 33.33%;
+            border-radius: 10px;
+            -webkit-box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.75);
+            -moz-box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.75);
+            box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.75);
+            margin: 0 auto;
+            margin-top: 50px;
+            background-color: #ffffff;
+            padding: 25px;
         }
 
         paper-button {
@@ -57,7 +60,7 @@
         }
 
         #transactionButton{
-            margin-left: 15px;
+            margin-left: 35px;
         }
 
         .centerTxt{
@@ -71,29 +74,32 @@
         }
         </style>
         <iron-localstorage name="transactionDetails" value="{{transactionDetails}}" on-iron-localstorage-load-empty="initializeStorage"></iron-localstorage>
-        <h2>Transaction Status</h2>
+        <div class='container'>
+        <h2>Payment Status</h2>
          <hr size="30">
         <template is="dom-if" if="{{showSuccess}}">
-            <iron-image src="../images/success.png"></iron-image>
+            <iron-image src="src/images/success.png"></iron-image>
             <h2 class="centerTxt">Success!</h2>
         </template>
         <template is="dom-if" if="{{showError}}">
-            <iron-image src="../images/error.png"></iron-image>
+            <iron-image src="src/images/error.png"></iron-image>
             <h2 class="centerTxt">Failed!</h2>
         </template>
-        <div>
-            <div class="detailSec"> <span>Transaction ID: </span><span>{{transactionId}}</span></div>
-            <div class="detailSec"> <span>Amount: </span><span>{{transactionAmount}}</span></div>
-            <div class="detailSec"> <span>Transaction Type: </span><span>{{transactionType}}</span></div>
+        <div class="detailSec">
+            <div > <span>Transaction ID: </span><span>{{transactionId}}</span></div>
+            <div > <span>Amount: </span><span>{{transactionAmount}}</span></div>
+            <div > <span>Transaction Type: </span><span>{{transactionType}}</span></div>
         </div>
         <div>
-        <paper-button nolink on-click="_makeTransaction">
-            Make new Payment
+             <app-location route="{{route}}"></app-location>
+        <paper-button nolink on-click="_navigateToPayment">
+            Make new payment
         </paper-button>
-        <paper-button id="transactionButton" nolink on-click="_makeTransaction">
+        <paper-button id="transactionButton" nolink on-click="_navigateToAlanyzer">
             Transaction history
         </paper-button>
     </div>
+</div>
     </template>
     <script>
     class paymentStatus extends Polymer.Element {
@@ -119,6 +125,13 @@
 
         _getTransactionStatus() {
             let status = this.transactionDetails;
+        }
+
+          _navigateToPayment() {
+            this.set("route.path", "/payments");
+        }
+          _navigateToAlanyzer() {
+             this.set("route.path", "/analyser");
         }
     }
 
