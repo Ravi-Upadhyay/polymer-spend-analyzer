@@ -29,6 +29,16 @@
       :host {
         display: block;
       }
+
+      .main-container {
+        max-height: 100vh;
+        overflow-y: hidden;
+      }
+
+      .scrollable-container {
+        max-height: calc(100vh - 100px);
+        overflow-y: scroll;
+      }
     </style>
 <!-- SET PAGE TITLE AS PER THE PAGE --> 
 
@@ -42,40 +52,46 @@
     </app-location>
 
     <app-route
-        route="{{route}}"
-        pattern="/:page"
-        data="{{routeData}}"
-        tail="{{subroute}}"
-        active="{{pageActive}}">
+      route="{{route}}"
+      pattern="/:page"
+      data="{{routeData}}"
+      tail="{{subroute}}"
+      active="{{pageActive}}">
     </app-route>
     
 <!-- APP-STRUCTURE -->
-    <common-header 
-      is-logged-in="{{isLoggedIn}}" 
-      menu="[[myMenu]]" 
-      root-path="[[rootPath]]" 
-      selected="[[page]]"
-      logout="[[_logout]]">
-    </common-header>
     
-<!-- PAGES/COMPONENTS BASED ON ROUTE     -->
-    <iron-pages
-        selected="[[page]]"
-        attr-for-selected="name"
-        selected-item="{{selectedPage}}"
-        role="main">
-      <login-form title='Login' name="login" login-success="[[_loginSuccess]]"></login-form>
-      <make-payment title='Make Payment'  name="payments"></make-payment>
-      <payment-status title='Payment Status'  name="status"></payment-status>
-      <payment-history title='Transactions'  name="transactions"></payment-history>
-      <payment-analyser title='Spend Analyzer'  name="analyser"></payment-analyser>
+    <div class="main-container">
+      <div>
+        <common-header 
+          is-logged-in="{{isLoggedIn}}" 
+          menu="[[myMenu]]" 
+          root-path="[[rootPath]]" 
+          selected="[[page]]"
+          logout="[[_logout]]">
+        </common-header>
+      </div>
+      <div class="scrollable-container">
+        <!-- PAGES/COMPONENTS BASED ON ROUTE     -->
+        <iron-pages
+          selected="[[page]]"
+          attr-for-selected="name"
+          selected-item="{{selectedPage}}"
+          role="main">
+        <login-form title='Login' name="login" login-success="[[_loginSuccess]]"></login-form>
+        <make-payment title='Make Payment'  name="payments"></make-payment>
+        <payment-status title='Payment Status'  name="status"></payment-status>
+        <payment-history title='Transactions'  name="transactions"></payment-history>
+        <payment-analyser title='Spend Analyzer'  name="analyser"></payment-analyser>
 
 
-      <!-- <my-view404 name="view404"></my-view404> -->
-    </iron-pages>
+          <!-- <my-view404 name="view404"></my-view404> -->
+        </iron-pages>
 
-    <footer-component></footer-component>
-    <copyright-component></copyright-component>
+        <footer-component></footer-component>
+        <copyright-component></copyright-component>
+      </div>
+    </div>
   </template>
 
   <script>
