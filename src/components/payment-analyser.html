@@ -10,6 +10,8 @@
 <link rel="import" href="common-styles.html">
 <link rel="import" href="bar-chart-component.html">
 <link rel="import" href="no-data-found.html">
+<link rel="import" href="sub-header.html">
+
 
 <dom-module id="payment-analyser">
     <template>
@@ -36,6 +38,7 @@
             }
         </style>
         <iron-ajax id="analyser" handle-as="json" last-response="{{activities.data}}" on-response="_handleResponse"></iron-ajax>
+       <sub-header></sub-header>
         <div class="container fntFamily">
             <h2 class="centerText"> Account Activity Analysis </h2>
 
