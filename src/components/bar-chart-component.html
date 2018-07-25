@@ -8,9 +8,13 @@
     <template>
         <style> 
             #chartdiv {
-                width: 50%;
+                width: 60%;
                 height: 500px;
                 margin:0 auto;
+                background-color: white;
+                -webkit-box-shadow: 2px 2px 14px -4px rgba(0,0,0,0.75);
+                -moz-box-shadow: 2px 2px 14px -4px rgba(0,0,0,0.75);
+                box-shadow: 2px 2px 14px -4px rgba(0,0,0,0.75);
             }
             .amcharts-chart-div a{
                 display: none !important;
@@ -59,20 +63,22 @@
                     "categoryField": "month",                    
                     "graphs": [{
                         "balloonText": "Credit in [[category]]: <b>[[value]]</b>",
-                        "fillAlphas": 0.9,                       
+                        "fillAlphas": 1,                       
                         "title": "Credit",
                         "type": "column",
                         "fixedColumnWidth": 50,//adjusts with of the column
-                        //"colorField": "Ccolor", //change color
-                        "valueField": "credit"
+                        "colorField": "Ccolor", //change color
+                        "lineColorField":"Ccolor",
+                        "valueField": "totalIncoming"
                     }, {
                         "balloonText": "Debit in [[category]]: <b>[[value]]</b>",
-                        "fillAlphas": 0.9,                       
+                        "fillAlphas": 1,                       
                         "title": "Debit",
                         "type": "column",
-                        //"colorField": "Dcolor",//change color
+                        "colorField": "Dcolor",//change color
+                        "lineColorField":"Dcolor",
                         "fixedColumnWidth": 50,
-                        "valueField": "debit"
+                        "valueField": "totalOutgoing"
                     }]                     
                 });                
             }

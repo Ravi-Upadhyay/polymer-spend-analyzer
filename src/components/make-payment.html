@@ -11,6 +11,7 @@
 <link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../bower_components/neon-animation/web-animations.html">
 <link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 <script src="../../bower_components/web-animations-js/web-animations.min.js"></script>
 <link rel="import" href="common-styles.html">
 <dom-module id="make-payment">
@@ -22,12 +23,12 @@
                
         
         </style>
-        <div class="container fntFamily boxShadow">
+        <div class="container fntFamily boxShadow whiteBckgrnd">
             <h2 class="heading">Make Payment</h2>
             <hr>
 
             <!-- localstorage compoment to store the transaction details -->
-            <iron-localstorage name="transactionDetails" value="{{transactionDetails}}" on-iron-localstorage-load-empty="initializeStorage"></iron-localstorage>
+            <iron-localstorage name="transactionDetails" value="{{transactionDetails}}" on-iron-localstorage-load="initializeStorage"></iron-localstorage>
 
             <!-- Ajax component to make a post request to payment API -->
             <iron-ajax id="transaction" method="post" content-type="application/json" handle-as="json" on-response="_handleResponse" loading="{{loading}}"></iron-ajax>
@@ -66,6 +67,7 @@
                         Make Payment
                     </paper-button>
                     <paper-spinner-lite active="[[loading]]"></paper-spinner-lite>
+                    <paper-toast id="toast" text="{{msg}}"></paper-toast>
                 </form>
         </iron-form>
         </div>
@@ -78,10 +80,10 @@
                 transactionType: {
                     type: Array,
                     value: [{
-                        type: 'Debit',
+                        type: 'DEBIT',
                         value: 0
                     }, {
-                        type: 'Credit',
+                        type: 'CREDIT',
                         value: 1,
                     }]
                 },
@@ -96,11 +98,15 @@
                 },
                 selectedType: {
                     type: String,
-                    value: 'Debit' //Set debit as default
+                    value: 'DEBIT' //Set debit as default
                 },
                 transactionDetails: {
-                    type: Array,
-                    value: () => { return [] }
+                    type: Object,
+                    value: {}
+                },
+                msg: {
+                type: String,
+                value: "Successfully logged in"
                 }
             }
         }
@@ -108,7 +114,7 @@
 
         //Initialize localstorage
         initializeStorage() {
-            this.transactionDetails = [];
+            this.transactionDetails = {};
         }
 
         _clearError() {
@@ -116,15 +122,15 @@
         }
 
         _makeTransaction() {
-            this.transactionDetails = [];
-         this.set("route.path", "/status")
+           localStorage.removeItem('transactionDetails');
             var amount = this.amount
             var paymentType = this.selectedType
             var description = this.description
             var ajax = this.$.transaction;
-            ajax.url = 'http://192.168.43.120:8080/user/1000/makepayment';
+            let custId = JSON.parse(sessionStorage.user).customerId;
+            ajax.url = 'http://192.168.43.18:8080/user/'+custId+'/makepayment';
             ajax.body = JSON.stringify({
-                "customerId": "1000",
+                "customerId": custId,
                 "amount": amount,
                 "paymentType": paymentType,
                 "description": description
@@ -138,20 +144,18 @@
         }
 
         _handleResponse(response) {
-            console.log('response', response.detail.__data.response.data);
-            var data = response.detail.__data.response.data;
+            var data = response.detail.__data.response;
             //spot data
             if (data.status) {
-                this.transactionDetails.push(data.data)
+                this.transactionDetails = data.data
                 //Take care of routing
                  this.set("route.path", "/status");
-                  window.location.hash="no-back-button";
+           window.location.hash="no-back-button";
            window.location.hash="Again-No-back-button";
            window.onhashchange=function(){window.location.hash="no-back-button";}
-                
             } else {
                 //Set error message
-                this.amountError = data.errorMessage
+                this.amountError = data.errors[0].errorMessage
                 this.$.amount.invalid = true; //show message error
 
             }

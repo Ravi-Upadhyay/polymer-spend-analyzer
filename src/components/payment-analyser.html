@@ -31,15 +31,15 @@
                 border-bottom: 1px solid #080808;
             }
             vaadin-grid#border {
-                border-bottom: 1px solid #080808;                
+                border-bottom: 1px solid #080808;
             }
         </style>
-        <iron-ajax id="analyser" handle-as="json" last-response="{{activities}}" on-response="_handleResponse"></iron-ajax>
+        <iron-ajax id="analyser" handle-as="json" last-response="{{activities.data}}" on-response="_handleResponse"></iron-ajax>
         <div class="container">
             <h2 class="centerText"> Account Activity Analysis </h2>
 
-            <vaadin-grid id="analyser_grid" theme="row-dividers" items="[[activities]]" page-size="10" height-by-rows column-reordering-allowed>
-                <vaadin-grid-column items="[[activities]]" id="border">
+            <vaadin-grid id="analyser_grid" theme="row-dividers" items="[[transactions]]" page-size="10" height-by-rows>
+                <vaadin-grid-column items="[[transactions]]" id="border">
                     <template class="header"><strong>#</strong></template>
                     <template>
                         <div class="vaadinCol">[[displayIndex(index)]]</div>
@@ -52,17 +52,17 @@
 
                 <vaadin-grid-column>
                     <template class="header"><strong>Total Transaction</strong></template>
-                    <template>[[addCurrency(item.totalTransaction)]]</template>
+                    <template>[[addCurrency(item.totalOutgoing,item.totalIncoming)]]</template>
                 </vaadin-grid-column>
         
                 <vaadin-grid-column>
                     <template class="header"><strong>Debit</strong></template>
-                    <template>[[addCurrency(item.debit)]]</template>
+                    <template>[[addCurrency(item.totalOutgoing)]]</template>
                 </vaadin-grid-column>
         
                 <vaadin-grid-column>
                     <template class="header"><strong>Credit</strong></template>
-                    <template class="border">[[addCurrency(item.credit)]]</template>
+                    <template class="border">[[addCurrency(item.totalIncoming)]]</template>
                 </vaadin-grid-column>            
             </vaadin-grid>     
 
@@ -77,7 +77,16 @@
                 return  {
                    spendChart : {},
                    transactions: {
-                       type:Array,
+                       type:Array
+                   },
+                   testdata: {
+                       type:Array
+                   },
+                   amount :{
+                       type: Number
+                   },
+                   custId : {
+                       type:String
                    }
                 }
             }
@@ -87,6 +96,13 @@
                 Polymer.RenderStatus.afterNextRender(this,function(){
                     this._getTransactionData();                    
                 })
+
+                try{
+                    this.custId = JSON.parse(sessionStorage.user).customerId;
+                }
+                catch(e){
+                    console.log('Error getting data from SessionStorage -->' + e)
+                }
             }
             
             //Increment by 1 to index in dom-repeat
@@ -95,21 +111,30 @@
             }            
 
             // Add currency
-            addCurrency(amount){
-                return '$' + amount;
+            addCurrency(am1, am2){
+                this.amount = am1;
+                if(arguments.length == 2){
+                    this.amount = am1+ am2;
+                }
+                return '$' + this.amount.toFixed(2);
             }
 
             //Get transaction data ffrom API
             _getTransactionData(){
                 let ajax = this.$.analyser;
-                ajax.url = "src/data/analyser.json";
+                //ajax.url = "src/data/analyser.json";
+                ajax.url = "http://192.168.43.18:8080/user/"+this.custId+"/transactionsummary";
                 ajax.generateRequest(); //trigger the iron-ajax                
             }
 
             //Store the response 
             _handleResponse(event,request){
-                this.transactions = request.response;
-                console.log(this.transactions);
+                this.testdata = request.response.data;
+                this.testdata.forEach(function(el) {
+                    el.Ccolor = "#ff6600";
+                    el.Dcolor = "#42417a";
+                })
+                this.transactions = this.testdata;
             }           
         };
         window.customElements.define(paymentAnalyser.is,paymentAnalyser);
