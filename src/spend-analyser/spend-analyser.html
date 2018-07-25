@@ -23,6 +23,7 @@
 <link rel="import" href="../components/footer.html">
 <link rel="import" href="../components/copyright.html">
 <link rel="import" href="../components/view-404.html">
+<link rel="import" href="../components/sub-header.html">
 
 <dom-module id="spend-analyser">
   <template>
@@ -71,8 +72,11 @@
           selected="[[page]]"
           logout="[[_logout]]">
         </common-header>
+         
+      
       </div>
       <div class="scrollable-container">
+           <sub-header  is-logged-in="{{isLoggedIn}}" ></sub-header>
         <!-- PAGES/COMPONENTS BASED ON ROUTE     -->
         <iron-pages
           selected="[[page]]"
@@ -86,6 +90,7 @@
         <payment-history title='Transactions'  name="transactions"></payment-history>
         <payment-analyser title='Spend Analyzer'  name="analyser"></payment-analyser>
         <view-404 title='Not Found 404' name="view404"></view-404>
+       
 
 
           <!-- <my-view404 name="view404"></my-view404> -->
@@ -188,6 +193,7 @@
       _loginSuccess(user){
         // FUNCTION: After authentication at login-form control will be redirected
         // so in case of successful login action can be taken here   
+      //  let stringUser = JSON.stringify(user)
         sessionStorage.setItem('user',user);
         // window.location = 'payments';
         this.set('route.path','/payments');

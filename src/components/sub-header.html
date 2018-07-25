@@ -1,0 +1,63 @@
+<!--Component for sub header to show the information of page and user-->
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="common-styles.html">
+
+<dom-module id="sub-header">
+   <template>
+        <style include="common-styles">
+        .subheader{
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-left: 8.33%;
+                margin-right: 8.33%;
+                margin-bottom: 50px;
+        }
+        
+        </style>
+         <app-location route="{{route}}"></app-location>
+          <div class="subheader">
+              <template is="dom-if" if="{{isLoggedIn}}">
+         <span class="floatLeft fntFamily"> {{route.path}}</span>
+         <span class="floatRight fntFamily"> Hi {{userName}} </span>
+        
+              </template>
+                 </div>
+       
+    </template>
+    <script>
+        class SubHeader extends Polymer.Element  {
+             static get is() { return 'sub-header' }
+                static get properties(){
+                return {
+                    isLoggedIn  : {
+                        type        : Boolean,
+                        notify      : true
+                    },
+                     userName  : {
+                        type        : String,
+                    },
+                    path:{
+                        type: String
+                    },
+                    route:{
+                        type:Object
+                    }
+                }
+            }
+               ready() {
+            super.ready();
+            Polymer.RenderStatus.afterNextRender(this, function() {
+           this.userName = JSON.parse(sessionStorage.getItem('user')).customerName;
+           //this.path = this.route.path
+            })
+        }
+        }
+
+        
+
+        window.customElements.define('sub-header',SubHeader);
+    </script>
+</dom-module>
