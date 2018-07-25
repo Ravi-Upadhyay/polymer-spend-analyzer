@@ -19,11 +19,11 @@
         </style>
          <app-location route="{{route}}"></app-location>
           <div class="subheader">
-              <template is="dom-if" if="{{isLoggedIn}}">
+              <!--<template is="dom-if" if="{{isLoggedIn}}">-->
          <span class="floatLeft fntFamily fontBold"> {{route.path}}</span>
          <span class="floatRight fntFamily fontBold"> Welcome, {{userName}} </span>
         
-              </template>
+              <!--</template>-->
                  </div>
        
     </template>
@@ -32,10 +32,6 @@
              static get is() { return 'sub-header' }
                 static get properties(){
                 return {
-                    isLoggedIn  : {
-                        type        : Boolean,
-                        notify      : true
-                    },
                      userName  : {
                         type        : String,
                     },
@@ -50,8 +46,11 @@
                ready() {
             super.ready();
             Polymer.RenderStatus.afterNextRender(this, function() {
-           this.set('userName',JSON.parse(sessionStorage.getItem('user')).customerName);
-           //this.path = this.route.path
+            if(sessionStorage.getItem('user')){
+            let userName = JSON.parse(sessionStorage.getItem('user')).customerName
+            this.set('userName',userName);
+            this.userName = JSON.parse(sessionStorage.getItem('user')).customerName
+            }
             })
         }
         }

@@ -12,6 +12,7 @@
 <link rel="import" href="../../bower_components/neon-animation/web-animations.html">
 <link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../components/sub-header.html">
 <script src="../../bower_components/web-animations-js/web-animations.min.js"></script>
 <link rel="import" href="common-styles.html">
 <dom-module id="make-payment">
@@ -19,10 +20,22 @@
         <style include="common-styles">
                 paper-dropdown-menu{
                     width:100%;  
-                }                          
-               
+                } 
+
+                .customWidth{
+                    width:18.68em
+                } 
+
+               .customWidth paper-item:hover{
+                    background-color:#dbdbdb;
+                }                        
+
+                .paper-button{
+                    margin-top: 1.25em
+                }
         
         </style>
+        <sub-header></sub-header>
         <div class="container fntFamily boxShadow whiteBckgrnd">
             <h2 class="heading">Make Payment</h2>
             <hr>
@@ -32,15 +45,15 @@
 
             <!-- Ajax component to make a post request to payment API -->
             <iron-ajax id="transaction" method="post" content-type="application/json" handle-as="json" on-response="_handleResponse" loading="{{loading}}"></iron-ajax>
-            <paper-spinner-lite active="[[loading]]"></paper-spinner-lite>
+
             
             <iron-form id="myForm">
                 <form>
                     <!-- Dropdown component  -->
                     <div>
                         <h4 class="label">Select transaction type</h4>
-                        <paper-dropdown-menu id="type" no-label-float>
-                            <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content" selected="{{selectedType}}">
+                        <paper-dropdown-menu id="type" class="customWidth" no-label-float>
+                            <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content customWidth" selected="{{selectedType}}">
                                 <template is="dom-repeat" items="[[transactionType]]">
                                     <paper-item value$="[[item.type]]">[[item.type]]</paper-item>
                                 </template>
@@ -63,10 +76,10 @@
                     </div>
 
                     <app-location route="{{route}}"></app-location>
+                    <paper-spinner-lite active="[[loading]]"></paper-spinner-lite>
                     <paper-button disabled="[[isInputEmpty(amount)]]" class="btnPrl" on-click="_makeTransaction">
                         Make Payment
                     </paper-button>
-                    <paper-spinner-lite active="[[loading]]"></paper-spinner-lite>
                     <paper-toast id="toast" text="{{msg}}"></paper-toast>
                 </form>
         </iron-form>
