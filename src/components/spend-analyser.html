@@ -83,11 +83,8 @@
       </div>
 
       <div class="scrollable-container">
-<<<<<<< HEAD:src/spend-analyser/spend-analyser.html
+
            <sub-header  is-logged-in="{{isLoggedIn}}" ></sub-header>
-=======
-        
->>>>>>> babb43234775a2595761999dc59de768550afb78:src/components/spend-analyser.html
         <!-- PAGES/COMPONENTS BASED ON ROUTE     -->
         <iron-pages
           selected="[[page]]"
@@ -95,25 +92,13 @@
           selected-item="{{selectedPage}}"
           fallback-selection="view404"
           role="main">
-<<<<<<< HEAD:src/spend-analyser/spend-analyser.html
+
         <login-form title='Login' name="login" login-success="[[_loginSuccess]]"></login-form>
         <make-payment title='Make Payment'  name="payments"></make-payment>
         <payment-status title='Payment Status'  name="status"></payment-status>
         <payment-history title='Transactions'  name="transactions"></payment-history>
         <payment-analyser title='Spend Analyzer'  name="analyser"></payment-analyser>
         <view-404 title='Not Found 404' name="view404"></view-404>
-       
-
-
-          <!-- <my-view404 name="view404"></my-view404> -->
-=======
-          <login-form title='Login' name="login" login-success="[[_loginSuccess]]"></login-form>
-          <make-payment title='Make Payment'  name="payments"></make-payment>
-          <payment-status title='Payment Status'  name="status"></payment-status>
-          <payment-history title='Transactions'  name="transactions"></payment-history>
-          <payment-analyser title='Spend Analyzer'  name="analyser"></payment-analyser>
-          <view-404 title='Not Found 404' name="view404"></view-404>
->>>>>>> babb43234775a2595761999dc59de768550afb78:src/components/spend-analyser.html
         </iron-pages>
 
         <footer-component></footer-component>
@@ -216,13 +201,8 @@
       _loginSuccess(user){
         // FUNCTION: After authentication at login-form control will be redirected
         // so in case of successful login action can be taken here   
-<<<<<<< HEAD:src/spend-analyser/spend-analyser.html
-      //  let stringUser = JSON.stringify(user)
-        sessionStorage.setItem('user',user);
-        // window.location = 'payments';
-=======
+
 		sessionStorage.setItem('user',JSON.stringify(user));
->>>>>>> babb43234775a2595761999dc59de768550afb78:src/components/spend-analyser.html
         this.set('route.path','/payments');
       }
 
