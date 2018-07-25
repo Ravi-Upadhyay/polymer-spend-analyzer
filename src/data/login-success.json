@@ -1,8 +1,8 @@
 {
     "status"    : 1,
-    "data"      : [{
+    "data"      : {
         "loginId"   : "abbas",
         "customerId": 10984653,
         "customerName": "M Junaid Abbas"
-    }]
+    }
 }

@@ -20,8 +20,8 @@
          <app-location route="{{route}}"></app-location>
           <div class="subheader">
               <template is="dom-if" if="{{isLoggedIn}}">
-         <span class="floatLeft fntFamily"> {{route.path}}</span>
-         <span class="floatRight fntFamily"> Hi {{userName}} </span>
+         <span class="floatLeft fntFamily fontBold"> {{route.path}}</span>
+         <span class="floatRight fntFamily fontBold"> Welcome, {{userName}} </span>
         
               </template>
                  </div>
@@ -50,7 +50,7 @@
                ready() {
             super.ready();
             Polymer.RenderStatus.afterNextRender(this, function() {
-           this.userName = JSON.parse(sessionStorage.getItem('user')).customerName;
+           this.set('userName',JSON.parse(sessionStorage.getItem('user')).customerName);
            //this.path = this.route.path
             })
         }
