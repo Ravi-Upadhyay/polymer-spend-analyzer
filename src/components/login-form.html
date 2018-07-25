@@ -110,7 +110,7 @@
             let response    = JSON.parse(argReceived.response);
             let status      = response.status;
             if(status){
-                this.loginSuccess(response.data[0]);
+                this.loginSuccess(response.data);
                 // this.msg = "Successfully logged Out";
                     // this.$.toast.open();
                     // console.log(msg);

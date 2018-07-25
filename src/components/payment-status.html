@@ -26,7 +26,7 @@
             text-align: center;
         }      
         </style>
-        <iron-localstorage name="transactionDetails" value="{{transactionDetails}}" on-iron-localstorage-load-empty="initializeStorage"></iron-localstorage>
+        <iron-localstorage name="transactionDetails" value="{{transactionDetails}}"></iron-localstorage>
        
         <div class='container fntFamily boxShadow'>
         <h2 class="heading">Payment Status</h2>
@@ -73,6 +73,18 @@
                 showError: {
                     type: Boolean,
                     value: false,
+                },
+				transactionId:{
+                    type:String,
+                    value:''
+                },
+                  transactionAmount:{
+                    type:String,
+                    value:''
+                },
+                  transactionType:{
+                    type:String,
+                    value:''
                 }
             }
         }
@@ -84,7 +96,12 @@
         }
 
         _getTransactionStatus() {
+            if(this.transactionDetails){
             let status = this.transactionDetails;
+            this.transactionId = status.transactionId
+            this.transactionType  = status.paymentType
+            this.transactionAmount = status.amount
+            } 
         }
 
         _navigateToPayment() {
