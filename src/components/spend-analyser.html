@@ -5,6 +5,8 @@
 * Routing is included here
 -->
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/lib/utils/import-href.html">
+
 
 <!-- IMPORT DEPENDENCIES -->
 <link rel="import" href="../../bower_components/app-route/app-location.html">
@@ -14,15 +16,17 @@
 <link rel="import" href="../../bower_components/page-title/page-title.html">
 
 <!-- IMPORT COMPONENTS -->
-<link rel="import" href="../components/make-payment.html">
-<link rel="import" href="../components/payment-status.html">
-<link rel="import" href="../components/payment-history.html">
-<link rel="import" href="../components/payment-analyser.html">
-<link rel="import" href="../components/login-form.html">
-<link rel="import" href="../components/common-header.html">
-<link rel="import" href="../components/footer.html">
-<link rel="import" href="../components/copyright.html">
-<link rel="import" href="../components/view-404.html">
+<link rel="lazy-import" href="make-payment.html">
+<link rel="lazy-import" href="payment-status.html">
+<link rel="lazy-import" href="payment-history.html">
+<link rel="lazy-import" href="payment-analyser.html">
+<link rel="lazy-import" href="login-form.html">
+<link rel="lazy-import" href="view-404.html">
+
+<link rel="import" href="common-header.html">
+<link rel="import" href="footer.html">
+<link rel="import" href="copyright.html">
+
 
 <dom-module id="spend-analyser">
   <template>
@@ -42,8 +46,8 @@
         background-color: #e9e9e9;
       }
     </style>
-<!-- SET PAGE TITLE AS PER THE PAGE --> 
 
+<!-- SET PAGE TITLE AS PER THE PAGE --> 
   <page-title base-title="Spend Analyzer" 
     page-title="[[page]]">
   </page-title>
@@ -64,6 +68,7 @@
 <!-- APP-STRUCTURE -->
     
     <div class="main-container">
+      
       <div>
         <common-header 
           is-logged-in="{{isLoggedIn}}" 
@@ -73,7 +78,9 @@
           logout="[[_logout]]">
         </common-header>
       </div>
+
       <div class="scrollable-container">
+        
         <!-- PAGES/COMPONENTS BASED ON ROUTE     -->
         <iron-pages
           selected="[[page]]"
@@ -81,15 +88,12 @@
           selected-item="{{selectedPage}}"
           fallback-selection="view404"
           role="main">
-        <login-form title='Login' name="login" login-success="[[_loginSuccess]]"></login-form>
-        <make-payment title='Make Payment'  name="payments"></make-payment>
-        <payment-status title='Payment Status'  name="status"></payment-status>
-        <payment-history title='Transactions'  name="transactions"></payment-history>
-        <payment-analyser title='Spend Analyzer'  name="analyser"></payment-analyser>
-        <view-404 title='Not Found 404' name="view404"></view-404>
-
-
-          <!-- <my-view404 name="view404"></my-view404> -->
+          <login-form title='Login' name="login" login-success="[[_loginSuccess]]"></login-form>
+          <make-payment title='Make Payment'  name="payments"></make-payment>
+          <payment-status title='Payment Status'  name="status"></payment-status>
+          <payment-history title='Transactions'  name="transactions"></payment-history>
+          <payment-analyser title='Spend Analyzer'  name="analyser"></payment-analyser>
+          <view-404 title='Not Found 404' name="view404"></view-404>
         </iron-pages>
 
         <footer-component></footer-component>
@@ -99,10 +103,7 @@
   </template>
 
   <script>
-    /**
-     * @customElement
-     * @polymer
-     */
+
     class SpendAnalyser extends Polymer.Element {
       constructor() {
         super();
@@ -116,18 +117,15 @@
           isLoggedIn : {
             type  : Boolean,
             value : false,
-            // computed: '_isLoggedInCheck()'
           },
           page: {
             type: String,
-            reflectToAttribute: true
-            // observer: '_pageChanged',
+            reflectToAttribute: true,
+            observer: '_pageChanged',
           },
           routeData: Object,
           subroute: Object,
           route: Object,
-          // This shouldn't be neccessary, but the Analyzer isn't picking up
-          // Polymer.Element#rootPath
           rootPath: String,
           myMenu  : {
             type  : Array,
@@ -158,47 +156,67 @@
           '_routeChanged(route.path)'
         ];
       }
+      _pageChanged(page) {
+        // FUNCTION: Enable lazy loading for performance
+        // based on page attribute we will tell which file to load, NOTE: not working on
+        // routeChanged
+        const pathMap = {
+          "login"       : "login-form.html",
+          "payments"    : "make-payment.html",
+          "status"      : "payment-status.html",
+          "transactions": "payment-history.html",
+          "analyser"    : "payment-analyser.html"
+        };
 
+        const fileName = pathMap[page] ? pathMap[page] : "view-404.html";
+
+        const resolvedPageUrl = this.resolveUrl(fileName);
+
+        Polymer.importHref(
+          resolvedPageUrl,
+          null,
+          null,
+          true);
+      }
       _routeChanged(path){
-        // alert('route path changed');
+
         let user = sessionStorage.getItem('user');
         let isLoggedIn =  user ? true : false;
         this.set('isLoggedIn',isLoggedIn);
-        if(!this.isLoggedIn){
+        
+        if(!this.isLoggedIn)  {
           this.set('route.path','/login');
         }
       }
 
       _routePageChanged(page) {
-        // If no page was found in the route data, page will be an empty string.
-        // Default to 'view1' in that case.
         this.page = page || 'login';
-        // this.routeData.page = 'login';
-        // if(!page) window.location.href = this.rootPath + 'login';
-        // Close a non-persistent drawer when the page & route are changed.
-        // if (!this.$.drawer.persistent) {
-        //   this.$.drawer.close();
-        // }
       }
-
-      // _isLoggedInCheck(){
-      //   let user = sessionStorage.getItem('user');
-      //   return user ? true : false;
-      // }
 
       _loginSuccess(user){
         // FUNCTION: After authentication at login-form control will be redirected
         // so in case of successful login action can be taken here   
         sessionStorage.setItem('user',user);
-        // window.location = 'payments';
         this.set('route.path','/payments');
       }
 
       _logout(){
-        // window.location.href = `${this.rootPath}login`;
         this.set('route.path','/login');
         sessionStorage.removeItem('user');
         this.isLoggedIn = false;
+      }
+
+      _fileNameFinder(path){
+        let pathMap = {
+          "login"       : "login-form.html",
+          "payments"    : "make-payment.html",
+          "status"      : "payment-status.html",
+          "transactions": "payment-history.html",
+          "analyser"    : "payment-analyser.html"
+        };
+
+        let fileName = pathMap.path ? pathMap.path : "view-404.html";
+        return fileName;
       }
     }
   
