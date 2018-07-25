@@ -9,6 +9,7 @@
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="common-styles.html">
 <link rel="import" href="bar-chart-component.html">
+<link rel="import" href="no-data-found.html">
 
 <dom-module id="payment-analyser">
     <template>
@@ -35,36 +36,42 @@
             }
         </style>
         <iron-ajax id="analyser" handle-as="json" last-response="{{activities.data}}" on-response="_handleResponse"></iron-ajax>
-        <div class="container">
+        <div class="container fntFamily">
             <h2 class="centerText"> Account Activity Analysis </h2>
 
-            <vaadin-grid id="analyser_grid" theme="row-dividers" items="[[transactions]]" page-size="10" height-by-rows>
-                <vaadin-grid-column items="[[transactions]]" id="border">
-                    <template class="header"><strong>#</strong></template>
-                    <template>
-                        <div class="vaadinCol">[[displayIndex(index)]]</div>
-                    </template>
-                </vaadin-grid-column>
-                <vaadin-grid-column>
-                    <template class="header"><strong>Month</strong></template>
-                    <template>[[item.month]]</template>
-                </vaadin-grid-column>
-
-                <vaadin-grid-column>
-                    <template class="header"><strong>Total Transaction</strong></template>
-                    <template>[[addCurrency(item.totalOutgoing,item.totalIncoming)]]</template>
-                </vaadin-grid-column>
-        
-                <vaadin-grid-column>
-                    <template class="header"><strong>Debit</strong></template>
-                    <template>[[addCurrency(item.totalOutgoing)]]</template>
-                </vaadin-grid-column>
-        
-                <vaadin-grid-column>
-                    <template class="header"><strong>Credit</strong></template>
-                    <template class="border">[[addCurrency(item.totalIncoming)]]</template>
-                </vaadin-grid-column>            
-            </vaadin-grid>     
+            <!-- <template is="dom-if" if="{{dataAvailable}}">
+                <no-data-found></no-data-found>
+            </template> -->
+            <!-- <template is="dom-if" if="{{dataAvailable}}"> -->
+                <vaadin-grid id="analyser_grid" theme="row-dividers" items="[[transactions]]" page-size="10" height-by-rows>
+                    <vaadin-grid-column items="[[transactions]]" id="border">
+                        <template class="header"><strong>#</strong></template>
+                        <template>
+                            <div class="vaadinCol">[[displayIndex(index)]]</div>
+                        </template>
+                    </vaadin-grid-column>
+                    <vaadin-grid-column>
+                        <template class="header"><strong>Month</strong></template>
+                        <template>[[item.month]]</template>
+                    </vaadin-grid-column>
+    
+                    <vaadin-grid-column>
+                        <template class="header"><strong>Total Transaction</strong></template>
+                        <template>[[addCurrency(item.totalOutgoing,item.totalIncoming)]]</template>
+                    </vaadin-grid-column>
+            
+                    <vaadin-grid-column>
+                        <template class="header"><strong>Debit</strong></template>
+                        <template>[[addCurrency(item.totalOutgoing)]]</template>
+                    </vaadin-grid-column>
+            
+                    <vaadin-grid-column>
+                        <template class="header"><strong>Credit</strong></template>
+                        <template class="border">[[addCurrency(item.totalIncoming)]]</template>
+                    </vaadin-grid-column>            
+                </vaadin-grid>                   
+            <!-- </template> -->
+  
 
             <h2 class="centerText">Spend Analyser</h2>
             <barchart-component transactions=[[transactions]]></barchart-component>
@@ -76,6 +83,9 @@
             static get properties(){
                 return  {
                    spendChart : {},
+                   dataAvailable: {
+                       type: Boolean
+                   },
                    transactions: {
                        type:Array
                    },
@@ -109,6 +119,10 @@
             displayIndex(index){
                 return index + 1;
             }            
+            
+            // _checkAvailability(transactions){
+            //     return transactions.length ? true : false;
+            // }
 
             // Add currency
             addCurrency(am1, am2){
@@ -135,6 +149,9 @@
                     el.Dcolor = "#42417a";
                 })
                 this.transactions = this.testdata;
+                let dataAvailable = this.testdata.length ? true : false;
+                console.log(dataAvailable);
+                this.set('dataAvailable', dataAvailable)
             }           
         };
         window.customElements.define(paymentAnalyser.is,paymentAnalyser);

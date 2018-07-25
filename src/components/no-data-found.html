@@ -1,0 +1,39 @@
+<!-- 
+    THIS COMPONENT FOR PURPOSE TO SHOW 
+    IN CASE ON NO DATA FOUND
+ -->
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="common-styles.html">
+
+<dom-module id="no-data-found">
+    <template>
+        <style include="common-styles">
+            .ndf-container {
+                display: flex;
+                display: -webkit-flex;
+                flex-direction: column;
+                align-items: center;
+                margin-top: 50px;
+                margin-bottom: 50px;
+            }
+        </style>
+
+        <div id="ndf-container fntFamily">
+            <img src="/src/images/no-data.png" alt="No Data Found" height="128px" width="128px">
+            <h4 class="info-txt">NO DATA FOUND</h4>
+            <br>
+            <p>We could not find any records</p>
+        </div>
+
+    </template>
+
+    <script>
+        class NoDataFound extends Polymer.Element {
+            static get is(){
+                return 'no-data-found';
+            }
+        }
+        window.customElements.define(NoDataFound.is,NoDataFound);
+    </script>
+
+</dom-module>

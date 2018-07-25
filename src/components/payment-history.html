@@ -22,7 +22,7 @@
         </style>
 
         <!-- <iron-ajax auto url="src/data/history.json" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax>  -->
-        <iron-ajax auto method="GET" url="http://192.168.43.18:8080/user/"+{{custId}}+"/transactions" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax>
+        <iron-ajax id="transHistory" method="GET" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax>
 
         
         <div class="container fntFamily">
@@ -86,18 +86,33 @@
       static get properties () {
         return {
           items: {
-            type: Array
+            type    : Array
           },
           pages: {
-            type: Array
+            type    : Array
           },
           page: {
-            type: Number
+            type    : Number
           },
-		  custId:{
-            type:String
-           }
+          user: {
+            type    : Object
+          },
+		      custId:{
+            type    : String,
+            computed: '_getCustId(user)'
+          }
         };
+      }
+
+      _getCustId(user){
+        return user.customerId;
+      } 
+
+      _getTransactionData(){
+          let ajax = this.$.transHistory;
+          //ajax.url = "src/data/analyser.json";
+          ajax.url = "http://192.168.43.18:8080/user/"+this.custId+"/transactions";
+          ajax.generateRequest(); //trigger the iron-ajax                
       }
 
       // Add currency
@@ -109,15 +124,12 @@
         this.items = request.response.data;
       }
 
-      ready(){
-            super.ready();
-            this.page = 0;
-			try{
-				this.custId = JSON.parse(sessionStorage.user).customerId;
-			}
-			catch(e){
-				console.log('Error getting data from SessionStorage -->' + e)
-			}
+      constructor(){
+        super();
+        this.page = 0;
+        Polymer.RenderStatus.afterNextRender(this,function(){
+            this._getTransactionData();                    
+        })
       }
 
 	    static get observers() {

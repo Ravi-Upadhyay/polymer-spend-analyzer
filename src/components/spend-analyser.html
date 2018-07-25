@@ -91,7 +91,7 @@
           <login-form title='Login' name="login" login-success="[[_loginSuccess]]"></login-form>
           <make-payment title='Make Payment'  name="payments"></make-payment>
           <payment-status title='Payment Status'  name="status"></payment-status>
-          <payment-history title='Transactions'  name="transactions"></payment-history>
+          <payment-history user="[[user]]" title='Transactions'  name="transactions"></payment-history>
           <payment-analyser title='Spend Analyzer'  name="analyser"></payment-analyser>
           <view-404 title='Not Found 404' name="view404"></view-404>
         </iron-pages>
@@ -117,6 +117,9 @@
           isLoggedIn : {
             type  : Boolean,
             value : false,
+          },
+          user: {
+            type  : Object,
           },
           page: {
             type: String,
@@ -180,7 +183,9 @@
       }
       _routeChanged(path){
 
-        let user = sessionStorage.getItem('user');
+        let user = JSON.parse(sessionStorage.getItem('user'));
+        this.set('user',user);
+
         let isLoggedIn =  user ? true : false;
         this.set('isLoggedIn',isLoggedIn);
         
@@ -196,7 +201,7 @@
       _loginSuccess(user){
         // FUNCTION: After authentication at login-form control will be redirected
         // so in case of successful login action can be taken here   
-		sessionStorage.setItem('user',JSON.stringify(user));
+		    sessionStorage.setItem('user',JSON.stringify(user));
         this.set('route.path','/payments');
       }
 
