@@ -196,7 +196,7 @@
       _loginSuccess(user){
         // FUNCTION: After authentication at login-form control will be redirected
         // so in case of successful login action can be taken here   
-        sessionStorage.setItem('user',user);
+		sessionStorage.setItem('user',JSON.stringify(user));
         this.set('route.path','/payments');
       }
 
