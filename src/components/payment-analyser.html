@@ -42,10 +42,10 @@
         <div class="container fntFamily">
             <h2 class="centerText"> Account Activity Analysis </h2>
 
-            <!-- <template is="dom-if" if="{{dataAvailable}}">
+            <template is="dom-if" if="{{!dataAvailable}}">
                 <no-data-found></no-data-found>
-            </template> -->
-            <!-- <template is="dom-if" if="{{dataAvailable}}"> -->
+            </template>
+            <template is="dom-if" if="{{dataAvailable}}">
                 <vaadin-grid id="analyser_grid" theme="row-dividers" items="[[transactions]]" page-size="10" height-by-rows>
                     <vaadin-grid-column items="[[transactions]]" id="border">
                         <template class="header"><strong>#</strong></template>
@@ -73,11 +73,16 @@
                         <template class="border">[[addCurrency(item.totalIncoming)]]</template>
                     </vaadin-grid-column>            
                 </vaadin-grid>                   
-            <!-- </template> -->
+            </template>
   
 
             <h2 class="centerText">Spend Analyser</h2>
-            <barchart-component transactions=[[transactions]]></barchart-component>
+            <template is="dom-if" if="{{!dataAvailable}}">
+                <no-data-found></no-data-found>
+            </template>
+            <template is="dom-if" if="{{dataAvailable}}">
+                <barchart-component transactions=[[transactions]]></barchart-component>
+            </template>
         </div>
     </template>
     <script>
@@ -139,8 +144,8 @@
             //Get transaction data ffrom API
             _getTransactionData(){
                 let ajax = this.$.analyser;
-                //ajax.url = "src/data/analyser.json";
-                ajax.url = "http://192.168.43.18:8080/user/"+this.custId+"/transactionsummary";
+                ajax.url = "src/data/analyser.json";
+                // ajax.url = "http://192.168.43.18:8080/user/"+this.custId+"/transactionsummary";
                 ajax.generateRequest(); //trigger the iron-ajax                
             }
 
