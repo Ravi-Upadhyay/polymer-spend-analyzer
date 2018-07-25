@@ -12,6 +12,7 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="common-styles.html">
+<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 
 <dom-module id="login-form">
   <template>
@@ -29,7 +30,7 @@
         }
        
     </style>
-    <div class="container fntFamily boxShadow">
+    <div class="container fntFamily boxShadow whiteBckgrnd">
         <h2 class="heading">Login</h2>
         <hr>
         <iron-form id="myForm"> 
@@ -46,9 +47,8 @@
 
             <iron-request id="xhr"></iron-request>
 
-            <paper-button class="btnPrl" on-click="login" disabled="[[loginBtnDisabled]]">
-                LOGIN
-            </paper-button>        
+            <paper-button class="btnPrl" on-click="login">LOGIN</paper-button>        
+            <paper-toast id="toast" text="{{msg}}"></paper-toast>       
          
         </form>
      </iron-form>
@@ -85,6 +85,10 @@
             ajaxResponse: {
             type: String,
             value: []
+            },
+            msg: {
+                type: String,
+                value: ""
             }
         };
       }
@@ -107,23 +111,29 @@
             let status      = response.status;
             if(status){
                 this.loginSuccess(response.data[0]);
+                // this.msg = "Successfully logged Out";
+                    // this.$.toast.open();
+                    // console.log(msg);
             }
             else{
-                //TODO: display proper message somewhere
                 this.$.username.invalid = true;
                 this.$.password.invalid = true;
                 this.password = "";
+                this.msg = "Incorrect username or password, please try again!";
+                    this.$.toast.open();
             }
         }, function(){
-            //TODO: display proper page, unable to hit server properly 500
+            this.msg = "Server is down, please try again";
+                this.$.toast.open();
         });
       }
 
       _toggleLoginBtn(loginId, password){
           // FUNCTION: This function will validate loginId and password should
           // have some value before they hit api 
-           if((loginId.length >= 2) && (password.length >= 2)) return false;
-           else return true;
+        //    if((loginId.length >= 2) && (password.length >= 2)) return false;
+        //    else return true;
+        return false;
       }
 
       _removeInvalid(){
