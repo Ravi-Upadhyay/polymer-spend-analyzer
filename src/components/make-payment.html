@@ -118,12 +118,32 @@
                     value: {}
                 },
                 msg: {
-                type: String,
-                value: "Successfully logged in"
+                    type: String,
+                    value: "Successfully logged in"
+                },
+                activated: {
+                    type: Boolean,
+                    observer: '_activationChanged'
                 }
             }
         }
+        
+        // constructor(){
+        //     super();
+        //     this.amount = '';
+        //     this.selectedType = 'DEBIT';
+        //     this.description = ''; 
+        // }
 
+        _activationChanged(newVal, oldVal){
+            console.log('values::', newVal, oldVal);
+            if(newVal){
+                console.log('newVal', newVal);
+                this.amount = '';
+                this.selectedType = 'DEBIT';
+                this.description = ''; 
+            }
+        }
 
         //Initialize localstorage
         initializeStorage() {
@@ -141,7 +161,7 @@
             var description = this.description
             var ajax = this.$.transaction;
             let custId = JSON.parse(sessionStorage.user).customerId;
-            ajax.url = 'http://192.168.43.18:8080/user/'+custId+'/makepayment';
+            ajax.url = 'http://192.168.43.91:8080/user/'+custId+'/makepayment';
             ajax.body = JSON.stringify({
                 "customerId": custId,
                 "amount": amount,
