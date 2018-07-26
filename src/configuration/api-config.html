@@ -35,16 +35,7 @@
                         type        : String,
                         value       : "http://192.168.43.18:8080"
                     },
-                    development     : {
-                        type        : Object,
-                        value       : {
-                            // "login"         : "src/data/login-success.json",
-                            // "payment"       : "",
-                            // "transactions"  : "",
-                            // "analyser"      : ""  
-                        }
-                    },
-                    production      : {
+                    apiCollection     : {
                         type        : Object,
                         value       : {
                             // "login"         : "",
@@ -61,11 +52,27 @@
             }
 
             _updateURLs(newUser, oldUser){
-                if(this.environment == "production"){
-                    const baseURL   = "";
+                let apiCollection = {};
+                if(this.environment === "production"){
+                    const baseURL    = this.prodBaseURL;
+                    const customerId = this.user.customerId;
+                    apiCollection = {
+                        "login"         : `${baseURL}/user/login`,
+                        "payment"       : `${baseURL}/user/${customerId}/makepayment`,
+                        "transactions"  : `${baseURL}/user/${customerId}/transactions`,
+                        "analyser"      : `${baseURL}/user/${customerId}/transactionsummary`  
+                    }; 
                 }
                 else{
-
+                    apiCollection = {
+                        "login"         : `src/data/login-success.json`,
+                        "payment"       : `src/data/payment.json`,
+                        "transactions"  : `src/data/history.json`,
+                        "analyser"      : `src/data/analyser.json`  
+                    };
+                this.set('apiCollection',apiCollection);
+                this.notifyPath('apiCollection.*');
+                console.log(this.apiCollection);
                 }
             }
         }
