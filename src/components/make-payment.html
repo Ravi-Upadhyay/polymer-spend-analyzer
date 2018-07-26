@@ -41,7 +41,7 @@
             <hr>
 
             <!-- localstorage compoment to store the transaction details -->
-            <iron-localstorage name="transactionDetails" value="{{transactionDetails}}" on-iron-localstorage-load="initializeStorage"></iron-localstorage>
+            <!-- <iron-localstorage name="transactionDetails" value="{{transactionDetails}}" on-iron-localstorage-load="initializeStorage"></iron-localstorage> -->
 
             <!-- Ajax component to make a post request to payment API -->
             <iron-ajax id="transaction" method="post" content-type="application/json" handle-as="json" on-response="_handleResponse" loading="{{loading}}"></iron-ajax>
@@ -162,7 +162,7 @@
             var description = this.description
             var ajax = this.$.transaction;
             let custId = JSON.parse(sessionStorage.user).customerId;
-            ajax.url = 'http://192.168.43.118:8080/user/'+custId+'/makepayment';
+			ajax.url = 'http://192.168.43.118:8080/user/'+custId+'/makepayment';
             ajax.body = JSON.stringify({
                 "customerId": custId,
                 "amount": amount,
@@ -181,7 +181,8 @@
             var data = response.detail.__data.response;
             //spot data
             if (data.status) {
-                this.transactionDetails = data.data
+                //this.transactionDetails = data.data
+				localStorage.setItem('transactionDetails',JSON.stringify(data.data))
                 //Take care of routing
                  this.set("route.path", "/status");
            window.location.hash="no-back-button";

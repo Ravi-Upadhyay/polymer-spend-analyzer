@@ -101,6 +101,10 @@
 		      custId:{
             type    : String,
             computed: '_getCustId(user)'
+          },
+		  activated: {
+              type: Boolean,
+              observer: '_activationChanged'
           }
         };
       }
@@ -108,6 +112,13 @@
       _getCustId(user){
         return user.customerId;
       } 
+	  
+	  _activationChanged(newVal, oldVal){
+		console.log('values::', newVal, oldVal);
+		if(newVal){
+			this._getTransactionData();  
+		}
+	  }	
 
       _getTransactionData(){
           let ajax = this.$.transHistory;
@@ -128,9 +139,6 @@
       constructor(){
         super();
         this.page = 0;
-        Polymer.RenderStatus.afterNextRender(this,function(){
-            this._getTransactionData();                    
-        })
       }
 
 	    static get observers() {
