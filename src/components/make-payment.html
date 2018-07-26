@@ -161,7 +161,7 @@
             var description = this.description
             var ajax = this.$.transaction;
             let custId = JSON.parse(sessionStorage.user).customerId;
-            ajax.url = 'http://localhost:8080/user/'+custId+'/makepayment';
+            ajax.url = 'http://192.168.43.91:8080/user/'+custId+'/makepayment';
             ajax.body = JSON.stringify({
                 "customerId": custId,
                 "amount": amount,
