@@ -3,6 +3,9 @@
 
 * This component will is root and host of application
 * Routing is included here
+
+** NOTE: developers please run on port 9011
+** so that environment can be set up properly
 -->
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/polymer/lib/utils/import-href.html">
@@ -17,16 +20,19 @@
 
 <!-- IMPORT COMPONENTS -->
 
-<link rel="lazy-import" href="../components/make-payment.html">
-<link rel="lazy-import" href="../components/payment-status.html">
-<link rel="lazy-import" href="../components/payment-history.html">
-<link rel="lazy-import" href="../components/payment-analyser.html">
-<link rel="lazy-import" href="../components/login-form.html">
-<link rel="import" href="../components/common-header.html">
-<link rel="import" href="../components/footer.html">
-<link rel="import" href="../components/copyright.html">
-<link rel="import" href="../components/view-404.html">
+<link rel="lazy-import" href="./make-payment.html">
+<link rel="lazy-import" href="./payment-status.html">
+<link rel="lazy-import" href="./payment-history.html">
+<link rel="lazy-import" href="./payment-analyser.html">
+<link rel="lazy-import" href="./login-form.html">
+<link rel="import" href="./common-header.html">
+<link rel="import" href="./footer.html">
+<link rel="import" href="./copyright.html">
+<link rel="import" href="./view-404.html">
+<link rel="import" href="./bar-chart-component.html">
+
 <!--<link rel="import" href="../components/sub-header.html">-->
+<link rel="import" href="../configuration/api-config.html">
 
 
 <dom-module id="spend-analyser">
@@ -65,6 +71,8 @@
       tail="{{subroute}}"
       active="{{pageActive}}">
     </app-route>
+
+    <api-config root-path = "[[rootPath]]" user = "[[user]]"></api-config>
     
 <!-- APP-STRUCTURE -->
     
@@ -89,6 +97,7 @@
         <iron-pages
           selected="[[page]]"
           attr-for-selected="name"
+          selected-attribute="activated"
           selected-item="{{selectedPage}}"
           fallback-selection="view404"
           role="main">
@@ -107,11 +116,11 @@
   </template>
 
   <script>
-
     class SpendAnalyser extends Polymer.Element {
       constructor() {
         super();
         //TODO: Removed tasks from here, May need in case of troubleshooting
+        // console.log(this.rootPath);
       }
       
       static get is() { return 'spend-analyser'; }
