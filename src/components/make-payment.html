@@ -52,8 +52,8 @@
                     <!-- Dropdown component  -->
                     <div>
                         <h4 class="label">Select transaction type</h4>
-                        <paper-dropdown-menu id="type" class="customWidth" no-label-float>
-                            <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content customWidth" selected="{{selectedType}}">
+                        <paper-dropdown-menu allow-outside-scroll="true" id="type" class="customWidth" no-label-float>
+                            <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content customWidth" selected="{{selectedType}}" on-tap="_removeInvalid">
                                 <template is="dom-repeat" items="[[transactionType]]">
                                     <paper-item value$="[[item.type]]">[[item.type]]</paper-item>
                                 </template>
@@ -63,14 +63,14 @@
 
                     <div>
                         <h4 class="label">Enter amount</h4>
-                        <paper-input on-keyup="_clearError" no-label-float id="amount" type="number" error-message="{{amountError}}" value="{{amount}}">
+                        <paper-input on-keyup="_clearError" auto-validate pattern="[0-9]*" minlength="1" maxlength="6" no-label-float id="amount"  error-message="{{amountError}}" value="{{amount}}" on-change="_removeInvalid">
                         <div slot="prefix">$ &nbsp</div>
                         </paper-input>
                     </div>
 
                     <div>
                         <h4 class="label">Enter description</h4>
-                        <paper-input id="description" no-label-float error-message="{{amountError}}" value="{{description}}">
+                        <paper-input id="description"  no-label-float error-message="{{amountError}}" value="{{description}}"  on-change="_removeInvalid">
                         <div></div>
                         </paper-input>
                     </div>
@@ -128,15 +128,9 @@
             }
         }
         
-        // constructor(){
-        //     super();
-        //     this.amount = '';
-        //     this.selectedType = 'DEBIT';
-        //     this.description = ''; 
-        // }
-
         _activationChanged(newVal, oldVal){
             console.log('values::', newVal, oldVal);
+            this.$.amount.invalid = false;
             if(newVal){
                 console.log('newVal', newVal);
                 this.amount = '';
@@ -154,6 +148,13 @@
             this.$.amount.invalid = false; //remove error message
         }
 
+         _removeInvalid(){
+           console.log('remove invalid');
+            // FUNCTION: This function will take care, if we have inputs in invalid state
+            // We need to remove that state when user changes the value
+            this.$.amount.invalid = false;
+        }
+
         _makeTransaction() {
            localStorage.removeItem('transactionDetails');
             var amount = this.amount
@@ -161,7 +162,7 @@
             var description = this.description
             var ajax = this.$.transaction;
             let custId = JSON.parse(sessionStorage.user).customerId;
-            ajax.url = 'http://192.168.43.91:8080/user/'+custId+'/makepayment';
+            ajax.url = 'http://192.168.43.118:8080/user/'+custId+'/makepayment';
             ajax.body = JSON.stringify({
                 "customerId": custId,
                 "amount": amount,
