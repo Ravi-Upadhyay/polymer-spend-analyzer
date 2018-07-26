@@ -9,6 +9,8 @@
 
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="common-styles.html">
+<link rel="import" href="no-data-found.html">
+
 
 
 <dom-module id="payment-history">
@@ -28,49 +30,55 @@
         <sub-header></sub-header>
         <div class="container fntFamily">
             <h2 class="centerText"> Most Recent Transaction </h2>
-        <vaadin-grid id="grid" class="gridBorder" theme="row-dividers" items="[[users.data]]" page-size="10" height-by-rows column-reordering-allowed multi-sort>
-            <vaadin-grid-column width="1em">
-                <template class="header">
-                    <vaadin-grid-sorter path="transactionDetails">Transaction Id</vaadin-grid-sorter>
-                </template>
-                <template>[[item.transactionId]]</template>
-            </vaadin-grid-column>
-            
-            <vaadin-grid-column width="2em">
-                <template class="header">
-                    <vaadin-grid-sorter path="transactionDescription">Transaction Description</vaadin-grid-sorter>
-                </template>
-                <template>[[item.description]]</template>
-            </vaadin-grid-column>
 
-            <vaadin-grid-column width="1em">
-                <template class="header">
-                    <vaadin-grid-sorter path="transactionType">Transaction Type</vaadin-grid-sorter>
-                </template>
-                <template>[[item.paymentType]]</template>
-            </vaadin-grid-column>
-    
-            <vaadin-grid-column width="8em">
-                <template class="header">
-                    <vaadin-grid-sorter path="transactionDate">Transaction Date</vaadin-grid-sorter>
-                </template>
-                <template>[[item.transactionDate]]</template>
-            </vaadin-grid-column>
-    
-            <vaadin-grid-column width="1em">
-                <template class="header">
-                    <vaadin-grid-sorter path="amount">Amount</vaadin-grid-sorter>
-                </template>
-                <template>[[addCurrency(item.transactionAmount)]]</template>
-            </vaadin-grid-column>
+        <template is="dom-if" if="{{!dataAvailable}}">
+            <no-data-found></no-data-found>
+        </template>
+        <template is="dom-if" if="{{dataAvailable}}">    
+          <vaadin-grid id="grid" class="gridBorder" theme="row-dividers" items="[[users.data]]" page-size="10" height-by-rows column-reordering-allowed multi-sort>
+              <vaadin-grid-column width="1em">
+                  <template class="header">
+                      <vaadin-grid-sorter path="transactionDetails">Transaction Id</vaadin-grid-sorter>
+                  </template>
+                  <template>[[item.transactionId]]</template>
+              </vaadin-grid-column>
+              
+              <vaadin-grid-column width="2em">
+                  <template class="header">
+                      <vaadin-grid-sorter path="transactionDescription">Transaction Description</vaadin-grid-sorter>
+                  </template>
+                  <template>[[item.description]]</template>
+              </vaadin-grid-column>
 
-            <vaadin-grid-column width="1em">
-                <template class="header">
-                    <vaadin-grid-sorter path="balance">Balance</vaadin-grid-sorter>
-                </template>
-                <template>[[addCurrency(item.closingBalance)]]</template>
-            </vaadin-grid-column>
-        </vaadin-grid>
+              <vaadin-grid-column width="1em">
+                  <template class="header">
+                      <vaadin-grid-sorter path="transactionType">Transaction Type</vaadin-grid-sorter>
+                  </template>
+                  <template>[[item.paymentType]]</template>
+              </vaadin-grid-column>
+      
+              <vaadin-grid-column width="8em">
+                  <template class="header">
+                      <vaadin-grid-sorter path="transactionDate">Transaction Date</vaadin-grid-sorter>
+                  </template>
+                  <template>[[item.transactionDate]]</template>
+              </vaadin-grid-column>
+      
+              <vaadin-grid-column width="1em">
+                  <template class="header">
+                      <vaadin-grid-sorter path="amount">Amount</vaadin-grid-sorter>
+                  </template>
+                  <template>[[addCurrency(item.transactionAmount)]]</template>
+              </vaadin-grid-column>
+
+              <vaadin-grid-column width="1em">
+                  <template class="header">
+                      <vaadin-grid-sorter path="balance">Balance</vaadin-grid-sorter>
+                  </template>
+                  <template>[[addCurrency(item.closingBalance)]]</template>
+              </vaadin-grid-column>
+          </vaadin-grid>
+        </template>
        <!-- <div id="pages">
             <button on-click="_prev">&lt;</button>
             <template is="dom-repeat" items="[[pages]]">
@@ -88,6 +96,12 @@
         return {
           items: {
             type    : Array
+          },
+          dataAvailable: {
+              type: Boolean
+          },
+          apiUrl : {
+              type    : String
           },
           pages: {
             type    : Array
@@ -112,7 +126,7 @@
       _getTransactionData(){
           let ajax = this.$.transHistory;
           //ajax.url = "src/data/analyser.json";
-          ajax.url = "http://localhost:8080/user/"+this.custId+"/transactions";
+          ajax.url = "http://192.168.43.118:8080/user/"+this.custId+"/transactions";
           ajax.generateRequest(); //trigger the iron-ajax                
       }
 
@@ -123,6 +137,9 @@
 
       handleResponse(event,request){
         this.items = request.response.data;
+        let dataAvailable = this.items.length ? true : false;
+        console.log(dataAvailable);
+        this.set('dataAvailable', dataAvailable)
       }
 
       constructor(){
@@ -133,43 +150,43 @@
         })
       }
 
-	    static get observers() {
-          return [
-            '_itemsChanged(items, page)'
-          ]
-        }
+	    // static get observers() {
+      //     return [
+      //       '_itemsChanged(items, page)'
+      //     ]
+      //   }
 
-      _isSelected(page, item) {
-        return page === item - 1;
-      }
+      // _isSelected(page, item) {
+      //   return page === item - 1;
+      // }
 
-      _select(e) {
-        this.page = e.model.item - 1;
-      }
+      // _select(e) {
+      //   this.page = e.model.item - 1;
+      // }
 
-      _next() {
-        this.page = Math.min(this.pages.length - 1, this.page + 1);
-      }
+      // _next() {
+      //   this.page = Math.min(this.pages.length - 1, this.page + 1);
+      // }
 
-      _prev() {
-        this.page = Math.max(0, this.page - 1);
-      }
+      // _prev() {
+      //   this.page = Math.max(0, this.page - 1);
+      // }
 
-      _itemsChanged(items, page) {
-        if (items === undefined || page === undefined) {
-          return;
-        }
+      // _itemsChanged(items, page) {
+      //   if (items === undefined || page === undefined) {
+      //     return;
+      //   }
 
-        if (!this.pages) {
-          this.pages = Array.apply(null, {length: Math.ceil(items.length / this.$.grid.pageSize)}).map(function(item, index) {
-            return index + 1;
-          });
-        }
+      //   if (!this.pages) {
+      //     this.pages = Array.apply(null, {length: Math.ceil(items.length / this.$.grid.pageSize)}).map(function(item, index) {
+      //       return index + 1;
+      //     });
+      //   }
 
-        var start = page * this.$.grid.pageSize;
-        var end = (page + 1) * this.$.grid.pageSize;
-        this.$.grid.items = items.slice(start, end);
-      }    
+      //   var start = page * this.$.grid.pageSize;
+      //   var end = (page + 1) * this.$.grid.pageSize;
+      //   this.$.grid.items = items.slice(start, end);
+      // }    
     }
     window.customElements.define(paymentHistory.is, paymentHistory);
   </script>

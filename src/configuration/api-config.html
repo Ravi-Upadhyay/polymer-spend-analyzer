@@ -7,11 +7,13 @@
 
             constructor(){
                 super();
-                setInterval(()=>{
+                // this._updateURLs();
+                // setTimeout(()=>{
+                    // this._updateURLs();
                     // console.log(this.environment);
                     // console.log(this.rootPath);
                     // console.log(JSON.stringify(this.user));
-                }, 1000);
+                // }, 1000);
             }
 
             static get is(){
@@ -29,14 +31,15 @@
                     },
                     environment : {
                         type        : String,
-                        computed    : '_defineEnvironment(rootPath)'
+                        computed    : '_defineEnvironment(rootPath)',
                     },
                     prodBaseURL : {
                         type        : String,
-                        value       : "http://192.168.43.18:8080"
+                        value       : "http://192.168.43.118:8080"
                     },
                     apiCollection     : {
                         type        : Object,
+                        notify      : true,
                         value       : {
                             // "login"         : "",
                             // "payment"       : "",
@@ -52,10 +55,11 @@
             }
 
             _updateURLs(newUser, oldUser){
+                console.log(this.environment)
                 let apiCollection = {};
                 if(this.environment === "production"){
                     const baseURL    = this.prodBaseURL;
-                    const customerId = this.user.customerId;
+                    const customerId = (this.user) ? this.user.customerId : 0;
                     apiCollection = {
                         "login"         : `${baseURL}/user/login`,
                         "payment"       : `${baseURL}/user/${customerId}/makepayment`,

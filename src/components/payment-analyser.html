@@ -94,6 +94,9 @@
                    dataAvailable: {
                        type: Boolean
                    },
+                   apiUrl: {
+                       type: String
+                   },
                    transactions: {
                        type:Array
                    },
@@ -146,8 +149,8 @@
             //Get transaction data ffrom API
             _getTransactionData(){
                 let ajax = this.$.analyser;
-                ajax.url = "src/data/analyser.json";
-                // ajax.url = "http://192.168.43.91:8080/user/"+this.custId+"/transactionsummary";
+                // ajax.url = "src/data/analyser.json";
+                ajax.url = "http://192.168.43.118:8080/user/"+this.custId+"/transactionsummary";
                 ajax.generateRequest(); //trigger the iron-ajax                
             }
 
@@ -160,7 +163,7 @@
                 })
                 this.transactions = this.testdata;
                 let dataAvailable = this.testdata.length ? true : false;
-                console.log(dataAvailable);
+                // console.log(dataAvailable);
                 this.set('dataAvailable', dataAvailable)
             }           
         };
