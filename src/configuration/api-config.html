@@ -23,7 +23,8 @@
             static get properties(){
                 return {
                     rootPath    : {
-                        type    : String
+                        type    : String,
+                        observer: '_defineEnvironment'
                     },
                     user        : {
                         type    : Object,
@@ -31,7 +32,7 @@
                     },
                     environment : {
                         type        : String,
-                        computed    : '_defineEnvironment(rootPath)',
+                        observer    : '_updateURLs'
                     },
                     prodBaseURL : {
                         type        : String,
@@ -50,8 +51,12 @@
                 };
             }
 
-            _defineEnvironment(rootPath) {
-                return (rootPath.indexOf('9011') === -1) ? "production" : "development";
+            _defineEnvironment(newVal, oldVal) {
+                // return (rootPath.indexOf('9011') === -1) ? "production" : "development";
+                if(newVal){
+                    const environment = (this.rootPath.indexOf('9011') === -1) ? "production" : "development";
+                    this.set("environment",environment)
+                }
             }
 
             _updateURLs(newUser, oldUser){
