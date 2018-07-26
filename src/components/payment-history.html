@@ -5,9 +5,11 @@
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-selection-column.html">
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-sorter.html">
+<link rel="import" href="sub-header.html">
 
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="common-styles.html">
+
 
 <dom-module id="payment-history">
     <template>
@@ -22,9 +24,9 @@
         </style>
 
         <!-- <iron-ajax auto url="src/data/history.json" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax>  -->
-        <iron-ajax auto method="GET" url="http://192.168.43.120:8080/user/1000/transactions" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax>
+        <iron-ajax id="transHistory" method="GET" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax>
 
-        
+        <sub-header></sub-header>
         <div class="container fntFamily">
             <h2 class="centerText"> Most Recent Transaction </h2>
         <vaadin-grid id="grid" class="gridBorder" theme="row-dividers" items="[[users.data]]" page-size="10" height-by-rows column-reordering-allowed multi-sort>
@@ -70,13 +72,13 @@
                 <template>[[addCurrency(item.closingBalance)]]</template>
             </vaadin-grid-column>
         </vaadin-grid>
-        <div id="pages">
+       <!-- <div id="pages">
             <button on-click="_prev">&lt;</button>
             <template is="dom-repeat" items="[[pages]]">
             <button on-click="_select" selected$="[[_isSelected(page, item)]]">[[item]]</button>
             </template>
             <button on-click="_next">&gt;</button>
-        </div>
+        </div> -->
       </div>
     </template>
 
@@ -86,15 +88,33 @@
       static get properties () {
         return {
           items: {
-            type: Array
+            type    : Array
           },
           pages: {
-            type: Array
+            type    : Array
           },
           page: {
-            type: Number
+            type    : Number
+          },
+          user: {
+            type    : Object
+          },
+		      custId:{
+            type    : String,
+            computed: '_getCustId(user)'
           }
         };
+      }
+
+      _getCustId(user){
+        return user.customerId;
+      } 
+
+      _getTransactionData(){
+          let ajax = this.$.transHistory;
+          //ajax.url = "src/data/analyser.json";
+          ajax.url = "http://192.168.43.18:8080/user/"+this.custId+"/transactions";
+          ajax.generateRequest(); //trigger the iron-ajax                
       }
 
       // Add currency
@@ -106,9 +126,12 @@
         this.items = request.response.data;
       }
 
-      ready(){
-            super.ready();
-            this.page = 0;
+      constructor(){
+        super();
+        this.page = 0;
+        Polymer.RenderStatus.afterNextRender(this,function(){
+            this._getTransactionData();                    
+        })
       }
 
 	    static get observers() {

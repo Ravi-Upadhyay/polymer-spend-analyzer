@@ -16,16 +16,17 @@
 <link rel="import" href="../../bower_components/page-title/page-title.html">
 
 <!-- IMPORT COMPONENTS -->
-<link rel="lazy-import" href="make-payment.html">
-<link rel="lazy-import" href="payment-status.html">
-<link rel="lazy-import" href="payment-history.html">
-<link rel="lazy-import" href="payment-analyser.html">
-<link rel="lazy-import" href="login-form.html">
-<link rel="lazy-import" href="view-404.html">
 
-<link rel="import" href="common-header.html">
-<link rel="import" href="footer.html">
-<link rel="import" href="copyright.html">
+<link rel="lazy-import" href="../components/make-payment.html">
+<link rel="lazy-import" href="../components/payment-status.html">
+<link rel="lazy-import" href="../components/payment-history.html">
+<link rel="lazy-import" href="../components/payment-analyser.html">
+<link rel="lazy-import" href="../components/login-form.html">
+<link rel="import" href="../components/common-header.html">
+<link rel="import" href="../components/footer.html">
+<link rel="import" href="../components/copyright.html">
+<link rel="import" href="../components/view-404.html">
+<!--<link rel="import" href="../components/sub-header.html">-->
 
 
 <dom-module id="spend-analyser">
@@ -43,7 +44,7 @@
       .scrollable-container {
         max-height: calc(100vh - 100px);
         overflow-y: scroll;
-        background-color: #e9e9e9;
+        /* background-color: #e4e4e4 */
       }
     </style>
 
@@ -77,10 +78,13 @@
           selected="[[page]]"
           logout="[[_logout]]">
         </common-header>
+         
+      
       </div>
 
       <div class="scrollable-container">
-        
+
+           <!--<sub-header  is-logged-in="{{isLoggedIn}}" ></sub-header>-->
         <!-- PAGES/COMPONENTS BASED ON ROUTE     -->
         <iron-pages
           selected="[[page]]"
@@ -91,7 +95,7 @@
           <login-form title='Login' name="login" login-success="[[_loginSuccess]]"></login-form>
           <make-payment title='Make Payment'  name="payments"></make-payment>
           <payment-status title='Payment Status'  name="status"></payment-status>
-          <payment-history title='Transactions'  name="transactions"></payment-history>
+          <payment-history user="[[user]]" title='Transactions'  name="transactions"></payment-history>
           <payment-analyser title='Spend Analyzer'  name="analyser"></payment-analyser>
           <view-404 title='Not Found 404' name="view404"></view-404>
         </iron-pages>
@@ -117,6 +121,9 @@
           isLoggedIn : {
             type  : Boolean,
             value : false,
+          },
+          user: {
+            type  : Object,
           },
           page: {
             type: String,
@@ -180,7 +187,9 @@
       }
       _routeChanged(path){
 
-        let user = sessionStorage.getItem('user');
+        let user = JSON.parse(sessionStorage.getItem('user'));
+        this.set('user',user);
+
         let isLoggedIn =  user ? true : false;
         this.set('isLoggedIn',isLoggedIn);
         
@@ -196,7 +205,7 @@
       _loginSuccess(user){
         // FUNCTION: After authentication at login-form control will be redirected
         // so in case of successful login action can be taken here   
-        sessionStorage.setItem('user',user);
+		    sessionStorage.setItem('user',JSON.stringify(user));
         this.set('route.path','/payments');
       }
 

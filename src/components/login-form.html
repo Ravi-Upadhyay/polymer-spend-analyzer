@@ -28,9 +28,13 @@
         a:hover {
             color:rgb(23, 66, 146);
         }
+
+        .loginCompTopMargin{
+            margin-top:100px
+        }
        
     </style>
-    <div class="container fntFamily boxShadow whiteBckgrnd">
+    <div class="container fntFamily boxShadow whiteBckgrnd loginCompTopMargin">
         <h2 class="heading">Login</h2>
         <hr>
         <iron-form id="myForm"> 
@@ -101,8 +105,9 @@
         let that = this;
         let bodyData = JSON.stringify(that.userDetails);
         var post_req = this.$.xhr;
-        
-        post_req.send({url: "src/data/login-success.json"});
+
+         post_req.send({url: "src/data/login-success.json"});
+
     //     post_req.send({url: "http://192.168.43.120:8080/user/login", method: "post", headers: {
     //     'content-type': 'application/json'
     //   }, body: bodyData});
@@ -110,7 +115,7 @@
             let response    = JSON.parse(argReceived.response);
             let status      = response.status;
             if(status){
-                this.loginSuccess(response.data[0]);
+                this.loginSuccess(response.data);
                 // this.msg = "Successfully logged Out";
                     // this.$.toast.open();
                     // console.log(msg);
