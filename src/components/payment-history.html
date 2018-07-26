@@ -16,8 +16,7 @@
         <style include="common-styles">
           vaadin-grid-sorter{
             font-weight:bold;
-          }      
-           
+          }     
         </style>
         <style include="shared-styles">
          
@@ -30,42 +29,42 @@
         <div class="container fntFamily">
             <h2 class="centerText"> Most Recent Transaction </h2>
         <vaadin-grid id="grid" class="gridBorder" theme="row-dividers" items="[[users.data]]" page-size="10" height-by-rows column-reordering-allowed multi-sort>
-            <vaadin-grid-column>
+            <vaadin-grid-column width="1em">
                 <template class="header">
                     <vaadin-grid-sorter path="transactionDetails">Transaction Id</vaadin-grid-sorter>
                 </template>
                 <template>[[item.transactionId]]</template>
             </vaadin-grid-column>
             
-            <vaadin-grid-column>
+            <vaadin-grid-column width="2em">
                 <template class="header">
                     <vaadin-grid-sorter path="transactionDescription">Transaction Description</vaadin-grid-sorter>
                 </template>
                 <template>[[item.description]]</template>
             </vaadin-grid-column>
 
-            <vaadin-grid-column>
+            <vaadin-grid-column width="1em">
                 <template class="header">
                     <vaadin-grid-sorter path="transactionType">Transaction Type</vaadin-grid-sorter>
                 </template>
                 <template>[[item.paymentType]]</template>
             </vaadin-grid-column>
     
-            <vaadin-grid-column>
+            <vaadin-grid-column width="8em">
                 <template class="header">
                     <vaadin-grid-sorter path="transactionDate">Transaction Date</vaadin-grid-sorter>
                 </template>
                 <template>[[item.transactionDate]]</template>
             </vaadin-grid-column>
     
-            <vaadin-grid-column>
+            <vaadin-grid-column width="1em">
                 <template class="header">
                     <vaadin-grid-sorter path="amount">Amount</vaadin-grid-sorter>
                 </template>
                 <template>[[addCurrency(item.transactionAmount)]]</template>
             </vaadin-grid-column>
 
-            <vaadin-grid-column>
+            <vaadin-grid-column width="1em">
                 <template class="header">
                     <vaadin-grid-sorter path="balance">Balance</vaadin-grid-sorter>
                 </template>
