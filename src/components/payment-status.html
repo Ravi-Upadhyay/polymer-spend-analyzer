@@ -29,7 +29,7 @@
         <iron-localstorage name="transactionDetails" value="{{transactionDetails}}"></iron-localstorage>
        
        <sub-header></sub-header>
-        <div class='container fntFamily boxShadow'>
+        <div class='container fntFamily boxShadow whiteBckgrnd'>
         <h2 class="heading">Payment Status</h2>
         <hr>
 
@@ -86,23 +86,29 @@
                   transactionType:{
                     type:String,
                     value:''
+                },
+				  activated: {
+                    type: Boolean,
+                    observer: '_activationChanged'
                 }
             }
         }
         ready() {
             super.ready();
-            Polymer.RenderStatus.afterNextRender(this, function() {
-                this._getTransactionStatus()
-            })
         }
 
         _getTransactionStatus() {
+			this.transactionDetails = JSON.parse(localStorage.getItem('transactionDetails'));
             if(this.transactionDetails){
             let status = this.transactionDetails;
             this.transactionId = status.transactionId
             this.transactionType  = status.paymentType
             this.transactionAmount = status.amount
             } 
+        }
+		
+		_activationChanged(){
+             this._getTransactionStatus()
         }
 
         _navigateToPayment() {

@@ -18,6 +18,13 @@
         <style include="common-styles">                  
             .amcharts-chart-div a{
                 display: none !important;
+            }
+            vaadin-grid-column {
+                border: 3px solid #000;
+            }
+            #border {
+                border: 3px solid #000;
+
             }          
         </style>
         <style include="shared-styles">
@@ -149,7 +156,7 @@
             //Get transaction data ffrom API
             _getTransactionData(){
                 let ajax = this.$.analyser;
-                // ajax.url = "src/data/analyser.json";
+                //ajax.url = "src/data/analyser.json";
                 ajax.url = "http://192.168.43.118:8080/user/"+this.custId+"/transactionsummary";
                 ajax.generateRequest(); //trigger the iron-ajax                
             }

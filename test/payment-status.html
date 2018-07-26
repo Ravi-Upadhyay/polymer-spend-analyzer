@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <script src="../../webcomponentsjs/webcomponents.min.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../test-fixture/test-fixture-mocha.js"></script>
+
+  <!-- Import the element to test -->
+  <link rel="import" href="../src/components/payment-status.html">
+</head>
+<body>
+    <test-fixture id="payment">
+        <template>
+            <payment-status></payment-status>
+        </template>
+      </test-fixture>
+      <script>
+            describe('<payment-status>', function() {
+                var paymentStatus;
+
+                beforeEach(function() {
+                    paymentStatus = fixture('payment');
+                });
+                context('common tests', function() {
+                
+                });
+            });
+      </script>
+</body>
+</html>
