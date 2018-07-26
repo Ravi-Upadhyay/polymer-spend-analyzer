@@ -1,6 +1,29 @@
 {
     "status"    : 1,
     "data"      : [
-
+        {
+            "month":"Jan",
+            "totalTransaction":"35677",
+            "credit" : "2000",
+            "debit" : "500",
+            "Ccolor": "#ff6600",
+            "Dcolor":"#42417a"
+        },
+        {
+            "month":"Feb",
+            "totalTransaction":"35677",
+            "credit" : "1000",
+            "debit" : "500",
+            "Ccolor": "#ff6600",
+            "Dcolor":"#42417a"
+        },
+        {
+            "month":"March",
+            "totalTransaction":"35677",
+            "credit" : "1500",
+            "debit" : "700",
+            "Ccolor": "#ff6600",
+            "Dcolor":"#42417a"
+        }
     ]
 }

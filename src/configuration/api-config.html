@@ -1,0 +1,72 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="api-config">
+    <script>
+        class ApiConfig extends Polymer.Element {
+
+            constructor(){
+                super();
+                setInterval(()=>{
+                    // console.log(this.environment);
+                    // console.log(this.rootPath);
+                    // console.log(JSON.stringify(this.user));
+                }, 1000);
+            }
+
+            static get is(){
+                return 'api-config'
+            }
+
+            static get properties(){
+                return {
+                    rootPath    : {
+                        type    : String
+                    },
+                    user        : {
+                        type    : Object,
+                        observer: '_updateURLs'
+                    },
+                    environment : {
+                        type        : String,
+                        computed    : '_defineEnvironment(rootPath)'
+                    },
+                    prodBaseURL : {
+                        type        : String,
+                        value       : "http://192.168.43.18:8080"
+                    },
+                    development     : {
+                        type        : Object,
+                        value       : {
+                            "login"         : "src/data/login-success.json",
+                            "payment"       : "",
+                            "transactions"  : "",
+                            "analyser"      : ""  
+                        }
+                    },
+                    production      : {
+                        type        : Object,
+                        value       : {
+                            "login"         : "",
+                            "payment"       : "",
+                            "transactions"  : "",
+                            "analyser"      : ""  
+                        }
+                    }
+                };
+            }
+
+            _defineEnvironment(rootPath) {
+                return (rootPath.indexOf('9011') === -1) ? "production" : "development";
+            }
+
+            _updateURLs(newUser, oldUser){
+            
+                // console.log(`from api-config, user updated ${JSON.stringify(newUser)}`);
+                
+            }
+        }
+
+        window.customElements.define(ApiConfig.is, ApiConfig);
+    </script>
+</dom-module>

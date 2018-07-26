@@ -3,6 +3,9 @@
 
 * This component will is root and host of application
 * Routing is included here
+
+** NOTE: developers please run on port 9011
+** so that environment can be set up properly
 -->
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/polymer/lib/utils/import-href.html">
@@ -28,6 +31,7 @@
 <link rel="import" href="../components/view-404.html">
 <link rel="import" href="../components/bar-chart-component.html">
 <!--<link rel="import" href="../components/sub-header.html">-->
+<link rel="import" href="../configuration/api-config.html">
 
 
 <dom-module id="spend-analyser">
@@ -66,6 +70,8 @@
       tail="{{subroute}}"
       active="{{pageActive}}">
     </app-route>
+
+    <api-config root-path = "[[rootPath]]" user = "[[user]]"></api-config>
     
 <!-- APP-STRUCTURE -->
     
@@ -108,11 +114,11 @@
   </template>
 
   <script>
-
     class SpendAnalyser extends Polymer.Element {
       constructor() {
         super();
         //TODO: Removed tasks from here, May need in case of troubleshooting
+        // console.log(this.rootPath);
       }
       
       static get is() { return 'spend-analyser'; }
