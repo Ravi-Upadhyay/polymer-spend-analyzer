@@ -13,6 +13,7 @@
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="common-styles.html">
 <link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
 <dom-module id="login-form">
   <template>
@@ -37,7 +38,7 @@
     <div class="container fntFamily boxShadow whiteBckgrnd loginCompTopMargin">
         <h2 class="heading">Login</h2>
         <hr>
-        <iron-form id="myForm"> 
+        <iron-form id="myForm" on-submit="login"> 
         <form>
             <div>
                 <h4 class="label">Enter User Id</h4>
@@ -49,9 +50,17 @@
                 <paper-input type="password" label="Enter Password" id="password" no-label-float value="{{password}}" on-change="_removeInvalid" required></paper-input>
             </div>
 
-            <iron-request id="xhr"></iron-request>
-
-            <paper-button class="btnPrl" on-click="login">LOGIN</paper-button>        
+            <!-- <iron-request id="xhr"></iron-request> -->
+            <iron-ajax id="xhr"
+               url = "http://192.168.43.118:8080/user/login"
+               method="POST"
+               body = "{{bodyData}}"
+               handle-as = "json" 
+               on-response = "_handleResponse"
+               on-error = "_handleError"
+               content-type="application/json"
+               ></iron-ajax>  
+            <paper-button class="btnPrl" on-click="login">LOGIN</paper-button>      
             <paper-toast id="toast" text="{{msg}}"></paper-toast>       
          
         </form>
@@ -86,6 +95,9 @@
                 type: Object,
                 value: {}
             },
+            bodyData: {
+                type: Object
+            },
             ajaxResponse: {
             type: String,
             value: []
@@ -96,41 +108,74 @@
             }
         };
       }
-
-      login() {
-        this.userDetails = {
-            loginId: this.username,
-            password: this.password
-        }
-        let that = this;
-        let bodyData = JSON.stringify(that.userDetails);
-        var post_req = this.$.xhr;
-
-        // post_req.send({url: "src/data/login-success.json"});
-
-         post_req.send({url: "http://192.168.43.118:8080/user/login", method: "post", headers: {
-         'content-type': 'application/json'
-       }, body: bodyData});
-        post_req.completes.then((argReceived) => {
-            let response    = JSON.parse(argReceived.response);
-            let status      = response.status;
-            if(status){
+        _handleResponse(event, request) {
+            let response = request.response;
+            let status  = request.status;
+            console.log(response);
+            if(status) {
                 this.loginSuccess(response.data);
                 this.username = "";
                 this.password = "";
-            }
-            else{
+            } else {
                 this.$.username.invalid = true;
                 this.$.password.invalid = true;
                 this.username = "";
                 this.password = "";
-                this.msg = "Incorrect username or password, please try again!";
-                    this.$.toast.open();
-            }
-        }, function(){
-            this.msg = "Server is down, please try again";
+                this.msg = this.response.data[0].errorMessage;
                 this.$.toast.open();
-        });
+            }
+        }
+
+        _handleError(request, error) {
+            this.msg = "Server is down, please try again later.";
+            this.$.toast.open();
+        }
+
+      login() {
+          var userDetails = {
+            loginId: this.username,
+            password: this.password
+          }
+        if(this.username.length >=1 && this.password.length >= 1){
+            let that = this;
+            this.bodyData = JSON.stringify(that.userDetails);
+            var postRequest = this.$.xhr;
+            postRequest.generateRequest();
+        } else {
+            this.$.username.invalid = true;
+            this.$.password.invalid = true;
+            this.username = "";
+            this.password = "";
+            this.msg = "Login or Password can not be blank";
+            this.$.toast.open();
+        }
+    //     var post_req = this.$.xhr;
+
+    //     // post_req.send({url: "src/data/login-success.json"});
+
+    //      post_req.send({url: "http://192.168.43.118:8080/user/login", method: "post", headers: {
+    //      'content-type': 'application/json'
+    //    }, body: bodyData});
+    //     post_req.completes.then((argReceived) => {
+    //         let response    = JSON.parse(argReceived.response);
+    //         let status      = response.status;
+    //         if(status){
+                // this.loginSuccess(response.data);
+    //             this.username = "";
+    //             this.password = "";
+    //         }
+    //         else{
+    //             this.$.username.invalid = true;
+    //             this.$.password.invalid = true;
+    //             this.username = "";
+    //             this.password = "";
+    //             this.msg = "Incorrect username or password, please try again!";
+    //                 this.$.toast.open();
+    //         }
+    //     }, function(){
+    //         this.msg = "Server is down, please try again";
+    //             this.$.toast.open();
+    //     });
       }
 
       _toggleLoginBtn(loginId, password){
