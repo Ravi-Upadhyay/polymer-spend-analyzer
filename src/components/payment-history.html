@@ -112,8 +112,8 @@
 
       _getTransactionData(){
           let ajax = this.$.transHistory;
-          //ajax.url = "src/data/analyser.json";
-          ajax.url = "http://192.168.43.91:8080/user/"+this.custId+"/transactions";
+          ajax.url = "src/data/history.json";
+          // ajax.url = "http://192.168.43.91:8080/user/"+this.custId+"/transactions";
           ajax.generateRequest(); //trigger the iron-ajax                
       }
 

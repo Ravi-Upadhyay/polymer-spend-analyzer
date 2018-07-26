@@ -134,18 +134,20 @@
 
             // Add currency
             addCurrency(am1, am2){
-                this.amount = am1;
+
+                this.amount = parseInt(am1);
                 if(arguments.length == 2){
                     this.amount = am1+ am2;
                 }
-                return '$' + this.amount.toFixed(2);
+                let totalTransaction = this.amount;
+                return '$' + parseInt(totalTransaction).toFixed(2);
             }
 
             //Get transaction data ffrom API
             _getTransactionData(){
                 let ajax = this.$.analyser;
-                //ajax.url = "src/data/analyser.json";
-                ajax.url = "http://192.168.43.91:8080/user/"+this.custId+"/transactionsummary";
+                ajax.url = "src/data/analyser.json";
+                // ajax.url = "http://192.168.43.91:8080/user/"+this.custId+"/transactionsummary";
                 ajax.generateRequest(); //trigger the iron-ajax                
             }
 

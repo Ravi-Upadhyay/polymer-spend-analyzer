@@ -7,12 +7,14 @@
 
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/polymer/lib/utils/gestures.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
 
 <link rel="import" href="../../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="common-styles.html">
 <link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
+
+<link rel="import" href="common-styles.html">
 
 <dom-module id="login-form">
   <template>
@@ -106,11 +108,11 @@
         let bodyData = JSON.stringify(that.userDetails);
         var post_req = this.$.xhr;
 
-        // post_req.send({url: "src/data/login-success.json"});
+        post_req.send({url: "src/data/login-success.json"});
 
-         post_req.send({url: "http://192.168.43.91:8080/user/login", method: "post", headers: {
-         'content-type': 'application/json'
-       }, body: bodyData});
+    //      post_req.send({url: "http://192.168.43.91:8080/user/login", method: "post", headers: {
+    //      'content-type': 'application/json'
+    //    }, body: bodyData});
         post_req.completes.then((argReceived) => {
             let response    = JSON.parse(argReceived.response);
             let status      = response.status;

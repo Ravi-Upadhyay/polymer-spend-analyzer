@@ -38,19 +38,19 @@
                     development     : {
                         type        : Object,
                         value       : {
-                            "login"         : "src/data/login-success.json",
-                            "payment"       : "",
-                            "transactions"  : "",
-                            "analyser"      : ""  
+                            // "login"         : "src/data/login-success.json",
+                            // "payment"       : "",
+                            // "transactions"  : "",
+                            // "analyser"      : ""  
                         }
                     },
                     production      : {
                         type        : Object,
                         value       : {
-                            "login"         : "",
-                            "payment"       : "",
-                            "transactions"  : "",
-                            "analyser"      : ""  
+                            // "login"         : "",
+                            // "payment"       : "",
+                            // "transactions"  : "",
+                            // "analyser"      : ""  
                         }
                     }
                 };
@@ -61,9 +61,12 @@
             }
 
             _updateURLs(newUser, oldUser){
-            
-                // console.log(`from api-config, user updated ${JSON.stringify(newUser)}`);
-                
+                if(this.environment == "production"){
+                    const baseURL   = "";
+                }
+                else{
+
+                }
             }
         }
 

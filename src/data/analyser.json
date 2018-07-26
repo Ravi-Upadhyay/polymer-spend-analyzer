@@ -4,26 +4,20 @@
         {
             "month":"Jan",
             "totalTransaction":"35677",
-            "credit" : "2000",
-            "debit" : "500",
-            "Ccolor": "#ff6600",
-            "Dcolor":"#42417a"
+            "totalIncoming" : "2000",
+            "totalOutgoing" : "500"
         },
         {
             "month":"Feb",
             "totalTransaction":"35677",
-            "credit" : "1000",
-            "debit" : "500",
-            "Ccolor": "#ff6600",
-            "Dcolor":"#42417a"
+            "totalIncoming" : "1000",
+            "totalOutgoing" : "500"
         },
         {
             "month":"March",
             "totalTransaction":"35677",
-            "credit" : "1500",
-            "debit" : "700",
-            "Ccolor": "#ff6600",
-            "Dcolor":"#42417a"
+            "totalIncoming" : "1500",
+            "totalOutgoing" : "700"
         }
     ]
 }
