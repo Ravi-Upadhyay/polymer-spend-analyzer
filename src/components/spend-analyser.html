@@ -72,7 +72,7 @@
       active="{{pageActive}}">
     </app-route>
 
-    <api-config root-path = "[[rootPath]]" user = "[[user]]"></api-config>
+    <api-config root-path = "[[rootPath]]" api-collection="{{apiCollection}}" user = "[[user]]"></api-config>
     
 <!-- APP-STRUCTURE -->
     
@@ -101,11 +101,11 @@
           selected-item="{{selectedPage}}"
           fallback-selection="view404"
           role="main">
-          <login-form title='Login' name="login" login-success="[[_loginSuccess]]"></login-form>
-          <make-payment title='Make Payment'  name="payments"></make-payment>
+          <login-form title='Login' name="login" login-success="[[_loginSuccess]]" api-url={{apiCollection.login}}></login-form>
+          <make-payment title='Make Payment'  name="payments" api-url={{apiCollection.payment}}></make-payment>
           <payment-status title='Payment Status'  name="status"></payment-status>
-          <payment-history user="[[user]]" title='Transactions'  name="transactions"></payment-history>
-          <payment-analyser title='Spend Analyzer'  name="analyser"></payment-analyser>
+          <payment-history user="[[user]]" title='Transactions'  name="transactions" api-url={{apiCollection.transactions}}></payment-history>
+          <payment-analyser title='Spend Analyzer'  name="analyser" api-url={{apiCollection.analyser}}></payment-analyser>
           <view-404 title='Not Found 404' name="view404"></view-404>
         </iron-pages>
 
@@ -121,6 +121,9 @@
         super();
         //TODO: Removed tasks from here, May need in case of troubleshooting
         // console.log(this.rootPath);
+        // setInterval(()=>{
+        //   console.log(this.apiCollection);
+        // },2000);
       }
       
       static get is() { return 'spend-analyser'; }
@@ -139,6 +142,7 @@
             reflectToAttribute: true,
             observer: '_pageChanged',
           },
+          apiCollection: Object,
           routeData: Object,
           subroute: Object,
           route: Object,

@@ -1,0 +1,11 @@
+{
+    "status": 1,
+    "data": {
+        "transactionId": 29,
+        "transactionDate": "207-07-2018 07:26:38",
+        "description": "xxx",
+        "amount": 110.04,
+        "paymentType": "DEBIT",
+        "closingBalance": 156413.15
+    }
+}

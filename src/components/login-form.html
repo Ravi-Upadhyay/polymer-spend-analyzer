@@ -7,20 +7,32 @@
 
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/polymer/lib/utils/gestures.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
 
 <link rel="import" href="../../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="common-styles.html">
 <link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<link rel="import" href="common-styles.html">
 
 <dom-module id="login-form">
   <template>
     <style include="common-styles">
         .btnPrl{
             width: 50%;
-         }        
+         }
+
+         paper-toast{
+             position: absolute !important;
+            /* display: block !important; */
+            left: 50% !important;
+            top: 21% !important;
+            transform: translateX(-50%) translateY(-50%);
+            color: #fff;
+            background-color: red;
+         }
         
         a {
             text-decoration: none; 
@@ -37,6 +49,7 @@
     </style>
     <div class="container fntFamily boxShadow whiteBckgrnd loginCompTopMargin">
         <h2 class="heading">Login</h2>
+		<paper-toast id="toast" text="{{msg}}"></paper-toast>
         <hr>
         <iron-form id="myForm" on-submit="login"> 
         <form>
@@ -77,6 +90,9 @@
         return {
             loginSuccess : {
                 type: Object,
+            },
+            apiUrl      : {
+                type    : String
             },
             username: {
                 type    : String,
