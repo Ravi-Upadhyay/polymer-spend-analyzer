@@ -51,7 +51,7 @@
                 <paper-input type="password" label="Enter Password" id="password" no-label-float value="{{password}}" on-change="_removeInvalid" required></paper-input>
             </div>
 
-            <iron-request id="xhr"></iron-request>
+            <iron-ajax id="xhr" url = "http://192.168.43.118:8080/user/login" content-type='application/json' method="POST" body={{bodyData}} handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax>
 
             <paper-button class="btnPrl" on-click="login">LOGIN</paper-button>        
             <paper-toast id="toast" text="{{msg}}"></paper-toast>       
@@ -107,15 +107,27 @@
             loginId: this.username,
             password: this.password
         }
+        if((this.userDetails.loginId.length >= 1) && (this.userDetails.password.length >= 1)){
         let that = this;
-        let bodyData = JSON.stringify(that.userDetails);
+        this.bodyData = JSON.stringify(that.userDetails);
         var post_req = this.$.xhr;
+        post_req.generateRequest(); 
+        }else{
+            this.$.username.invalid = true;
+            this.$.password.invalid = true;
+            this.username = "";
+            this.password = "";
+            this.msg = "Login or Password can not be blank";
+            this.$.toast.open();
+        }
+
 
         // post_req.send({url: "src/data/login-success.json"});
 
-         post_req.send({url: "http://192.168.43.118:8080/user/login", method: "post", headers: {
+         /* post_req.send({url: "http://192.168.43.118:8080/user/login", method: "post", headers: {
          'content-type': 'application/json'
        }, body: bodyData});
+
         post_req.completes.then((argReceived) => {
             let response    = JSON.parse(argReceived.response);
             let status      = response.status;
@@ -135,7 +147,26 @@
         }, function(){
             this.msg = "Server is down, please try again";
                 this.$.toast.open();
-        });
+        });*/
+      }
+
+      handleResponse(event,request){
+          console.log(request.response);
+          let response    = request.response;
+            let status      = response.status;
+            if(status){
+                this.loginSuccess(response.data);
+                this.username = "";
+                this.password = "";
+            }
+            else{
+                this.$.username.invalid = true;
+                this.$.password.invalid = true;
+                this.username = "";
+                this.password = "";
+                this.msg = "Incorrect username or password, please try again!";
+                    this.$.toast.open();
+            }
       }
 
       _toggleLoginBtn(loginId, password){

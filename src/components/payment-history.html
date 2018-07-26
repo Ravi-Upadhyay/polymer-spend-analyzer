@@ -15,10 +15,7 @@
 
 <dom-module id="payment-history">
     <template>
-        <style include="common-styles">
-          vaadin-grid-sorter{
-            font-weight:bold;
-          }     
+        <style include="common-styles">    
         </style>
         <style include="shared-styles">
          
@@ -36,48 +33,48 @@
         </template>
         <template is="dom-if" if="{{dataAvailable}}">    
           <vaadin-grid id="grid" class="gridBorder" theme="row-dividers" items="[[users.data]]" page-size="10" height-by-rows column-reordering-allowed multi-sort>
-              <vaadin-grid-column width="1em">
-                  <template class="header">
-                      <vaadin-grid-sorter path="transactionDetails">Transaction Id</vaadin-grid-sorter>
-                  </template>
-                  <template>[[item.transactionId]]</template>
-              </vaadin-grid-column>
-              
-              <vaadin-grid-column width="2em">
-                  <template class="header">
-                      <vaadin-grid-sorter path="transactionDescription">Transaction Description</vaadin-grid-sorter>
-                  </template>
-                  <template>[[item.description]]</template>
-              </vaadin-grid-column>
+           <vaadin-grid-column width="1em">
+                <template class="header">
+                    <b>Transaction Id</b>
+                </template>
+                <template>[[item.transactionId]]</template>
+            </vaadin-grid-column>
+            
+            <vaadin-grid-column width="2em">
+                <template class="header">
+                    <b>Transaction Description</b>
+                </template>
+                <template>[[item.description]]</template>
+            </vaadin-grid-column>
 
-              <vaadin-grid-column width="1em">
-                  <template class="header">
-                      <vaadin-grid-sorter path="transactionType">Transaction Type</vaadin-grid-sorter>
-                  </template>
-                  <template>[[item.paymentType]]</template>
-              </vaadin-grid-column>
-      
-              <vaadin-grid-column width="8em">
-                  <template class="header">
-                      <vaadin-grid-sorter path="transactionDate">Transaction Date</vaadin-grid-sorter>
-                  </template>
-                  <template>[[item.transactionDate]]</template>
-              </vaadin-grid-column>
-      
-              <vaadin-grid-column width="1em">
-                  <template class="header">
-                      <vaadin-grid-sorter path="amount">Amount</vaadin-grid-sorter>
-                  </template>
-                  <template>[[addCurrency(item.transactionAmount)]]</template>
-              </vaadin-grid-column>
+            <vaadin-grid-column width="1em">
+                <template class="header">
+                    <b>Transaction Type</b>
+                </template>
+                <template>[[item.paymentType]]</template>
+            </vaadin-grid-column>
+    
+            <vaadin-grid-column width="8em">
+                <template class="header">
+                    <b>Transaction Date</b>
+                </template>
+                <template>[[item.transactionDate]]</template>
+            </vaadin-grid-column>
+    
+            <vaadin-grid-column width="1em">
+                <template class="header">
+                    <b path="amount">Amount</b>
+                </template>
+                <template>[[addCurrency(item.transactionAmount)]]</template>
+            </vaadin-grid-column>
 
-              <vaadin-grid-column width="1em">
-                  <template class="header">
-                      <vaadin-grid-sorter path="balance">Balance</vaadin-grid-sorter>
-                  </template>
-                  <template>[[addCurrency(item.closingBalance)]]</template>
-              </vaadin-grid-column>
-          </vaadin-grid>
+            <vaadin-grid-column width="1em">
+                <template class="header">
+                    <b path="balance">Balance</b>
+                </template>
+                <template>[[addCurrency(item.closingBalance)]]</template>
+            </vaadin-grid-column>
+        </vaadin-grid>
         </template>
        <!-- <div id="pages">
             <button on-click="_prev">&lt;</button>
