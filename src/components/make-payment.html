@@ -63,7 +63,7 @@
 
                     <div>
                         <h4 class="label">Enter amount</h4>
-                        <paper-input on-keyup="_clearError" auto-validate pattern="[0-9]*" minlength="1" maxlength="6" no-label-float id="amount"  error-message="{{amountError}}" value="{{amount}}" on-change="_removeInvalid">
+                        <paper-input on-keyup="_clearError" allowed-pattern="[0-9]" pattern="[0-9]" minlength="1" maxlength="6" no-label-float id="amount"  error-message="{{amountError}}" value="{{amount}}" on-change="_removeInvalid">
                         <div slot="prefix">$ &nbsp</div>
                         </paper-input>
                     </div>
