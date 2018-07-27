@@ -28,11 +28,11 @@
                     },
                     user        : {
                         type    : Object,
-                        observer: '_updateURLs'
+                        observer: '_userUpdated'
                     },
                     environment : {
                         type        : String,
-                        observer    : '_updateURLs'
+                        observer    : '_envUpdated'
                     },
                     prodBaseURL : {
                         type        : String,
@@ -41,12 +41,6 @@
                     apiCollection     : {
                         type        : Object,
                         notify      : true,
-                        value       : {
-                            // "login"         : "",
-                            // "payment"       : "",
-                            // "transactions"  : "",
-                            // "analyser"      : ""  
-                        }
                     }
                 };
             }
@@ -59,10 +53,27 @@
                 }
             }
 
-            _updateURLs(newUser, oldUser){
+            _userUpdated(newUser,oldUser){
+                // console.log(`newUser: ${newUser} oldUser: ${oldUser}`);
+                newUser = newUser || {};
+                oldUser = oldUser || {};
+                if(newUser.customerId !== oldUser.customerId){
+                    this._updateURLs();
+                }
+                
+            }
+
+            _envUpdated(newEn,oldEn) {
+                // console.log(`newEnvironment: ${newEn} oldEnvironment: ${oldEn}`);
+                if(newEn !== oldEn){
+                    this._updateURLs();
+                }
+            }
+
+            _updateURLs(){
                 console.log(this.environment)
                 let apiCollection = {};
-                if(this.environment === "production"){
+                if(this.environment == "production"){
                     const baseURL    = this.prodBaseURL;
                     const customerId = (this.user) ? this.user.customerId : 0;
                     apiCollection = {
@@ -79,10 +90,10 @@
                         "transactions"  : `src/data/history.json`,
                         "analyser"      : `src/data/analyser.json`  
                     };
+                }
                 this.set('apiCollection',apiCollection);
                 this.notifyPath('apiCollection.*');
-                console.log(this.apiCollection);
-                }
+                console.log(this.apiCollection);            
             }
         }
 
