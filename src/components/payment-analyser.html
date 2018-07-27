@@ -115,15 +115,25 @@
                    },
                    custId : {
                        type:String
-                   }
+                   },
+                   activated: {
+                        type: Boolean,
+                        observer: '_activationChanged'
+                    }
                 }
             }
+
+            _activationChanged(newVal, oldVal){
+                if(newVal){
+                    this._getTransactionData();  
+                }
+	        }	
             
             ready(){
                 super.ready();
-                Polymer.RenderStatus.afterNextRender(this,function(){
-                    this._getTransactionData();                    
-                })
+                // Polymer.RenderStatus.afterNextRender(this,function(){
+                //     this._getTransactionData();                    
+                // })
 
                 try{
                     this.custId = JSON.parse(sessionStorage.user).customerId;

@@ -21,7 +21,17 @@
     <style include="common-styles">
         .btnPrl{
             width: 50%;
-         }        
+         }
+
+         paper-toast{
+             position: absolute !important;
+            /* display: block !important; */
+            left: 50% !important;
+            top: 21% !important;
+            transform: translateX(-50%) translateY(-50%);
+            color: #fff;
+            background-color: red;
+         }
         
         a {
             text-decoration: none; 
@@ -38,6 +48,7 @@
     </style>
     <div class="container fntFamily boxShadow whiteBckgrnd loginCompTopMargin">
         <h2 class="heading">Login</h2>
+		<paper-toast id="toast" text="{{msg}}"></paper-toast>
         <hr>
         <iron-form id="myForm"> 
         <form>
@@ -55,7 +66,6 @@
             <iron-ajax id="xhr" url = "src/data/login-success.json" content-type='application/json' method="GET" body={{bodyData}} handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax>
 
             <paper-button class="btnPrl" on-click="login">LOGIN</paper-button>        
-            <paper-toast id="toast" text="{{msg}}"></paper-toast>       
          
         </form>
      </iron-form>
