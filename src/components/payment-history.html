@@ -22,7 +22,8 @@
         </style>
 
         <!-- <iron-ajax auto url="src/data/history.json" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax>  -->
-        <iron-ajax id="transHistory" method="GET" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax>
+        <!-- <iron-ajax id="transHistory" method="GET" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax> -->
+        <iron-ajax id="transHistory" method="[[api.method]]" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax>
 
         <sub-header></sub-header>
         <div class="container fntFamily">
@@ -32,7 +33,7 @@
             <no-data-found></no-data-found>
         </template>
         <template is="dom-if" if="{{dataAvailable}}">    
-          <vaadin-grid id="grid" class="gridBorder" theme="row-dividers" items="[[users.data]]" page-size="10" height-by-rows column-reordering-allowed multi-sort>
+          <vaadin-grid id="grid" class="gridBorder" theme="row-dividers" items="[[users.data]]" page-size="10" height-by-rows>
            <vaadin-grid-column width="1em">
                 <template class="header">
                     <b>Transaction Id</b>
@@ -132,10 +133,11 @@
 	  }	
 
       _getTransactionData(){
-          let ajax = this.$.transHistory;
-          //ajax.url = "src/data/analyser.json";
-          ajax.url = "http://192.168.43.118:8080/user/"+this.custId+"/transactions";
-          ajax.generateRequest(); //trigger the iron-ajax                
+        let ajax = this.$.transHistory;
+        //ajax.url = "src/data/analyser.json";
+        // ajax.url = "http://192.168.43.118:8080/user/"+this.custId+"/transactions";
+        ajax.url = this.api.url;
+        ajax.generateRequest(); //trigger the iron-ajax                
       }
 
       // Add currency

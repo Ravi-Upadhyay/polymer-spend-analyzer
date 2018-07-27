@@ -19,32 +19,13 @@
             .amcharts-chart-div a{
                 display: none !important;
             }
-            vaadin-grid-column {
-                border: 3px solid #000;
-            }
-            #border {
-                border: 3px solid #000;
-
-            }          
+                     
         </style>
         <style include="shared-styles">
-         vaadin-grid#analyser_grid{
-            border: 1px solid #000;
-            -webkit-font-smoothing: antialiased;
-             --divider-color: #0e0d0d;
-        }
-            --vaadin-grid-cell  {
-                border: 1px solid #000;
-                box-sizing: border-box;
-            }
-            --vaadin-grid-header-cell {
-                border-bottom: 1px solid #080808;
-            }
-            vaadin-grid#border {
-                border-bottom: 1px solid #080808;
-            }
+         
         </style>
-        <iron-ajax id="analyser" handle-as="json" last-response="{{activities.data}}" on-response="_handleResponse"></iron-ajax>
+        <!-- <iron-ajax id="analyser" handle-as="json" last-response="{{activities.data}}" on-response="_handleResponse"></iron-ajax> -->
+        <iron-ajax id="analyser" method="[[api.method]]" handle-as="json" last-response="{{activities.data}}" on-response="_handleResponse"></iron-ajax>
        <sub-header></sub-header>
         <div class="container fntFamily">
             <h2 class="centerText"> Account Activity Analysis </h2>
@@ -66,8 +47,8 @@
                     </vaadin-grid-column>
     
                     <vaadin-grid-column>
-                        <template class="header"><strong>Total Transaction</strong></template>
-                        <template>[[addCurrency(item.totalOutgoing,item.totalIncoming)]]</template>
+                        <template class="header"><strong>Closing Balance</strong></template>
+                        <template>[[addCurrency(item.closingBalance)]]</template>
                     </vaadin-grid-column>
             
                     <vaadin-grid-column>
@@ -127,21 +108,7 @@
                 if(newVal){
                     this._getTransactionData();  
                 }
-	        }	
-            
-            ready(){
-                super.ready();
-                // Polymer.RenderStatus.afterNextRender(this,function(){
-                //     this._getTransactionData();                    
-                // })
-
-                try{
-                    this.custId = JSON.parse(sessionStorage.user).customerId;
-                }
-                catch(e){
-                    console.log('Error getting data from SessionStorage -->' + e)
-                }
-            }
+	        }
             
             //Increment by 1 to index in dom-repeat
             displayIndex(index){
@@ -153,21 +120,25 @@
             // }
 
             // Add currency
-            addCurrency(am1, am2){
-
-                this.amount = parseInt(am1);
-                if(arguments.length == 2){
-                    this.amount = am1+ am2;
-                }
-                let totalTransaction = this.amount;
-                return '$' + parseInt(totalTransaction).toFixed(2);
+            // Add currency
+            addCurrency(amount){
+                return '$' + amount;
             }
 
             //Get transaction data ffrom API
             _getTransactionData(){
+
+                try{
+                    this.custId = JSON.parse(sessionStorage.user).customerId;
+                }
+                catch(e){
+                    console.log('Error getting data from SessionStorage -->' + e)
+                }
+
                 let ajax = this.$.analyser;
                 //ajax.url = "src/data/analyser.json";
-                ajax.url = "http://192.168.43.118:8080/user/"+this.custId+"/transactionsummary";
+                // ajax.url = "http://192.168.43.118:8080/user/"+this.custId+"/transactionsummary";
+                ajax.url = this.api.url;
                 ajax.generateRequest(); //trigger the iron-ajax                
             }
 
