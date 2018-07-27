@@ -1,3 +1,17 @@
+<!-- 
+    This is single place to configure APIs of project
+    It will also switch between environments 
+        - Devleopment
+        - production
+    It will frame api url's between production and development
+    Pass user object to form url's accordingly
+
+    ////////////////////////////////////////////////////////////
+    DEVELOPERS : USE PORT 9011
+    ///////////////////////////////////////////////////////////
+    
+    It identifies environment on basis of port  
+-->
 
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 
@@ -7,6 +21,9 @@
 
             constructor(){
                 super();
+                // NOTE: Completed but, before state is also preserved in 
+                // files.
+
                 // this._updateURLs();
                 // setTimeout(()=>{
                     // this._updateURLs();
