@@ -62,8 +62,16 @@
                 <paper-input type="password" label="Enter Password" id="password" no-label-float value="{{password}}" on-change="_removeInvalid" required></paper-input>
             </div>
 
-            <!-- <iron-ajax id="xhr" url = "http://192.168.43.118:8080/user/login" content-type='application/json' method="POST" body={{bodyData}} handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax> -->
-            <iron-ajax id="xhr" url = "src/data/login-success.json" content-type='application/json' method="GET" body={{bodyData}} handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax>
+            <iron-ajax id="xhr" 
+                url = "http://192.168.43.118:8080/user/login" 
+                content-type='application/json' 
+                method="POST" 
+                body={{bodyData}}
+                handle-as="json" 
+                last-response="{{users}}" 
+                on-response="handleResponse">
+            </iron-ajax>
+            <!-- <iron-ajax id="xhr" url = "src/data/login-success.json" content-type='application/json' method="GET" body={{bodyData}} handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax> -->
 
             <paper-button class="btnPrl" on-click="login">LOGIN</paper-button>        
          
@@ -109,6 +117,9 @@
             msg: {
                 type: String,
                 value: ""
+            },
+            bodyData: {
+                type: String
             }
         };
       }
@@ -162,7 +173,7 @@
       }
 
       handleResponse(event,request){
-          console.log(request.response);
+          console.log(request);
           let response    = request.response;
             let status      = response.status;
             if(status){
