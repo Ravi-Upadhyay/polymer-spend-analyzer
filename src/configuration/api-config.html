@@ -77,18 +77,34 @@
                     const baseURL    = this.prodBaseURL;
                     const customerId = (this.user) ? this.user.customerId : 0;
                     apiCollection = {
-                        "login"         : `${baseURL}/user/login`,
-                        "payment"       : `${baseURL}/user/${customerId}/makepayment`,
-                        "transactions"  : `${baseURL}/user/${customerId}/transactions`,
-                        "analyser"      : `${baseURL}/user/${customerId}/transactionsummary`  
+                        "login"         : { "url"     : `${baseURL}/user/login`,
+                                            "method"  : "POST"
+                                          },
+                        "payment"       : { "url"     : `${baseURL}/user/${customerId}/makepayment`,
+                                            "method"  : "POST"
+                                          },
+                        "transactions"  : { "url"     : `${baseURL}/user/${customerId}/transactions`,
+                                            "method"  : "GET"
+                                          },
+                        "analyser"      : { "url"     : `${baseURL}/user/${customerId}/transactionsummary`,
+                                            "method"  : "GET"
+                                          }  
                     }; 
                 }
                 else{
                     apiCollection = {
-                        "login"         : `src/data/login-success.json`,
-                        "payment"       : `src/data/payment.json`,
-                        "transactions"  : `src/data/history.json`,
-                        "analyser"      : `src/data/analyser.json`  
+                        "login"         : { "url"     : `src/data/login-success.json`,
+                                            "method"  : "GET"
+                                          },
+                        "payment"       : { "url"     : `src/data/payment.json`,
+                                            "method"  : "GET"
+                                          },
+                        "transactions"  : { "url"     : `src/data/history.json`,
+                                            "method"  : "GET"
+                                          },
+                        "analyser"      : { "url"     : `src/data/analyser.json`,
+                                            "method"  : "GET"
+                                          }
                     };
                 }
                 this.set('apiCollection',apiCollection);

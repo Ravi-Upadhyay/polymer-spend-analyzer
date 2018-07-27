@@ -71,8 +71,16 @@
                 last-response="{{users}}" 
                 on-response="handleResponse">
             </iron-ajax>
-            <!-- <iron-ajax id="xhr" url = "src/data/login-success.json" content-type='application/json' method="GET" body={{bodyData}} handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax> -->
-
+            <!-- <iron-ajax id="xhr" 
+                url = "src/data/login-success.json" 
+                content-type='application/json' 
+                method="GET" 
+                body={{bodyData}}
+                handle-as="json" 
+                last-response="{{users}}" 
+                on-response="handleResponse">
+            </iron-ajax> -->
+            
             <paper-button class="btnPrl" on-click="login">LOGIN</paper-button>        
          
         </form>
@@ -90,8 +98,8 @@
             loginSuccess : {
                 type: Object,
             },
-            apiUrl      : {
-                type    : String
+            api          : {
+                type    : Object
             },
             username: {
                 type    : String,
