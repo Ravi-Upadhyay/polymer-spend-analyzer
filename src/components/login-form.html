@@ -130,7 +130,7 @@
       }
         _handleResponse(event, request) {
             let response = request.response;
-            let status  = request.status;
+            let status  = response.status;
             console.log(response);
             if(status) {
                 this.loginSuccess(response.data);
@@ -141,7 +141,7 @@
                 this.$.password.invalid = true;
                 this.username = "";
                 this.password = "";
-                this.msg = this.response.data[0].errorMessage;
+                this.msg = response.errors[0].errorMessage;
                 this.$.toast.open();
             }
         }
@@ -157,7 +157,6 @@
             password: this.password
           }
         if(this.username.length >=1 && this.password.length >= 1){
-            let that = this;
             this.bodyData = JSON.stringify(userDetails);
             var postRequest = this.$.xhr;
             postRequest.generateRequest();
@@ -176,33 +175,6 @@
             this.msg = "Login and password should be minimum of 3 characters";
             this.$.toast.open();
         }
-    //     var post_req = this.$.xhr;
-
-    //     // post_req.send({url: "src/data/login-success.json"});
-
-    //      post_req.send({url: "http://192.168.43.118:8080/user/login", method: "post", headers: {
-    //      'content-type': 'application/json'
-    //    }, body: bodyData});
-    //     post_req.completes.then((argReceived) => {
-    //         let response    = JSON.parse(argReceived.response);
-    //         let status      = response.status;
-    //         if(status){
-                // this.loginSuccess(response.data);
-    //             this.username = "";
-    //             this.password = "";
-    //         }
-    //         else{
-    //             this.$.username.invalid = true;
-    //             this.$.password.invalid = true;
-    //             this.username = "";
-    //             this.password = "";
-    //             this.msg = "Incorrect username or password, please try again!";
-    //                 this.$.toast.open();
-    //         }
-    //     }, function(){
-    //         this.msg = "Server is down, please try again";
-    //             this.$.toast.open();
-    //     });
       }
 
       _toggleLoginBtn(loginId, password){
