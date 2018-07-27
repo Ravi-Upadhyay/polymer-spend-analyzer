@@ -32,7 +32,7 @@
             <no-data-found></no-data-found>
         </template>
         <template is="dom-if" if="{{dataAvailable}}">    
-          <vaadin-grid id="grid" class="gridBorder" theme="row-dividers" items="[[users.data]]" page-size="10" height-by-rows column-reordering-allowed multi-sort>
+          <vaadin-grid id="grid" class="gridBorder" theme="row-dividers" items="[[users.data]]" page-size="10" height-by-rows>
            <vaadin-grid-column width="1em">
                 <template class="header">
                     <b>Transaction Id</b>

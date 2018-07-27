@@ -46,8 +46,8 @@
                     </vaadin-grid-column>
     
                     <vaadin-grid-column>
-                        <template class="header"><strong>Total Transaction</strong></template>
-                        <template>[[addCurrency(item.totalOutgoing,item.totalIncoming)]]</template>
+                        <template class="header"><strong>Closing Balance</strong></template>
+                        <template>[[addCurrency(item.closingBalance)]]</template>
                     </vaadin-grid-column>
             
                     <vaadin-grid-column>
@@ -107,21 +107,7 @@
                 if(newVal){
                     this._getTransactionData();  
                 }
-	        }	
-            
-            ready(){
-                super.ready();
-                // Polymer.RenderStatus.afterNextRender(this,function(){
-                //     this._getTransactionData();                    
-                // })
-
-                try{
-                    this.custId = JSON.parse(sessionStorage.user).customerId;
-                }
-                catch(e){
-                    console.log('Error getting data from SessionStorage -->' + e)
-                }
-            }
+	        }
             
             //Increment by 1 to index in dom-repeat
             displayIndex(index){
@@ -133,18 +119,21 @@
             // }
 
             // Add currency
-            addCurrency(am1, am2){
-
-                this.amount = parseInt(am1);
-                if(arguments.length == 2){
-                    this.amount = am1+ am2;
-                }
-                let totalTransaction = this.amount;
-                return '$' + parseInt(totalTransaction).toFixed(2);
+            // Add currency
+            addCurrency(amount){
+                return '$' + amount;
             }
 
             //Get transaction data ffrom API
             _getTransactionData(){
+
+                try{
+                    this.custId = JSON.parse(sessionStorage.user).customerId;
+                }
+                catch(e){
+                    console.log('Error getting data from SessionStorage -->' + e)
+                }
+
                 let ajax = this.$.analyser;
                 //ajax.url = "src/data/analyser.json";
                 ajax.url = "http://192.168.43.118:8080/user/"+this.custId+"/transactionsummary";
