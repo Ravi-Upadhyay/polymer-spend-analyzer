@@ -27,14 +27,15 @@
          paper-toast{
              position: absolute !important;
             /* display: block !important; */
-            left: 48% !important;
+            left: 48.5% !important;
             top: 22% !important;
             transform: translateX(-50%) translateY(-50%);
             color: #fff;
             letter-spacing: 0.06em;
             font-size: 15px;
-            background-color: rgba(255, 0, 0, 0.61);
+            background-color: rgb(221, 44, 0);
             text-align: center;
+        
          }
         
         a {
@@ -52,7 +53,7 @@
     </style>
     <div class="container fntFamily boxShadow whiteBckgrnd loginCompTopMargin">
         <h2 class="heading">Login</h2>
-		<paper-toast id="toast" text="{{msg}}"></paper-toast>
+		<paper-toast duration="10000" id="toast" text="{{msg}}"></paper-toast>
         <hr>
         <iron-form id="myForm" on-submit="login"> 
         <form>
