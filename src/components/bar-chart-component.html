@@ -54,8 +54,12 @@
                         "unit": "",
                         "position": "left",
                         "title": "",
-                        "autoGridCount" :false
+                        "autoGridCount" :false,
+                        "minimum"   : 10
                     }],
+                    legend: {
+        useGraphSettings: true
+    },
                     // set startDuration to 0 on older browsers
                     "startDuration": this._supportSVG()? 1 : 0,                                 
                     "depth3D": 60,

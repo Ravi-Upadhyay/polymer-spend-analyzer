@@ -3,6 +3,6 @@
     "data"      : {
         "loginId"   : "abbas",
         "customerId": 10984653,
-        "customerName": "M Junaid Abbas"
+        "name": "M Junaid Abbas"
     }
 }
