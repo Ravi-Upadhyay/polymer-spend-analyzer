@@ -50,20 +50,28 @@
                     "type": "serial",                    
                     "dataProvider":this.transactions,
                     "valueAxes": [{
-                        "stackType": "3d",
+                        //"stackType": "3d",
                         "unit": "",
                         "position": "left",
-                        "title": "",
+                        "title": "Amount",
                         "autoGridCount" :false,
-                        "minimum"   : 10
+                        "minimum"   : 0,
+                        "strictMinMax": true
                     }],
                     legend: {
-        useGraphSettings: true
-    },
+                       // useGraphSettings: true,
+                        "data":[{
+                            "title":"Credit",
+                            "color":"#ff6600"
+                        },{
+                            "title":"Debit",
+                            "color":"#42417a"
+                        }]
+                    },
                     // set startDuration to 0 on older browsers
                     "startDuration": this._supportSVG()? 1 : 0,                                 
                     "depth3D": 60,
-                    "angle": 8,
+                    "angle": 30,
                     "categoryField": "month",                    
                     "graphs": [{
                         "balloonText": "Credit in [[category]]: <b>[[value]]</b>",
