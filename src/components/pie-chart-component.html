@@ -1,0 +1,80 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../../bower_components/google-chart/google-chart.html">
+<link rel="import" href="../../bower_components/google-chart/google-chart-loader.html">
+<link rel="import" href="../../bower_components/google-chart/google-chart-styles.html">
+
+<dom-module id="piechart-component">
+    <template>
+        <style> 
+            div#chartContainer {
+                margin-left: 300px;
+                right: 0;
+                left: 0;
+                position: relative;
+            }
+            h2{
+                text-align: center;
+                margin-top:25px;
+            }
+        </style> 
+        <h2>Chart View for Spend Analyser</h2>
+        <div id='chartContainer'>  
+        <span id="piechartDebit">
+            <google-chart
+            id="debitchart"
+            type="pie"
+            options='{"title": "Distribution of Debit"}'
+            selection='[{"row": 1}]'>
+            </google-chart>
+        </span>  
+
+        <span id="piechartCredit">
+            <google-chart
+            id="creditchart"
+            type="pie"
+            options='{"title": "Distribution of Credit"}'
+            selection='[{"row": 1}]'>
+            </google-chart>
+        </span>  
+        </div>                     
+    </template>
+    <script>
+        class piechartComponent extends Polymer.Element{
+            static get is(){ return 'piechart-component'}
+            static get properties(){
+                return  {
+                   transactions: {
+                       type:Array,
+                       observer:'_configureChart'
+                   }
+                }
+            }
+            
+            _configureChart(){                 
+                console.log(this.transactions)
+                var debitArr = [];
+                var creditArr = [];
+                debitArr.push(["Label", "Value"]);
+                creditArr.push(["Label", "Value"]);
+                this.transactions.forEach(function(el) {
+                    creditArr.push([el.month,parseInt(el.totalIncoming)])
+                });
+                this.transactions.forEach(function(el) {
+                    debitArr.push([el.month,parseInt(el.totalOutgoing)])
+                });
+                let creditChart = this.$.creditchart;   
+                let debitChart = this.$.debitchart;    
+                document.createElement('google-chart-loader').dataTable(debitArr).then(function(dataTable) {
+                    debitChart.data = dataTable;
+                });  
+                document.createElement('google-chart-loader').dataTable(creditArr).then(function(dataTable) {
+                    creditChart.data = dataTable;
+                });
+            }
+            
+ 
+        };
+        window.customElements.define(piechartComponent.is,piechartComponent);
+    </script>
+</dom-module>
