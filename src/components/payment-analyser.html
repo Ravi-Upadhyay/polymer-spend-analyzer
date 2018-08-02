@@ -9,6 +9,7 @@
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="common-styles.html">
 <link rel="import" href="bar-chart-component.html">
+<link rel="import" href="pie-chart-component.html">
 <link rel="import" href="no-data-found.html">
 <link rel="import" href="sub-header.html">
 
@@ -71,6 +72,7 @@
             <template is="dom-if" if="{{dataAvailable}}">
                 <barchart-component transactions=[[transactions]]></barchart-component>
             </template>
+                <piechart-component transactions=[[transactions]]></piechart-component>
         </div>
     </template>
     <script>
