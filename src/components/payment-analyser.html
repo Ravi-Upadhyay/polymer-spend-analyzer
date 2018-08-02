@@ -34,7 +34,7 @@
                 <no-data-found></no-data-found>
             </template>
             <template is="dom-if" if="{{dataAvailable}}">
-                <vaadin-grid id="analyser_grid" theme="row-dividers" items="[[transactions]]" page-size="10" height-by-rows>
+                <vaadin-grid id="analyser_grid" theme="row-dividers" class="gridBorder" border="2px solid #000;"items="[[transactions]]" page-size="10" height-by-rows>
                     <vaadin-grid-column items="[[transactions]]" id="border">
                         <template class="header"><strong>#</strong></template>
                         <template>
