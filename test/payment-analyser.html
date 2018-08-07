@@ -1,0 +1,140 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>Payment Analyser</title>
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+
+    <!-- Import the element to test -->
+    <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+    <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
+    <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-selection-column.html">
+    <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-sorter.html">
+    <link rel="import" href="../src/components/payment-analyser.html">
+    <link rel="import" href="../src/components/no-data-found.html">
+  </head>
+  <body>
+    <test-fixture id="analyserView">
+      <template>
+        <payment-analyser></payment-analyser>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="ajaxGet">
+      <template>
+          <iron-ajax></iron-ajax>      
+      </template>
+    </test-fixture>
+
+    <test-fixture id="no-data-found">
+      <template>
+          <no-data-found></no-data-found>      
+      </template>
+    </test-fixture>
+
+
+    <script>
+       
+      suite('<payment-analyser>', function() {
+        var paymentAnalyserView;
+        var wrapper;
+        var grid, columns;
+        var ajax,request,server,responseHeader;
+
+        setup(function(){             
+
+          paymentAnalyserView = fixture('analyserView');  
+          ajax = fixture('ajaxGet');
+          responseHeader = {
+                'json':{
+                    'content-type':'application/json'
+                }
+            };
+
+            server = sinon.fakeServer.create();
+            var data = JSON.stringify([{
+                        "month":"Feb",
+                        "totalTransaction":"35677",
+                        "totalIncoming" : "1000",
+                        "totalOutgoing" : "500",
+                        "closingBalance": "230"
+                    }]);
+            server.respondWith(
+                'GET',
+                '',
+                [
+                    200,
+                    responseHeader.json,
+                    data
+                ]
+            );       
+        });
+
+        test('If data is available vaadin grid should come', function(done){
+            var length;
+            request = ajax.generateRequest();
+            server.respond();
+            console.log(request.response);   
+            // expect(request.response).to.be.ok;
+            // expect(request.response).to.be.an('array');
+
+            length = request.response.length;
+
+            if(length){
+                paymentAnalyserView.dataAvailable = true;
+                paymentAnalyserView.transactions = request.response;
+            }
+
+            wrapper = paymentAnalyserView.shadowRoot.querySelector('.container');
+            flush(function(){
+                grid = wrapper.querySelector('vaadin-grid');
+                console.log(grid);
+                columns = grid.querySelectorAll('vaadin-grid-column');
+                console.log(columns[0]);
+                console.log(columns[0].attributes.length);
+                
+                    var rows = columns[0].querySelectorAll('.vaadinCol');
+                    console.log(rows);
+                
+            })
+            done();
+        });
+
+        test('If data is not available no-data-found should come', function(done){
+
+            paymentAnalyserView.dataAvailable = false;
+            wrapper = paymentAnalyserView.shadowRoot.querySelector('.container');
+            flush(function(){
+                grid = wrapper.querySelector('no-data-found');
+                console.log(grid);
+            })
+            done();
+        });
+        
+        //check for vaadin grid label
+        test('header should be present', function() {          
+          var headerEle = paymentAnalyserView.shadowRoot.querySelector('.centerText');
+          headerEle.textContent = headerEle.textContent.replace(/\s/g,''); 
+          console.log(headerEle.textContent);
+          expect(headerEle.textContent).to.equal('AccountActivityAnalysis');
+        });
+     
+      })
+    
+    </script>
+  </body>
+</html>
