@@ -1,0 +1,47 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="common-styles.html">
+
+<dom-module id="msg-component">
+    <template>
+        <style>
+            .msgContainer {
+                width: 28em;
+                z-index: 1000;
+                background-color: rgba(158, 158, 158, 0.212);
+                border-radius: 10px;
+            }
+
+            .left {
+                /* position: absolute; */
+                background-color: chartreuse;
+                float: left;
+            }
+
+            .right {
+                padding: 10px 10px;
+                color: rgb(98, 146, 201);
+            }
+        </style>
+        <div class="msgContainer">
+            <div class="left"></div>
+            <div class="right">
+                <p>INFORMATION: Select multiple categories to perform category wise spend analysis. After
+                     selection of categories please click analyse button to see graphical representation.</p>
+            </div>
+        </div>
+    </template>
+    <script>
+        class MsgComponent extends Polymer.Element {
+            static get is() { return 'msg-component';}
+            static get properties() {
+                return{
+                    duration: {
+                        type: Number
+                    }
+                }
+                console.log("Component Working!!!!!!");
+            }
+        }
+        window.customElements.define(MsgComponent.is, MsgComponent);
+    </script>
+</dom-module>

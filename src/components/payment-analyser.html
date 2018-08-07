@@ -12,6 +12,7 @@
 <link rel="import" href="pie-chart-component.html">
 <link rel="import" href="no-data-found.html">
 <link rel="import" href="sub-header.html">
+<link rel="import" href="msg-component.html">
 
 
 <dom-module id="payment-analyser">
@@ -29,6 +30,7 @@
         <iron-ajax id="analyser" method="[[api.method]]" handle-as="json" last-response="{{activities.data}}" on-response="_handleResponse"></iron-ajax>
        <sub-header></sub-header>
         <div class="container fntFamily">
+            <msg-component></msg-component>
             <h2 class="centerText"> Account Activity Analysis </h2>
 
             <template is="dom-if" if="{{!dataAvailable}}">
