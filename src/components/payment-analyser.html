@@ -35,10 +35,7 @@
         </style>
        <sub-header></sub-header>
         <div class="container fntFamily">
-<<<<<<< HEAD
             <msg-component></msg-component>
-            <h2 class="centerText"> Account Activity Analysis </h2>
-=======
         <h2 class="centerText"> Account Activity Analysis </h2>
 
             <iron-form id="myForm">
@@ -63,7 +60,6 @@
          <!-- <iron-ajax id="analyser" handle-as="json" last-response="{{activities.data}}" on-response="_handleResponse"></iron-ajax> -->
         <iron-ajax id="analyser" method="[[api.method]]" handle-as="json" last-response="{{activities.data}}" on-response="_handleResponse"></iron-ajax>
 
->>>>>>> 266e356feb9aac402cd8830a6b5f048494d34239
 
             <template is="dom-if" if="{{!dataAvailable}}">
                 <no-data-found></no-data-found>
