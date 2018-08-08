@@ -6,6 +6,7 @@
         "description": "xxx",
         "amount": 110.04,
         "paymentType": "DEBIT",
-        "closingBalance": 156413.15
+        "closingBalance": 156413.15,
+        "category": ["Rent", "Utilities", "Groceries"]
     }
 }

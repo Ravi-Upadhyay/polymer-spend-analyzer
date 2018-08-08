@@ -70,7 +70,7 @@
                         <paper-dropdown-menu allow-outside-scroll="true" id="type" class="customWidth" no-label-float>
                             <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content customWidth" selected="{{selectedType}}" on-tap="_removeInvalid">
                                 <template is="dom-repeat" items="[[transactionType]]">
-                                    <paper-item value$="[[item.type]]">[[item.type]]</paper-item>
+                                    <paper-item value$="[[item.type]]" on-click="_changeType">[[item.type]]</paper-item>
                                 </template>
                             </paper-listbox>
                         </paper-dropdown-menu>
@@ -78,10 +78,23 @@
 
                     <div>
                         <h4 class="label">Enter amount</h4>
-                        <paper-input on-keyup="_clearError" allowed-pattern="[0-9]" pattern="[0-9]" minlength="1" maxlength="6" no-label-float id="amount"  error-message="{{amountError}}" value="{{amount}}" on-change="_removeInvalid">
+                        <paper-input on-keyup="_clearError" allowed-pattern="[0-9.]" minlength="1" maxlength="10" no-label-float id="amount"  error-message="{{amountError}}" value="{{amount}}" on-change="_removeInvalid">
                         <div slot="prefix">$ &nbsp</div>
                         </paper-input>
                     </div>
+                    
+                    <template is="dom-if" if="[[isCategoryPresent]]">
+                        <div>
+                            <h4 class="label">Select payment category</h4>
+                            <paper-dropdown-menu allow-outside-scroll="true" id="type" class="customWidth" no-label-float>
+                                <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content customWidth" selected="{{selectedCategory}}">
+                                    <template is="dom-repeat" items="[[categories]]">
+                                        <paper-item value$="[[item.category]]">[[item.category]]</paper-item>
+                                    </template>
+                                </paper-listbox>
+                            </paper-dropdown-menu>
+                        </div>
+                    </template>
 
                     <div>
                         <h4 class="label">Enter description</h4>
@@ -92,7 +105,7 @@
 
                     <app-location route="{{route}}"></app-location>
                     <paper-spinner-lite active="[[loading]]"></paper-spinner-lite>
-                    <paper-button disabled="[[isInputEmpty(amount)]]" class="btnPrl" on-click="_makeTransaction">
+                    <paper-button class="btnPrl" on-click="_makeTransaction">
                         Make Payment
                     </paper-button>
                     <paper-toast id="toast" text="{{msg}}"></paper-toast>
@@ -115,6 +128,22 @@
                         value: 1,
                     }]
                 },
+                categories: {
+                    type: Array,
+                    value: [{
+                        category: 'Rent',
+                        value: 0
+                    }, {
+                        category: 'Utilities',
+                        value: 1,
+                    }, {
+                        category: 'Groceries',
+                        value: 2,
+                    }, {
+                        category: 'Other',
+                        value: 3,
+                    }]
+                },
                 api      : {
                     type    : Object
                 },
@@ -131,9 +160,17 @@
                     type: String,
                     value: 'DEBIT' //Set debit as default
                 },
+                selectedCategory: {
+                    type: String,
+                    value: 'Other'  //set Other as default
+                },
                 transactionDetails: {
                     type: Object,
                     value: {}
+                },
+                isCategoryPresent: {
+                    type: Boolean,
+                    value: true
                 },
                 msg: {
                     type: String,
@@ -154,6 +191,7 @@
                 this.amount = '';
                 this.selectedType = 'DEBIT';
                 this.description = ''; 
+                this.selectedCategory = 'Other';
             }
         }
 
@@ -165,7 +203,7 @@
         _clearError() {
             this.$.amount.invalid = false; //remove error message
         }
-
+        
          _removeInvalid(){
            console.log('remove invalid');
             // FUNCTION: This function will take care, if we have inputs in invalid state
@@ -173,10 +211,15 @@
             this.$.amount.invalid = false;
         }
 
+        _changeType(){
+            this.isCategoryPresent = (this.selectedType === 'CREDIT') ? false : true
+        }
+
         _makeTransaction() {
            localStorage.removeItem('transactionDetails');
             var amount = this.amount
             var paymentType = this.selectedType
+            var category = this.selectedCategory
             var description = this.description
             var ajax = this.$.transaction;
             let custId = JSON.parse(sessionStorage.user).customerId;
@@ -186,14 +229,25 @@
                 "customerId": custId,
                 "amount": amount,
                 "paymentType": paymentType,
-                "description": description
+                "description": description,
+                "category": category
             });
-            ajax.generateRequest(); // triggers the iron-ajax
-        }
-
-        isInputEmpty(amount) {
-            if (amount<= 0) return true;
-            return false;
+            console.log(ajax.body);
+            if(amount > 0) {
+                ajax.generateRequest(); // triggers the iron-ajax
+            } else if(amount === null || amount === "") {
+                //Set error message
+                this.amountError = "Amount should not be empty";
+                this.$.amount.invalid = true; //show message error
+            } else if(amount === '0') {
+                 //Set error message
+                 this.amountError = "Amount should not be Zero";
+                this.$.amount.invalid = true; //show message error   
+            } else {
+                 //Set error message
+                 this.amountError = "Please enter valid amount";
+                this.$.amount.invalid = true; //show message error
+            }
         }
 
         _handleResponse(response) {
