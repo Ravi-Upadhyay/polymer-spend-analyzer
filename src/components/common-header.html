@@ -6,6 +6,7 @@
 -->
 
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
 <link rel="import" href="common-styles.html">
 
 <dom-module id="common-header">
@@ -75,13 +76,13 @@
         <div class="h-container height100">
             
             <div class="logo-wrapper">
-                <img src="src/images/ing-logo-sm-88x270-mobile.png" alt="Logo-ING" height="60px" />
+                <img src="resources/images/ing-logo-sm-88x270-mobile.png" alt="Logo-ING" height="60px" />
             </div>
 
             <div class="menu-wrapper">
                 <template is="dom-if" if="{{isLoggedIn}}">
                     <template is="dom-repeat" items={{menu}}>
-                        <span><a class$="secondaryLinkButton [[item.class]]" href="{{_generateURL(rootPath,item.slug)}}">[[item.display]]</a></span>
+                        <span id="[[item.name]]"><a class$="secondaryLinkButton [[item.class]]" href="{{_generateURL(rootPath,item.slug)}}">[[item.display]]</a></span>
                     </template>
                 </template>
             </div>
@@ -108,7 +109,8 @@
                 return {
                     isLoggedIn  : {
                         type        : Boolean,
-                        notify      : true
+                        notify      : true,
+                        reflectToAttribute: true
                     },
                     menu        : {
                         type        : Array
@@ -136,17 +138,18 @@
 
             _routeChanged(path){
                 let page = path.substring(1);
-                
-                this.menu.forEach((item, index)=>{
-                    if(page === item.slug){
-                        item.class = 'secondaryLinkButtonActive';
-                    }
-                    else{
-                        item.class = 'secondaryLinkButtonInactive';
-                    }
-                    //console.log(this.menu);
-                    this.notifyPath(`menu.${index}.class`);
-                });
+                if(this.menu.length) {
+                    this.menu.forEach((item, index)=>{
+                        if(page === item.slug){
+                            item.class = 'secondaryLinkButtonActive';
+                        }
+                        else{
+                            item.class = 'secondaryLinkButtonInactive';
+                        }
+                        //console.log(this.menu);
+                        this.notifyPath(`menu.${index}.class`);
+                    });
+                }
             }
 
             _generateURL(rootPath, slug) {

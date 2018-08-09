@@ -1,13 +1,3 @@
-<!--
-@license
-Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -25,50 +15,200 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <body>
     <test-fixture id="commonHeader">
       <template>
-        <common-header></common-header>
+        <common-header
+          menu = '[
+          {
+            "display" : "Payments",
+            "name"    : "payments",
+            "slug"    : "payments"
+          },
+          {
+            "display" : "Transactions",
+            "name"    : "transactions",
+            "slug"    : "transactions"                
+          },
+          {
+            "display" : "Spend Analyser",
+            "name"    : "analyser",
+            "slug"    : "analyser"                
+          }]'
+          
+        ></common-header>
       </template>
     </test-fixture>
 
     <script>
 
-      suite('<common-header>', function() {
-        var commonHeader;
-
+      suite('<common-header>', function(){
+        var commonHeader,
+        menuArray     = [
+            {
+              "display" : "Payments",
+              "name"    : "payments",
+              "slug"    : "payments"
+            },
+            {
+              "display" : "Transactions",
+              "name"    : "transactions",
+              "slug"    : "transactions"                
+            },
+            {
+              "display" : "Spend Analyser",
+              "name"    : "analyser",
+              "slug"    : "analyser"                
+            }];
+            rootPath      = "127.0.0.1:8080";
+            loggedIn      = true;
+            loggedOut     = false;
+            selected      = "payments";
+         
         setup(function(){
-          commonHeader = fixture('commonHeader');
-          // stub('login-form', {
-          //   _changeRoute: function(){
-          //     route = {'path':'/view2/123'};
-          //   }
-          // })
+          commonHeader  = fixture('commonHeader');
+          // menuArray     = [
+          //   {
+          //     "display" : "Payments",
+          //     "name"    : "payments",
+          //     "slug"    : "payments"
+          //   },
+          //   {
+          //     "display" : "Transactions",
+          //     "name"    : "transactions",
+          //     "slug"    : "transactions"                
+          //   },
+          //   {
+          //     "display" : "Spend Analyser",
+          //     "name"    : "analyser",
+          //     "slug"    : "analyser"                
+          //   }];
+          // rootPath      = "127.0.0.1:8080";
+          // loggedIn      = true;
+          // loggedOut     = false;
+          // selected      = "payments";
+          
+          // commonHeader.menu = menuArray;
         });
 
-        // test('header should be login', function() {
-        //   var myView = fixture('BasicView');
-        //   var circle = myView.shadowRoot.querySelector('.heading');
-        //   expect(circle.textContent).to.equal('Login');
+/*
+//////////////////////////////////////////////////////////////////////
+
+In Setup we have intialized variables which we will need for tests
+Here we will show all paramenters <common-header> component will need
+to initiate properly for test suites
+
+  <common-header 
+    is-logged-in="{{isLoggedIn}}" 
+    menu="[[myMenu]]" 
+    root-path="[[rootPath]]" 
+    selected="[[page]]"
+    logout="[[_logout]]">
+  </common-header>
+
+//////////////////////////////////////////////////////////////////////
+*/
+
+      test('Properties are being set properly and with proper datatypes',function(){
+        commonHeader.isLoggedIn = loggedIn;
+        commonHeader.menu       = menuArray;
+        commonHeader.rootPath   = rootPath;
+        commonHeader.selected   = selected;
+
+        // commonHeader.render();
+        expect(commonHeader).to.have.a.property('isLoggedIn');
+        expect(commonHeader.isLoggedIn).to.be.a('boolean');
+        assert.equal(commonHeader.isLoggedIn , true);
+
+        expect(commonHeader).to.have.a.property('menu');
+        expect(commonHeader.menu).to.be.an('array');
+        expect(commonHeader.menu).to.not.be.empty;
+
+        expect(commonHeader).to.have.a.property('rootPath');
+        expect(commonHeader.rootPath).to.be.a('string');
+        assert.equal(commonHeader.rootPath , "127.0.0.1:8080");        
+
+        expect(commonHeader).to.have.a.property('selected');
+        expect(commonHeader.selected).to.be.a('string');
+        assert.equal(commonHeader.selected , "payments");
+      });
+
+        // test('Logged in status received from parent as property properly', function(){
+        //   commonHeader.isLoggedIn = loggedIn;
+        //   expect(commonHeader).to.have.a.property('isLoggedIn');
+        //   expect(commonHeader.isLoggedIn).to.be.a('boolean');
+        //   assert.equal(commonHeader.isLoggedIn , true);
         // });
 
-        // test('label should be present for username', function() {
-        //     var loginForm = fixture('BasicView');
-        //     var label = loginForm.shadowRoot.querySelector('.label');
-        //     expect(label.textContent).to.equal('Enter User Id');
+        // test('Menu Items received from parent as property properly', function(){
+        //   expect(commonHeader).to.have.a.property('menu');
+        //   expect(commonHeader.menu).to.be.an('array');
+        //   expect(commonHeader.menu).to.not.be.empty;
         // });
 
-        // test('label should be present for password', function(){
-        //     var loginForm = fixture('BasicView');
-        //     var label = loginForm.shadowRoot.querySelectorAll('.label');
-        //     expect(label[label.length - 1].textContent).to.equal('Enter Password'); 
+        // test('Root Path received from parent as property properly', function(){
+        //   expect(commonHeader).to.have.a.property('rootPath');
+        //   expect(commonHeader.rootPath).to.be.a('string');
+        //   assert.equal(commonHeader.rootPath , "127.0.0.1:8080");
         // });
 
-        // test('login button should be present', function(){
-        //     var loginForm = fixture('BasicView');
-        //     var loginButton = loginForm.shadowRoot.querySelector('paper-button');
-        //     expect(loginButton.textContent).to.contain('LOGIN');
+        // test('Page received from parent as property properly', function(){
+        //   expect(commonHeader).to.have.a.property('selected');
+        //   expect(commonHeader.selected).to.be.a('string');
+        //   assert.equal(commonHeader.selected , "payments");
         // });
 
-        
-      })
+        // test('Logout should visible only when user is logged in', function(done){
+        //   var logoutWrapper = commonHeader.shadowRoot.querySelectorAll('.logout-wrapper');
+        //   var logoutButton;
+          
+        //   flush(function(){
+        //     logoutButton = logoutWrapper[0].querySelector('button');
+        //     if(commonHeader.isLoggedIn){
+        //       expect(logoutButton).to.be.an.instanceof(Object); 
+        //     }
+        //     else {
+        //       expect(logoutButton).to.be.a('null');
+        //     }
+        //     done();
+        //   });
+        // });
+
+        test('Given that user is logged-in, he should able to see menu options and correct options should be visible', function(done){
+
+          commonHeader.isLoggedIn = loggedIn;
+          commonHeader.menu       = menuArray;
+          commonHeader.rootPath   = rootPath;
+          commonHeader.selected   = selected;
+
+          var menuWrapper = commonHeader.shadowRoot.querySelector('.menu-wrapper');
+          var menuLength  = commonHeader.menu.length;
+          var menuItems,displayText, i;
+
+          flush(function(){
+            menuItems = menuWrapper.getElementsByTagName('span');
+            expect(menuItems).to.have.lengthOf(menuLength);
+            for(i = 0; i< menuLength; i++){
+              displayText = menuItems[i].querySelector('a').textContent;
+              expect(displayText).to.equal(commonHeader.menu[i].display);
+            }
+            done();
+          });  
+        });
+
+        test('Given that user is logged-out, user should not be able to see menu', function(){
+          commonHeader.isLoggedIn = loggedOut;
+          commonHeader.menu       = menuArray;
+          commonHeader.rootPath   = rootPath;
+          commonHeader.selected   = selected;
+
+          var menuWrapper = commonHeader.shadowRoot.querySelector('.menu-wrapper');
+          var menuLength  = commonHeader.menu.length;
+          var menuItems,displayText, i;
+
+          flush(function(){
+            menuItems = menuWrapper.getElementsByTagName('span');
+            expect(menuItems).to.have.lengthOf(0);
+          });
+        });       
+      });
     </script>
   </body>
 </html>

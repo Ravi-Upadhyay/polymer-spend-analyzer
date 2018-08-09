@@ -1,0 +1,26 @@
+{
+    "status"    : 1,
+    "data"      : [
+        {
+            "month":"Jan",
+            "totalTransaction":"35677",
+            "totalIncoming" : "2000",
+            "totalOutgoing" : "500",
+            "closingBalance": "150"
+        },
+        {
+            "month":"Feb",
+            "totalTransaction":"35677",
+            "totalIncoming" : "1000",
+            "totalOutgoing" : "500",
+            "closingBalance": "230"
+        },
+        {
+            "month":"March",
+            "totalTransaction":"35677",
+            "totalIncoming" : "1500",
+            "totalOutgoing" : "700",
+            "closingBalance": "123"
+        }
+    ]
+}

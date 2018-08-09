@@ -21,7 +21,7 @@
          
         </style>
 
-        <!-- <iron-ajax auto url="src/data/history.json" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax>  -->
+        <!-- <iron-ajax auto url="resources/data/history.json" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax>  -->
         <!-- <iron-ajax id="transHistory" method="GET" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax> -->
         <iron-ajax id="transHistory" method="[[api.method]]" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax>
 
@@ -134,7 +134,7 @@
 
       _getTransactionData(){
         let ajax = this.$.transHistory;
-        //ajax.url = "src/data/analyser.json";
+        //ajax.url = "resources/data/analyser.json";
         // ajax.url = "http://192.168.43.118:8080/user/"+this.custId+"/transactions";
         ajax.url = this.api.url;
         ajax.generateRequest(); //trigger the iron-ajax                
