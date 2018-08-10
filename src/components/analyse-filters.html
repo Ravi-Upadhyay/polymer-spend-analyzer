@@ -21,8 +21,13 @@
             }
             .analyseBtnSpan{
                 float: right;
-                width: 35%;
-            }                     
+                width: 30%;
+            }    
+            span.note{
+                font-size: 12px;
+                color: #ff6600;
+                margin-left: 10px;
+            }                 
         </style>
         <style include="shared-styles">
          
@@ -30,6 +35,7 @@
          <iron-ajax id="getPeriod" method="[[api.method]]" handle-as="json" last-response="{{periods}}" on-response="_handlePeriodResponse"></iron-ajax>
          <iron-ajax id="getCurrentMonth" method="[[api.method]]" handle-as="json" last-response="{{currentMonthData}}" on-response="_handleCurrentMonthResponse"></iron-ajax>
          <iron-ajax id="getPreviousMonths" method="[[api.method]]" handle-as="json" last-response="{{currentMonthData}}" on-response="_handlePreviousMonthResponse"></iron-ajax>
+         <iron-ajax id="getCategories" method="[[api.method]]" handle-as="json" last-response="{{categories}}" on-response="_handleCategoriesResponse"></iron-ajax>
 
         <div class="container fntFamily">
             <iron-form id="myForm">
@@ -47,7 +53,7 @@
                         </span>
                         <template is="dom-if" id="periodic" if="{{isPeriodicSelected}}">
                             <span class="inline-block">
-                                <h4 class="label">From</h4>
+                                <h4 class="label">From Date(dd/mm/yy)</h4>
                                 <vaadin-date-picker 
                                     id='FromDate'
                                     placeholder="Select Date" value="{{fromDateVal}}" 
@@ -55,7 +61,7 @@
                                 </vaadin-date-picker>
                             </span>
                             <span class="inline-block">
-                                <h4 class="label">To</h4>
+                                <h4 class="label">To Date(dd/mm/yy)</h4>
                                 <vaadin-date-picker 
                                     id='vaadinToDate'  value="{{toDateVal}}"
                                     placeholder="Select Date" 
@@ -66,7 +72,7 @@
 
                          <template is="dom-if" id="MonthsDropdown" if="{{isMonthlySelected}}">
                             <span class="inline-block">
-                                <h4 class="label">Select Month</h4>
+                                <h4 class="label">Select Month<span class="note">*Only last 6 months transactions avaliable</span></h4>
                                 <paper-dropdown-menu allow-outside-scroll="true" id="months" 
                                     no-label-float placeholder="Select">
                                         <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content" selected="{{selectedMonth}}">
@@ -82,15 +88,17 @@
                         <template is="dom-if" if="{{isFromToSelected}}">
                             <span class="inline-block">
                                 <h4 class="label">Select Category</h4>
-                                <paper-dropdown-menu allow-outside-scroll="true" id="categoriesList" on-iron-select="categoryChanged" no-label-float>
+                                <paper-dropdown-menu allow-outside-scroll="true" id="categoriesList" on-iron-select="" no-label-float>
                                     <paper-listbox slot="dropdown-content" selected="{{selectedCategory}}"attr-for-selected="value" class="dropdown-content">
                                         <template is="dom-repeat" items="[[categoryList]]">
-                                            <paper-item value$="[[item]]">[[item]]</paper-item>
+                                            <paper-item value$="[[item.category]]">[[item.category]]</paper-item>
                                         </template>
                                     </paper-listbox>
                                 </paper-dropdown-menu>
                             </span>
-                            <msg-component></msg-component>
+                            <span class="inline-block">
+                                <msg-component></msg-component>
+                            </span>
                             <span class="inline-block analyseBtnSpan">
                                 <paper-button disabled="[[isInputEmpty(amount)]]" class="btnPrl" on-click="_analyseData">
                                     Analyse
@@ -141,6 +149,11 @@
                         value : false
                         
                     },   
+                    currentMonthData:{
+                        type:Array,
+                        value:'',
+                        notify:true
+                    },
                     isFromToSelected:{
                         type: Boolean,
                         value: false
@@ -167,12 +180,8 @@
                     }, 
                     categoryList:{
                         type:Array,
-                        value:[
-                        "All",
-                        "Travel",
-                        "Shopping",
-                        "Loan"                    
-                    ]},               
+                        value:''
+                    },               
                     makeFilters: {
                         type: Boolean,
                         observer: '_activationChanged'
@@ -188,6 +197,7 @@
                 this.selectedCategory = 'All';
                 this.selectedMonth = '';
                 this._getPeriods();
+                this._getCategories();
 
                 
                 // let now = new Date();
@@ -202,9 +212,9 @@
                 ajax.url = this.api.periods.url;
                 ajax.generateRequest();
             }
-
-            _handlePeriodResponse(event,request){
-                console.log(request)
+            
+            //Handle CURRENT MONTH(Landing page) response once periods are loaded
+            _handlePeriodResponse(event,request){                
                 this.periodList = request.response.data;
                 console.log('periods',this.periodList);
                 let  payload = [{
@@ -219,17 +229,15 @@
                 let ajax = this.$.getCurrentMonth;                                        
                 ajax.url = this.api.currentmonth.url;               
                 //ajax.body = payload;
-                ajax.generateRequest();
-                
-            }  
+                ajax.generateRequest();                
+            } 
+            
+            //Handle current month response - history with debit/credit data
             _handleCurrentMonthResponse(event,request){
                 console.log(request.response.data);
+                this.currentMonthData = request.response.data;
             }
-           
-            //Get categories from API
-            _getCategoryData(){
-                console.log(' category data needed');
-            }           
+               
             // User changes the period 
             _periodChanged(){                
                 if(this.$.period.value == 'Current Month'){                    
@@ -268,6 +276,12 @@
                 this.monthsList = request.response.data;
                 console.log('previous months list',this.monthsList);
             }
+            
+            //Handle categories response
+            _handleCategoriesResponse(event,request){
+                this.categoryList = request.response.data;
+                this.categoryList.splice(0,0,{'id':999,'category':'All'});//index,num of elements to be removed,item to be pushed
+            }
             //reset fields
             _resetFileds(period){
                 let periodList = this.periodList;
@@ -292,6 +306,14 @@
                     this.isFromToSelected = true;
                 }
             }
+            //Call Get categories API
+            _getCategories(){
+                let ajax = this.$.getCategories;                                        
+                ajax.url = this.api.categories.url;               
+                //ajax.body = payload;
+                ajax.generateRequest();
+                
+            }
             //When FROM date changed
              _fromDateChanged(e){                
                 this.selectedFromDate = e.target.value;
@@ -299,6 +321,7 @@
                      this.isFromToSelected = true;
                  }                 
             }
+
             //When TO date changed
             _toDateChanged(e){
                 this.selectedToDate = e.target.value;

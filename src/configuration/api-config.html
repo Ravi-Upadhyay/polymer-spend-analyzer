@@ -117,6 +117,10 @@
                         "previousMonths" : {
                                             "url"     : `${baseURL}/user/${customerId}/previousmonth`,
                                             "method"  : "GET" 
+                        },
+                        "categories" : {
+                                            "url"     : `${baseURL}/user/${customerId}/categories`,
+                                            "method"  : "GET" 
                         }
 
                     }; 
@@ -146,7 +150,11 @@
                         "previousmonth"       : {
                                             "url"     : `src/data/previousmonths.json`,
                                             "method"  : "GET"
-                        }  
+                        },
+                        "categories"       : {
+                                            "url"     : `src/data/categories.json`,
+                                            "method"  : "GET"
+                        }   
                     };
                 }
                 this.set('apiCollection',apiCollection);
