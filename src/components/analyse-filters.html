@@ -55,15 +55,15 @@
                             <span class="inline-block">
                                 <h4 class="label">From Date(dd/mm/yy)</h4>
                                 <vaadin-date-picker 
-                                    id='FromDate'
-                                    placeholder="Select Date" value="{{fromDateVal}}" 
+                                    id='FromDate' min={{minDateVal}} max={{maxDateVal}}
+                                    placeholder="Select Date" 
                                     on-change="_fromDateChanged">
                                 </vaadin-date-picker>
                             </span>
                             <span class="inline-block">
                                 <h4 class="label">To Date(dd/mm/yy)</h4>
                                 <vaadin-date-picker 
-                                    id='vaadinToDate'  value="{{toDateVal}}"
+                                    id='vaadinToDate' min={{minDateVal}} max={{maxDateVal}}
                                     placeholder="Select Date" 
                                     on-change="_toDateChanged">
                                 </vaadin-date-picker>
@@ -200,9 +200,9 @@
                 this._getCategories();
 
                 
-                // let now = new Date();
-                // this.fromDateVal = now.getFullYear() +'-' + (now.getMonth()-5)+'-'+now.getDate();
-                // this.toDateVal = now.getFullYear() +'-' + (now.getMonth()+1)+'-'+now.getDate();
+                let now = new Date();
+                this.minDateVal = now.getFullYear() +'-' + (now.getMonth()-5)+'-'+now.getDate();
+                this.maxDateVal = now.getFullYear() +'-' + (now.getMonth()+1)+'-'+now.getDate();
 	        }
         
             //get periods from API
@@ -235,6 +235,10 @@
             //Handle current month response - history with debit/credit data
             _handleCurrentMonthResponse(event,request){
                 console.log(request.response.data);
+                // request.response.data.totalCreditDebit.forEach(function(el) {
+                //     el.Ccolor = "#ff6600";
+                //     el.Dcolor = "#42417a";                    
+                // })
                 this.currentMonthData = request.response.data;
             }
                
@@ -244,6 +248,7 @@
                     this.isCurrentMonthSelected = true;
                     this.isMonthlySelected = false;
                     this.isPeriodicSelected = false;
+
 
                     this.isFromToSelected = false;
                     this._resetFileds(this.$.period.value);

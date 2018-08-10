@@ -1,0 +1,95 @@
+{
+	"status": 1,
+	"data": {
+		"transactions": [{
+				"transactionId": "TXN002",
+				"transactionDate": "23-05-2018 23:12:11",
+				"paymentType": "Debit",
+				"transactionAmount": "100",
+				"categoryType": "Education",
+				"closingBalance": "10259",
+				"description": "Education"
+			},
+			{
+				"transactionId": "TXN002",
+				"transactionDate": "25-05-2018 23:12:11",
+				"paymentType": "Credit",
+				"transactionAmount": "100",
+				"categoryType": "",
+				"closingBalance": "10159",
+				"description": ""
+			},
+			{
+				"transactionId": "TXN002",
+				"transactionDate": "26-05-2018 10:12:11",
+				"paymentType": "Debit",
+				"transactionAmount": "100",
+				"categoryType": "Education",
+				"closingBalance": "10359",
+				"description": "Education"
+			},
+			{
+				"transactionId": "TXN002",
+				"transactionDate": "23-05-2018 23:12:11",
+				"paymentType": "Credit",
+				"transactionAmount": "100",
+				"categoryType": "",
+				"closingBalance": "10259",
+				"description": ""
+			},
+			{
+				"transactionId": "TXN002",
+				"transactionDate": "23-05-2018 23:12:11",
+				"paymentType": "Credit",
+				"transactionAmount": "100",
+				"categoryType": "",
+				"closingBalance": "10259",
+				"description": ""
+			},
+			{
+				"transactionId": "TXN002",
+				"transactionDate": "23-05-2018 23:12:11",
+				"paymentType": "Debit",
+				"transactionAmount": "100",
+				"categoryType": "Medical",
+				"closingBalance": "10259",
+				"description": "Medical"
+			},
+			{
+				"transactionId": "TXN002",
+				"transactionDate": "23-05-2018 23:12:11",
+				"paymentType": "Debit",
+				"transactionAmount": "100",
+				"categoryType": "Travel",
+				"closingBalance": "10259",
+				"description": ""
+			},
+			{
+				"transactionId": "TXN002",
+				"transactionDate": "23-05-2018 23:12:11",
+				"paymentType": "Debit",
+				"categoryType": "Travel",
+				"transactionAmount": "100",
+				"closingBalance": "10259",
+				"description": ""
+			},
+			{
+				"transactionId": "TXN002",
+				"transactionDate": "23-05-2018 23:12:11",
+				"paymentType": "Debit",
+				"categoryType": "Loans",
+				"transactionAmount": "100",
+				"closingBalance": "10259",
+				"description": ""
+			}
+		],
+		"totalCreditDebit": [{
+			"type": "Credit",
+			"amount": 200
+		}, {
+			"type": "Debit",
+			"amount": 100
+		}],
+		"size": 200
+	}
+}

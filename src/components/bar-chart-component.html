@@ -57,40 +57,42 @@
                         "minimum"   : 0,
                         "strictMinMax": true
                     }],
-                    legend: {
-                       // useGraphSettings: true,
-                        "data":[{
-                            "title":"Credit",
-                            "color":"#ff6600"
-                        },{
-                            "title":"Debit",
-                            "color":"#42417a"
-                        }]
-                    },
+                    // legend: {
+                    //    // useGraphSettings: true,
+                    //     "data":[{
+                    //         "title":"Credit",
+                    //         "color":"#ff6600"
+                    //     },{
+                    //         "title":"Debit",
+                    //         "color":"#42417a"
+                    //     }]
+                    // },
                     // set startDuration to 0 on older browsers
                     "startDuration": this._supportSVG()? 1 : 0,                                 
                     "depth3D": 60,
                     "angle": 30,
-                    "categoryField": "month",                    
+                    "categoryField": "type",
                     "graphs": [{
-                        "balloonText": "Credit in [[category]]: <b>[[value]]</b>",
+                        "balloonText": "Amount in [[category]]: <b>[[value]]</b>",
                         "fillAlphas": 1,                       
-                        "title": "Credit",
+                        "title": "Amount",
                         "type": "column",
                         "fixedColumnWidth": 50,//adjusts with of the column
                         "colorField": "Ccolor", //change color
                         "lineColorField":"Ccolor",
-                        "valueField": "totalIncoming"
-                    }, {
-                        "balloonText": "Debit in [[category]]: <b>[[value]]</b>",
-                        "fillAlphas": 1,                       
-                        "title": "Debit",
-                        "type": "column",
-                        "colorField": "Dcolor",//change color
-                        "lineColorField":"Dcolor",
-                        "fixedColumnWidth": 50,
-                        "valueField": "totalOutgoing"
-                    }]                     
+                        "valueField": "amount"
+                    }
+                    // , {
+                    //     "balloonText": "Debit in [[category]]: <b>[[value]]</b>",
+                    //     "fillAlphas": 1,                       
+                    //     "title": "Debit",
+                    //     "type": "column",
+                    //     "colorField": "Dcolor",//change color
+                    //     "lineColorField":"Dcolor",
+                    //     "fixedColumnWidth": 50,
+                    //     "valueField": "totalOutgoing"
+                    // }
+                    ]                     
                 });                
             }
             // Check for SVG support in old browser

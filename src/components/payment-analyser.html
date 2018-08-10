@@ -1,12 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
-
-
-<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
-<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-selection-column.html">
-<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-sorter.html">
-
-
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="common-styles.html">
@@ -15,21 +8,13 @@
 <link rel="import" href="no-data-found.html">
 <link rel="import" href="sub-header.html">
 <link rel="import" href="analyse-filters.html">
+<link rel="import" href="table-component.html">
+
 
 <dom-module id="payment-analyser">
     <template>
         <style include="common-styles">                  
-            .amcharts-chart-div a{
-                display: none !important;
-            }
-            .inline-block{
-                display:inline-block;
-            }
-            .analyseBtnSpan{
-                float: right;
-                width: 35%;
-            }
-                     
+                                  
         </style>
         <style include="shared-styles">
          
@@ -39,57 +24,30 @@
        <div class="container fntFamily">
             <template is="dom-if" if="{{makeFilters}}">
             <!-- <analyse-filters period-list={{periodList}} make-filters="{{makeFilters}}"></analyse-filters>  -->
-            <analyse-filters api={{api}} make-filters="{{makeFilters}}"></analyse-filters> 
-        </template>       
-        </div>
-        <div class="container fntFamily">           
-         <!-- <iron-ajax id="analyser" handle-as="json" last-response="{{activities.data}}" on-response="_handleResponse"></iron-ajax> -->
-        <iron-ajax id="analyser" method="[[api.method]]" handle-as="json" last-response="{{activities.data}}" on-response="_handleResponse"></iron-ajax>
+                  <analyse-filters api={{api}} make-filters="{{makeFilters}}" current-month-data="{{currentMonthData}}"></analyse-filters>
+
+                  <!--Table component-->
+
+                  <table-component tabledata="[[currentMonthData.transactions]]"></table-component>
 
 
-            <template is="dom-if" if="{{!dataAvailable}}">
-                <no-data-found></no-data-found>
-            </template>
-            <template is="dom-if" if="{{dataAvailable}}">
-                <vaadin-grid id="analyser_grid" theme="row-dividers" class="gridBorder" border="2px solid #000;"items="[[transactions]]" page-size="10" height-by-rows>
-                    <vaadin-grid-column items="[[transactions]]" id="border">
-                        <template class="header"><strong>#</strong></template>
-                        <template>
-                            <div class="vaadinCol">[[displayIndex(index)]]</div>
-                        </template>
-                    </vaadin-grid-column>
-                    <vaadin-grid-column>
-                        <template class="header"><strong>Month</strong></template>
-                        <template>[[item.month]]</template>
-                    </vaadin-grid-column>
+                  <!--Tab component-->
+                    <div class="tabContainer">
+                        <paper-tabs selected="{{selectedTab}}" scrollable>
+                            <paper-tab>Pie chart</paper-tab>
+                            <paper-tab>Bar graph</paper-tab>
+                        </paper-tabs>
+                        <iron-pages selected="{{selectedTab}}">
+                        <piechart-component transactions=[[currentMonthData.totalCreditDebit]]></piechart-component>
+                        <!--<div><template is="dom-if" if="{{dataAvailable}}"> -->
+                            <barchart-component transactions=[[currentMonthData.totalCreditDebit]]></barchart-component> 
+                        <!--</template></div>-->
+                        </iron-pages>
+                  </div>
+                   
+            </template>       
+        </div>      
     
-                    <vaadin-grid-column>
-                        <template class="header"><strong>Closing Balance</strong></template>
-                        <template>[[addCurrency(item.closingBalance)]]</template>
-                    </vaadin-grid-column>
-            
-                    <vaadin-grid-column>
-                        <template class="header"><strong>Debit</strong></template>
-                        <template>[[addCurrency(item.totalOutgoing)]]</template>
-                    </vaadin-grid-column>
-            
-                    <vaadin-grid-column>
-                        <template class="header"><strong>Credit</strong></template>
-                        <template class="border">[[addCurrency(item.totalIncoming)]]</template>
-                    </vaadin-grid-column>            
-                </vaadin-grid>                   
-            </template>
-  
-
-            <h2 class="centerText">Spend Analyser</h2>
-            <template is="dom-if" if="{{!dataAvailable}}">
-                <no-data-found></no-data-found>
-            </template>
-            <template is="dom-if" if="{{dataAvailable}}">
-                <barchart-component transactions=[[transactions]]></barchart-component>
-            </template>
-                <piechart-component transactions=[[transactions]]></piechart-component>
-        </div>
     </template>
     <script>
         class paymentAnalyser extends Polymer.Element{
@@ -98,112 +56,39 @@
                 return  {
                     api : {
                         type    : Object
-                    }, 
-                   spendChart : {},
-                  
-                   
-                   dataAvailable: {
-                       type: Boolean
-                   },
-                   transactions: {
-                       type:Array
-                   },
-                   testdata: {
-                       type:Array
-                   },
-                   amount :{
-                       type: Number
-                   },
-                   custId : {
-                       type:String
-                   },
-                   isPeriodicSelected : {
-                       type:Boolean,
-                       value : false
-                   },
-                   activated: {
+                    },  
+                    activated: {
                         type: Boolean,
                         observer: '_activationChanged'
                     },
                     makeFilters:{
                         type: Array,
-                        value:"[]",
+                        value:"",
                         notify:true,
                         reflectToAttribute: true                        
+                    },
+                    currentMonthData:{
+                        type: Array,
+                        value:'',
+                        observer: '_currentMonthDataChanged'
+                    },
+                    selectedTab:{ 
+                        type : String,
+                        value : '0'
                     }
                 }
             }
 
-            getCategoryData(){
-                console.log(' category data needed');
-            }
-
             _activationChanged(newVal, oldVal){
                 if(newVal){
-                    this._getTransactionData();  
+                   
                 }
-                this.makeFilters= ['a'];
-                // let now = new Date();
-                // this.fromDateVal = now.getFullYear() +'-' + (now.getMonth()-6)+'-'+now.getDate();
-                // this.toDateVal = now.getFullYear() +'-' + now.getMonth()+'-'+now.getDate();
-	        }
-
-            periodChanged(){
-                if(this.$.period.value == 'Periodic'){
-                    this.isPeriodicSelected = true;
-                } else {
-                    this.isPeriodicSelected = false;
-                }
-	        }
-
-            isInputEmpty(amount) {
-                return true;
-            }
-            
-            //Increment by 1 to index in dom-repeat
-            displayIndex(index){
-                return index + 1;
-            }            
-            
-            // _checkAvailability(transactions){
-            //     return transactions.length ? true : false;
-            // }
-
-            // Add currency
-            // Add currency
-            addCurrency(amount){
-                return '$' + amount;
-            }
-
-            //Get transaction data ffrom API
-            _getTransactionData(){
-
-                try{
-                    this.custId = JSON.parse(sessionStorage.user).customerId;
-                }
-                catch(e){
-                    console.log('Error getting data from SessionStorage -->' + e)
-                }
-
-                let ajax = this.$.analyser;
-                //ajax.url = "src/data/analyser.json";
-                // ajax.url = "http://192.168.43.118:8080/user/"+this.custId+"/transactionsummary";
-                ajax.url = this.api.url;
-                ajax.generateRequest(); //trigger the iron-ajax                
-            }
-
-            //Store the response 
-            _handleResponse(event,request){
-                this.testdata = request.response.data;
-                this.testdata.forEach(function(el) {
-                    el.Ccolor = "#ff6600";
-                    el.Dcolor = "#42417a";
-                })
-                this.transactions = this.testdata;
-                let dataAvailable = this.testdata.length ? true : false;
-                // console.log(dataAvailable);
-                this.set('dataAvailable', dataAvailable)
-            }           
+                this.makeFilters= ['a'];               
+	        }   
+            _currentMonthDataChanged(){
+                console.log(this.currentMonthData);
+                console.log('chart',this.currentMonthData.totalCreditDebit);
+            }      
         };
         window.customElements.define(paymentAnalyser.is,paymentAnalyser);
     </script>
