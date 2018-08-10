@@ -14,7 +14,6 @@
 <link rel="import" href="pie-chart-component.html">
 <link rel="import" href="no-data-found.html">
 <link rel="import" href="sub-header.html">
-<link rel="import" href="msg-component.html">
 <link rel="import" href="analyse-filters.html">
 
 <dom-module id="payment-analyser">
@@ -36,17 +35,14 @@
          
         </style>
        <sub-header></sub-header>
-        <div class="container fntFamily">
-            <msg-component></msg-component>
-        <h2 class="centerText"> Account Activity Analysis </h2>
-        <div class="container fntFamily">
+
+       <div class="container fntFamily">
             <template is="dom-if" if="{{makeFilters}}">
             <!-- <analyse-filters period-list={{periodList}} make-filters="{{makeFilters}}"></analyse-filters>  -->
             <analyse-filters api={{api}} make-filters="{{makeFilters}}"></analyse-filters> 
         </template>       
         </div>
-
-          
+        <div class="container fntFamily">           
          <!-- <iron-ajax id="analyser" handle-as="json" last-response="{{activities.data}}" on-response="_handleResponse"></iron-ajax> -->
         <iron-ajax id="analyser" method="[[api.method]]" handle-as="json" last-response="{{activities.data}}" on-response="_handleResponse"></iron-ajax>
 

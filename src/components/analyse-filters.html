@@ -12,6 +12,7 @@
 
 <link rel="import" href="shared-styles.html"> 
 <link rel="import" href="common-styles.html">
+<link rel="import" href="msg-component.html">
 <dom-module id="analyse-filters">
     <template>
         <style include="common-styles">                  
@@ -28,6 +29,7 @@
         </style>
          <iron-ajax id="getPeriod" method="[[api.method]]" handle-as="json" last-response="{{periods}}" on-response="_handlePeriodResponse"></iron-ajax>
          <iron-ajax id="getCurrentMonth" method="[[api.method]]" handle-as="json" last-response="{{currentMonthData}}" on-response="_handleCurrentMonthResponse"></iron-ajax>
+         <iron-ajax id="getPreviousMonths" method="[[api.method]]" handle-as="json" last-response="{{currentMonthData}}" on-response="_handlePreviousMonthResponse"></iron-ajax>
 
         <div class="container fntFamily">
             <iron-form id="myForm">
@@ -88,6 +90,7 @@
                                     </paper-listbox>
                                 </paper-dropdown-menu>
                             </span>
+                            <msg-component></msg-component>
                             <span class="inline-block analyseBtnSpan">
                                 <paper-button disabled="[[isInputEmpty(amount)]]" class="btnPrl" on-click="_analyseData">
                                     Analyse
@@ -160,7 +163,7 @@
                     },                    
                     monthsList: {
                         type: Array,
-                        value: ['1 Month','2 Month','3 Month']
+                        value: ''
                     }, 
                     categoryList:{
                         type:Array,
@@ -213,8 +216,7 @@
                         }                       
                 }]
 
-                let ajax = this.$.getCurrentMonth; 
-                debugger;                        
+                let ajax = this.$.getCurrentMonth;                                        
                 ajax.url = this.api.currentmonth.url;               
                 //ajax.body = payload;
                 ajax.generateRequest();
@@ -244,6 +246,7 @@
 
                     this.isFromToSelected = false;
                     this._resetFileds(this.$.period.value);
+                    this._getPreviousMonthsList();
                 }else{
                     this.isCurrentMonthSelected = false;
                     this.isMonthlySelected = false;
@@ -253,6 +256,18 @@
                 }
 	        }
             
+            //get previous 6 months list
+            _getPreviousMonthsList(){
+                let ajax = this.$.getPreviousMonths;                                        
+                ajax.url = this.api.previousmonth.url;               
+                //ajax.body = payload;
+                ajax.generateRequest();
+                
+            }
+            _handlePreviousMonthResponse(event,request){
+                this.monthsList = request.response.data;
+                console.log('previous months list',this.monthsList);
+            }
             //reset fields
             _resetFileds(period){
                 let periodList = this.periodList;

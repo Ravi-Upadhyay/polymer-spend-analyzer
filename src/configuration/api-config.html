@@ -113,7 +113,12 @@
                         "currentmonth"       : {
                                             "url"     : `${baseURL}/user/${customerId}/currentmonth`,
                                             "method"  : "POST"
-                        }     
+                        },
+                        "previousMonths" : {
+                                            "url"     : `${baseURL}/user/${customerId}/previousmonth`,
+                                            "method"  : "GET" 
+                        }
+
                     }; 
                 }
                 else{
@@ -137,7 +142,11 @@
                         "currentmonth"       : {
                                             "url"     : `src/data/history.json`,
                                             "method"  : "GET"
-                        } 
+                        },
+                        "previousmonth"       : {
+                                            "url"     : `src/data/previousmonths.json`,
+                                            "method"  : "GET"
+                        }  
                     };
                 }
                 this.set('apiCollection',apiCollection);
