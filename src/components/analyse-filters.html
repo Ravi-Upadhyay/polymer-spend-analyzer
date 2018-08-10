@@ -1,0 +1,311 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/neon-animation/web-animations.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
+<script src="../../bower_components/web-animations-js/web-animations.min.js"></script>
+
+<link rel="import" href="shared-styles.html"> 
+<link rel="import" href="common-styles.html">
+<dom-module id="analyse-filters">
+    <template>
+        <style include="common-styles">                  
+            .inline-block{
+                display:inline-block;
+            }
+            .analyseBtnSpan{
+                float: right;
+                width: 35%;
+            }                     
+        </style>
+        <style include="shared-styles">
+         
+        </style>
+         <iron-ajax id="getPeriod" method="[[api.method]]" handle-as="json" last-response="{{periods}}" on-response="_handlePeriodResponse"></iron-ajax>
+         <iron-ajax id="getCurrentMonth" method="[[api.method]]" handle-as="json" last-response="{{currentMonthData}}" on-response="_handleCurrentMonthResponse"></iron-ajax>
+
+        <div class="container fntFamily">
+            <iron-form id="myForm">
+                <form>
+                    <div>  
+                        <span class="inline-block">                     
+                            <h4 class="label">Select Period</h4>
+                            <paper-dropdown-menu allow-outside-scroll="true" id="period" on-iron-select="_periodChanged" no-label-float>
+                                <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content" selected="{{selectedPeriod}}">
+                                    <template is="dom-repeat" items="[[periodList]]">
+                                        <paper-item value$="[[item]]">[[item]]</paper-item>
+                                    </template>
+                                </paper-listbox>
+                            </paper-dropdown-menu>
+                        </span>
+                        <template is="dom-if" id="periodic" if="{{isPeriodicSelected}}">
+                            <span class="inline-block">
+                                <h4 class="label">From</h4>
+                                <vaadin-date-picker 
+                                    id='FromDate'
+                                    placeholder="Select Date" value="{{fromDateVal}}" 
+                                    on-change="_fromDateChanged">
+                                </vaadin-date-picker>
+                            </span>
+                            <span class="inline-block">
+                                <h4 class="label">To</h4>
+                                <vaadin-date-picker 
+                                    id='vaadinToDate'  value="{{toDateVal}}"
+                                    placeholder="Select Date" 
+                                    on-change="_toDateChanged">
+                                </vaadin-date-picker>
+                            </span>
+                        </template>
+
+                         <template is="dom-if" id="MonthsDropdown" if="{{isMonthlySelected}}">
+                            <span class="inline-block">
+                                <h4 class="label">Select Month</h4>
+                                <paper-dropdown-menu allow-outside-scroll="true" id="months" 
+                                    no-label-float placeholder="Select">
+                                        <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content" selected="{{selectedMonth}}">
+                                            <template is="dom-repeat" items="[[monthsList]]">
+                                                <paper-item value$="[[item]]" on-click="_monthsChanged">[[item]]</paper-item>
+                                            </template>
+                                         </paper-listbox>
+                                </paper-dropdown-menu>
+                            </span>    
+                         </template>                      
+                    </div>  
+                    <div>
+                        <template is="dom-if" if="{{isFromToSelected}}">
+                            <span class="inline-block">
+                                <h4 class="label">Select Category</h4>
+                                <paper-dropdown-menu allow-outside-scroll="true" id="categoriesList" on-iron-select="categoryChanged" no-label-float>
+                                    <paper-listbox slot="dropdown-content" selected="{{selectedCategory}}"attr-for-selected="value" class="dropdown-content">
+                                        <template is="dom-repeat" items="[[categoryList]]">
+                                            <paper-item value$="[[item]]">[[item]]</paper-item>
+                                        </template>
+                                    </paper-listbox>
+                                </paper-dropdown-menu>
+                            </span>
+                            <span class="inline-block analyseBtnSpan">
+                                <paper-button disabled="[[isInputEmpty(amount)]]" class="btnPrl" on-click="_analyseData">
+                                    Analyse
+                                </paper-button>
+                            </span>
+                        </template>
+                          
+                    </div>      
+                </form>
+            </iron-form>
+        </div>
+    </template>
+    <script>
+       class analyseFilters extends Polymer.Element{
+            static get is(){ return 'analyse-filters'}
+            static get properties(){
+                return  {      
+                    api : {
+                        type    : Object
+                    },             
+                    periodList: {
+                        type: Array,
+                        value:''
+                        //observer:'_makePeriodDropdown'
+                    },
+                    selectedPeriod: {
+                        type: String,
+                        value: 'Current Month' //Set currentMonth as default value
+                    },
+                    selectedCategory: {
+                        type: String,
+                        value: 'All' //Set currentMonth as default value
+                    },
+                    selectedMonth:{
+                        type:String,
+                        value: false
+                    },
+                    isCurrentMonthSelected:{
+                        type: Boolean,
+                        value:true
+                    },
+                    isMonthlySelected:{
+                        type: Boolean,
+                        value:false
+                    },
+                    isPeriodicSelected : {
+                        type: Boolean,
+                        value : false
+                        
+                    },   
+                    isFromToSelected:{
+                        type: Boolean,
+                        value: false
+                    }, 
+                    selectedFromDate:{
+                        type: Boolean,
+                        value: false
+                    },
+                    selectedToDate:{
+                        type: Boolean,
+                        value: false
+                    },                  
+                    fromDateVal:{
+                        type:String,
+                        value: ''
+                    },
+                    toDateVal:{
+                        type:String,
+                        value: ''
+                    },                    
+                    monthsList: {
+                        type: Array,
+                        value: ['1 Month','2 Month','3 Month']
+                    }, 
+                    categoryList:{
+                        type:Array,
+                        value:[
+                        "All",
+                        "Travel",
+                        "Shopping",
+                        "Loan"                    
+                    ]},               
+                    makeFilters: {
+                        type: Boolean,
+                        observer: '_activationChanged'
+                    }
+                }
+            }
+                       
+            //navigate from other tabs without refreshing the page
+            _activationChanged(newVal, oldVal){
+                console.log('_activationChanged - filters',newVal, "::::", oldVal );
+                this.selectedFromDate = '';
+                this.selectedToDate = '';
+                this.selectedCategory = 'All';
+                this.selectedMonth = '';
+                this._getPeriods();
+
+                
+                // let now = new Date();
+                // this.fromDateVal = now.getFullYear() +'-' + (now.getMonth()-5)+'-'+now.getDate();
+                // this.toDateVal = now.getFullYear() +'-' + (now.getMonth()+1)+'-'+now.getDate();
+	        }
+        
+            //get periods from API
+            _getPeriods(){
+                let ajax = this.$.getPeriod;
+                
+                ajax.url = this.api.periods.url;
+                ajax.generateRequest();
+            }
+
+            _handlePeriodResponse(event,request){
+                console.log(request)
+                this.periodList = request.response.data;
+                console.log('periods',this.periodList);
+                let  payload = [{
+                        "customerId": 2,
+                        "period":{
+                            "from": "",
+                            "to" : "",
+                            "month": this.selectedMonth
+                        }                       
+                }]
+
+                let ajax = this.$.getCurrentMonth; 
+                debugger;                        
+                ajax.url = this.api.currentmonth.url;               
+                //ajax.body = payload;
+                ajax.generateRequest();
+                
+            }  
+            _handleCurrentMonthResponse(event,request){
+                console.log(request.response.data);
+            }
+           
+            //Get categories from API
+            _getCategoryData(){
+                console.log(' category data needed');
+            }           
+            // User changes the period 
+            _periodChanged(){                
+                if(this.$.period.value == 'Current Month'){                    
+                    this.isCurrentMonthSelected = true;
+                    this.isMonthlySelected = false;
+                    this.isPeriodicSelected = false;
+
+                    this.isFromToSelected = false;
+                    this._resetFileds(this.$.period.value);
+                } else if(this.$.period.value == "Monthly") {
+                    this.isCurrentMonthSelected = false;
+                    this.isMonthlySelected = true;
+                    this.isPeriodicSelected = false; 
+
+                    this.isFromToSelected = false;
+                    this._resetFileds(this.$.period.value);
+                }else{
+                    this.isCurrentMonthSelected = false;
+                    this.isMonthlySelected = false;
+                    this.isPeriodicSelected = true; 
+                    this.isFromToSelected = false;
+                    this._resetFileds(this.$.period.value);
+                }
+	        }
+            
+            //reset fields
+            _resetFileds(period){
+                let periodList = this.periodList;
+                if(period == 'Current Month'){
+                     this.selectedCategory = 'All';
+                     this.selectedMonth = '';
+                }else if(period == 'Periodic'){
+                     this.selectedCategory = 'All';
+                     this.fromDateVal = '';
+                     this.toDateVal= '';
+                }else{
+                    this.selectedMonth = '';
+                    this.selectedCategory = 'All';
+                }
+            }
+            //User selects the months duration
+             _monthsChanged(e){                
+               // this.$.MonthsDropdown.render();
+                this.selectedMonth = e.target.innerText;//this.$.months.value;
+                console.log('selectedMonth',this.selectedMonth);
+                if(this.selectedMonth){
+                    this.isFromToSelected = true;
+                }
+            }
+            //When FROM date changed
+             _fromDateChanged(e){                
+                this.selectedFromDate = e.target.value;
+                 if( this.selectedFromDate && this.selectedToDate){
+                     this.isFromToSelected = true;
+                 }                 
+            }
+            //When TO date changed
+            _toDateChanged(e){
+                this.selectedToDate = e.target.value;
+                if( this.selectedFromDate && this.selectedToDate){
+                     this.isFromToSelected = true;
+                 }   
+            }       
+            //Analyse data
+            _analyseData(){
+                var data = {
+                    'period': this.selectedPeriod,
+                    'duration':{
+                        'from' : this.selectedFromDate ? this.selectedFromDate : '',
+                        'to' : this.selectedToDate ? this.selectedToDate : '',
+                        'month': this.selectedMonth ? this.selectedMonth :''
+                    },
+                    'categories':[this.selectedCategory]
+
+                }
+                console.log('analyser payload',data)
+            }   
+        };
+        window.customElements.define(analyseFilters.is,analyseFilters);
+    </script>
+</dom-module>

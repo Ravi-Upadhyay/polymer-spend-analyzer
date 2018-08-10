@@ -105,7 +105,15 @@
                                           },
                         "analyser"      : { "url"     : `${baseURL}/user/${customerId}/transactionsummary`,
                                             "method"  : "GET"
-                                          }  
+                                          },
+                        "periods"       : {
+                                            "url"     : `${baseURL}/user/${customerId}/getperiods`,
+                                            "method"  : "GET"
+                                          },
+                        "currentmonth"       : {
+                                            "url"     : `${baseURL}/user/${customerId}/currentmonth`,
+                                            "method"  : "POST"
+                        }     
                     }; 
                 }
                 else{
@@ -121,7 +129,15 @@
                                           },
                         "analyser"      : { "url"     : `src/data/analyser.json`,
                                             "method"  : "GET"
-                                          }
+                                          },
+                        "periods"       : {
+                                            "url"     : `src/data/periods.json`,
+                                            "method"  : "GET"
+                        },
+                        "currentmonth"       : {
+                                            "url"     : `src/data/history.json`,
+                                            "method"  : "GET"
+                        } 
                     };
                 }
                 this.set('apiCollection',apiCollection);

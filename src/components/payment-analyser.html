@@ -5,12 +5,7 @@
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-selection-column.html">
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-sorter.html">
-<link rel="import" href="../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
-<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../../bower_components/neon-animation/web-animations.html">
-<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
-<script src="../../bower_components/web-animations-js/web-animations.min.js"></script>
+
 
 
 <link rel="import" href="shared-styles.html">
@@ -20,13 +15,20 @@
 <link rel="import" href="no-data-found.html">
 <link rel="import" href="sub-header.html">
 <link rel="import" href="msg-component.html">
-
+<link rel="import" href="analyse-filters.html">
 
 <dom-module id="payment-analyser">
     <template>
         <style include="common-styles">                  
             .amcharts-chart-div a{
                 display: none !important;
+            }
+            .inline-block{
+                display:inline-block;
+            }
+            .analyseBtnSpan{
+                float: right;
+                width: 35%;
             }
                      
         </style>
@@ -37,26 +39,14 @@
         <div class="container fntFamily">
             <msg-component></msg-component>
         <h2 class="centerText"> Account Activity Analysis </h2>
-
-            <iron-form id="myForm">
-                <form>
-        <div>
-            <h4 class="label">Select transaction type</h4>
-            <paper-dropdown-menu allow-outside-scroll="true" id="period" class="customWidth" on-iron-select="periodChanged" no-label-float>
-                <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content customWidth" selected="{{selectedPeriod}}">
-                    <template is="dom-repeat" items="[[periodList]]">
-                        <paper-item value$="[[item.value]]">[[item.type]]</paper-item>
-                    </template>
-                </paper-listbox>
-            </paper-dropdown-menu>
+        <div class="container fntFamily">
+            <template is="dom-if" if="{{makeFilters}}">
+            <!-- <analyse-filters period-list={{periodList}} make-filters="{{makeFilters}}"></analyse-filters>  -->
+            <analyse-filters api={{api}} make-filters="{{makeFilters}}"></analyse-filters> 
+        </template>       
         </div>
-        <vaadin-date-picker id='vaadin-date-from' disabled$="[[!isPeriodicSelected]]" placeholder="Select From Date" value={{fromDateVal}}></vaadin-date-picker>
-        <vaadin-date-picker id='vaadin-date-to' disabled$="[[!isPeriodicSelected]]" placeholder="Select To Date" value={{toDateVal}}></vaadin-date-picker>
-                <paper-button disabled="[[isInputEmpty(amount)]]" class="btnPrl" on-click="getCategoryData">
-            Analyse
-        </paper-button>
-            </form>
-            </iron-form>
+
+          
          <!-- <iron-ajax id="analyser" handle-as="json" last-response="{{activities.data}}" on-response="_handleResponse"></iron-ajax> -->
         <iron-ajax id="analyser" method="[[api.method]]" handle-as="json" last-response="{{activities.data}}" on-response="_handleResponse"></iron-ajax>
 
@@ -110,32 +100,14 @@
             static get is(){ return 'payment-analyser'}
             static get properties(){
                 return  {
+                    api : {
+                        type    : Object
+                    }, 
                    spendChart : {},
-                   periodList: {
-                    type: Array,
-                    value: [{
-                            type: 'CurrentMonth',
-                            value: 'CurrentMonth'
-                        }, {
-                            type: 'Periodic',
-                            value: 'Periodic',
-                        }]
-                    },
-                    selectedPeriod: {
-                        type: String,
-                        value: 'CurrentMonth' //Set currentMonth as default value
-                    },
-                    fromDateVal:{
-                        type:String
-                    },
-                    toDateVal:{
-                        type:String
-                    },
+                  
+                   
                    dataAvailable: {
                        type: Boolean
-                   },
-                   api: {
-                       type: Object
                    },
                    transactions: {
                        type:Array
@@ -156,6 +128,12 @@
                    activated: {
                         type: Boolean,
                         observer: '_activationChanged'
+                    },
+                    makeFilters:{
+                        type: Array,
+                        value:"[]",
+                        notify:true,
+                        reflectToAttribute: true                        
                     }
                 }
             }
@@ -168,9 +146,10 @@
                 if(newVal){
                     this._getTransactionData();  
                 }
-                let now = new Date();
-                this.fromDateVal = now.getFullYear() +'-' + (now.getMonth()-6)+'-'+now.getDate();
-                this.toDateVal = now.getFullYear() +'-' + now.getMonth()+'-'+now.getDate();
+                this.makeFilters= ['a'];
+                // let now = new Date();
+                // this.fromDateVal = now.getFullYear() +'-' + (now.getMonth()-6)+'-'+now.getDate();
+                // this.toDateVal = now.getFullYear() +'-' + now.getMonth()+'-'+now.getDate();
 	        }
 
             periodChanged(){
