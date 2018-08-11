@@ -84,9 +84,9 @@
                     </div>
                     <vaadin-date-picker id='vaadin-date-from' disabled$="[[!isPeriodicSelected]]" placeholder="Select From Date" value={{fromDateVal}}></vaadin-date-picker>
                     <vaadin-date-picker id='vaadin-date-to' disabled$="[[!isPeriodicSelected]]" placeholder="Select To Date" value={{toDateVal}}></vaadin-date-picker>
-                    <isw-dropdown-menu id="categories" multi attr-for-selected="value" label="Dinosaurs" on-click="categoryChanged" selected-values="{{ preselected }}">
-                        <template is="dom-repeat" items="[[ items ]]">
-                            <paper-icon-item value$="[[ item.id ]]" label$="[[ item.value ]]">
+                    <isw-dropdown-menu id="categories" multi attr-for-selected="value" label="Dinosaurs" on-click="changeCategory" selected-values="{{ preselected }}">
+                        <template is="dom-repeat" items="[[ categories ]]">
+                            <paper-icon-item on-click="toggle" value$="[[ item.id ]]" label$="[[ item.value ]]">
                                 <iron-icon class="checkbox unchecked" icon="check-box-outline-blank" slot="item-icon"></iron-icon>
                                 <iron-icon class="checkbox checked" icon="check-box" slot="item-icon"></iron-icon>
                                 <paper-item-body two-line>
@@ -149,7 +149,7 @@
                 </vaadin-grid>
             </template>
 
-            <iron-ajax auto method="GET" url="../src/data/category.json" handle-as="json" last-response="{{items}}" on-response="handleCategoryResponse"></iron-ajax>
+            <iron-ajax auto method="GET" url="../src/data/category.json" handle-as="json" last-response="{{categories}}" on-response="handleCategoryResponse"></iron-ajax>
 
             <h2 class="centerText">Spend Analyser</h2>
             <template is="dom-if" if="{{!dataAvailable}}">
@@ -180,12 +180,15 @@
                     preselected: {
                         type: Array,
                         value: [],
-                        observer: '_change'
                     },
-                    items: {
+                    categories: {
                         type: Array,
                         value: [],
                         observer: '_gotCategories'
+                    },
+                    selectedCategory: {
+                        type: String,
+                        value: ''
                     },
                     selectedPeriod: {
                         type: String,
@@ -227,25 +230,47 @@
             }
 
             _gotCategories() {
-                console.log(this.items);
-                if (this.items) {
-                    this.items.unshift({ "id": "99", "value": 'All' });
-                    // this.items[this.items.length] = { "id": "99", "value": 'All' };
-                    for (var dd in this.items) {
-                        this.preselected[dd] = this.items[dd].id;
+                if (this.categories) {
+                    this.categories.unshift({ "id": "99", "value": 'All' });
+                    for (var index in this.categories) {
+                        this.preselected[index] = this.categories[index].id;
                     }
                 }
 
             }
 
-            categoryChanged(event) {
-                console.log(event.target.value);
+            //Called whenever a category change takes place.
+            //selectedDropdown : Contains a list of elements which are selected
+            //This uses a splice and a push for inserting or removing elements from the array to make array changes observable
+            changeCategory() {
                 let selectedDropdown = this.$.categories.selectedValues;
-                let deselectedDropdown = this.findDeselectedValues(this.preselected, selectedDropdown);
-                if(selectedDropdown.indexOf('99')===-1 && (selectedDropdown.length === this.items.length-1)){
-                    this.preselected.push("99");
+                let copyArray = [];
+                for (var index in this.categories) {
+                    copyArray[index] = this.categories[index].id;
                 }
-                
+                if (this.selectedCategory === 'All') {
+                    if (selectedDropdown.indexOf("99") >= 0) {
+                        this.preselected = copyArray;
+                    } else {
+                        this.preselected = [];
+                    }
+                } else {
+                    if ((selectedDropdown.length === copyArray.length - 1) && selectedDropdown.indexOf("99") >= 0) {
+                        this.splice('preselected', this.preselected.indexOf("99"), 1);
+                    }
+                    if ((selectedDropdown.length === copyArray.length - 1) && selectedDropdown.indexOf("99") === -1) {
+                        this.push('preselected', "99");
+                    }
+                }
+
+            }
+
+            /**
+            *Function responsible for handling any select or deselect events taking place in the dropdown menu.
+            *This helps in identifying element for which selection or de-selection has occurred.
+            */
+            toggle(event) {
+                this.selectedCategory = event.currentTarget.innerText.trim();
             }
 
             findDeselectedValues(originalArray, selectedArray) {
@@ -253,12 +278,6 @@
                     return this.filter(function (i) { return a.indexOf(i) < 0; });
                 };
                 return originalArray.diff(selectedArray);
-            }
-
-
-
-            _change() {
-                console.log(this.preselected);
             }
 
             getCategoryData() {
