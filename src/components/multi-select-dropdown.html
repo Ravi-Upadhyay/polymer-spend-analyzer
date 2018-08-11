@@ -1,0 +1,157 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/isw-dropdown-menu/isw-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../../bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="../../bower_components/neon-animation/web-animations.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<script src="../../bower_components/web-animations-js/web-animations.min.js"></script>
+
+
+<dom-module id="multi-select-dropdown">
+    <template>
+        <style include="common-styles">
+            
+            :host {
+                display: block;
+                padding: 32px;
+            }
+
+            iron-icon.checkbox.checked {
+                color: #00508C;
+            }
+
+            iron-icon.checkbox.unchecked {
+                color: var(--secondary-text-color);
+            }
+
+            paper-icon-item iron-icon.checkbox.checked {
+                display: none;
+            }
+
+            paper-icon-item iron-icon.checkbox.unchecked {
+                display: block;
+            }
+
+            paper-icon-item.iron-selected iron-icon.checkbox.checked {
+                display: block;
+            }
+
+            paper-icon-item.iron-selected iron-icon.checkbox.unchecked {
+                display: none;
+            }
+        </style>
+        <style include="shared-styles">
+        </style>
+        <div class="container fntFamily">
+
+
+            <isw-dropdown-menu id="categories" multi attr-for-selected="value" label="Dinosaurs" on-click="changeCategory" selected-values="{{ preselected }}">
+                <template is="dom-repeat" items="[[ categories ]]">
+                    <paper-icon-item on-click="toggle" value$="[[ item.id ]]" label$="[[ item.value ]]">
+                        <iron-icon class="checkbox unchecked" icon="check-box-outline-blank" slot="item-icon"></iron-icon>
+                        <iron-icon class="checkbox checked" icon="check-box" slot="item-icon"></iron-icon>
+                        <paper-item-body two-line>
+                            <div>[[ item.value ]]</div>
+                        </paper-item-body>
+                    </paper-icon-item>
+                </template>
+            </isw-dropdown-menu>
+            <iron-ajax auto method="GET" url="../src/data/category.json" handle-as="json" last-response="{{categories}}" on-response="handleCategoryResponse"></iron-ajax>
+        </div>
+    </template>
+    <script>
+        class MultiSelectDropdown extends Polymer.Element {
+            static get is() { return 'multi-select-dropdown' }
+            static get properties() {
+                return {
+                    preselected: {
+                        type: Array,
+                        value: [],
+                    },
+                    categories: {
+                        type: Array,
+                        value: [],
+                        observer: '_gotCategories'
+                    },
+                    selectedCategory: {
+                        type: String,
+                        value: ''
+                    },
+                    api: {
+                        type: Object
+                    }
+                }
+            }
+
+            _gotCategories() {
+                if (this.categories) {
+                    this.categories.unshift({ "id": "99", "value": 'All' });
+                    for (var index in this.categories) {
+                        this.preselected[index] = this.categories[index].id;
+                    }
+                }
+
+            }
+
+            //Called whenever a category change takes place.
+            //selectedDropdown : Contains a list of elements which are selected
+            //This uses a splice and a push for inserting or removing elements from the array to make array changes observable
+            changeCategory() {
+                let selectedDropdown = this.$.categories.selectedValues;
+                let copyArray = [];
+                for (var index in this.categories) {
+                    copyArray[index] = this.categories[index].id;
+                }
+                if (this.selectedCategory === 'All') {
+                    if (selectedDropdown.indexOf("99") >= 0) {
+                        this.preselected = copyArray;
+                    } else {
+                        this.preselected = [];
+                    }
+                } else {
+                    if ((selectedDropdown.length === copyArray.length - 1) && selectedDropdown.indexOf("99") >= 0) {
+                        this.splice('preselected', this.preselected.indexOf("99"), 1);
+                    }
+                    if ((selectedDropdown.length === copyArray.length - 1) && selectedDropdown.indexOf("99") === -1) {
+                        this.push('preselected', "99");
+                    }
+                }
+
+            }
+
+            /**
+            *Function responsible for handling any select or deselect events taking place in the dropdown menu.
+            *This helps in identifying element for which selection or de-selection has occurred.
+            */
+            toggle(event) {
+                this.selectedCategory = event.currentTarget.innerText.trim();
+            }
+
+            findDeselectedValues(originalArray, selectedArray) {
+                Array.prototype.diff = function (a) {
+                    return this.filter(function (i) { return a.indexOf(i) < 0; });
+                };
+                return originalArray.diff(selectedArray);
+            }
+
+            getCategoryData() {
+                console.log(' category data needed');
+            }
+
+
+            handleCategoryResponse(event, request) {
+                // this.items = request.response.data;
+                // let dataAvailable = this.items.length ? true : false;
+                // console.log(dataAvailable);
+                // this.set('dataAvailable', dataAvailable)
+            }
+
+        };
+        window.customElements.define(MultiSelectDropdown.is, MultiSelectDropdown);
+    </script>
+</dom-module>

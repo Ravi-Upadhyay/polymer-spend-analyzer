@@ -38,27 +38,7 @@
             }     
         </style> 
         <h2>Chart View for Spend Analyser</h2>
-        <div id="chartdiv"></div>  
-        <h2>Google Chart based on month </h2>                         
-        <div id='chartContainer'>  
-        <span id="piechartDebit">
-            <google-chart
-            id="debitchart"
-            type="pie"
-            options='{"title": "Distribution of Debit"}'
-            selection='[{"row": 1}]'>
-            </google-chart>
-        </span>  
-
-        <span id="piechartCredit">
-            <google-chart
-            id="creditchart"
-            type="pie"
-            options='{"title": "Distribution of Credit"}'
-            selection='[{"row": 1}]'>
-            </google-chart>
-        </span>  
-        </div>                     
+        <div id="chartdiv"></div>
     </template>
     <script>
         class piechartComponent extends Polymer.Element{
@@ -73,51 +53,24 @@
             }
             
             _configureChart(){                 
-
                 let chart = this.$.chartdiv;    
-                var debitVal = 0,
-                    creditVal = 0;
-
-                this.transactions.forEach(function(el) { 
-                    creditVal += parseInt(el.totalIncoming);
-                    debitVal += parseInt(el.totalOutgoing);
-                })
-
+                console.log('in chart',this.transactions)
                 this.spendChart = AmCharts.makeChart(chart, {
                     "type": "pie",
-					  "theme": "light",
-					  "dataProvider": [ {
-						"type": "Debit",
-						"amount": debitVal
-					  }, {
-						"type": "Credit",
-						"amount": creditVal
-					  } ],
+                    "startDuration": 0,
+                    "theme": "light",
+                    "addClassNames": true,
+                    "legend":{
+                        "position":"right",
+                        "marginRight":100,
+                    },
+					  "dataProvider": this.transactions,
 					  "valueField": "amount",
 					  "titleField": "type",
 					   "balloon":{
 					   "fixedPosition":true
 					  }
-					} );   
-
-                var debitArr = [];
-                var creditArr = [];
-                debitArr.push(["Label", "Value"]);
-                creditArr.push(["Label", "Value"]);
-                this.transactions.forEach(function(el) {
-                    creditArr.push([el.month,parseInt(el.totalIncoming)])
-                });
-                this.transactions.forEach(function(el) {
-                    debitArr.push([el.month,parseInt(el.totalOutgoing)])
-                });
-                let creditChart = this.$.creditchart;   
-                let debitChart = this.$.debitchart;    
-                document.createElement('google-chart-loader').dataTable(debitArr).then(function(dataTable) {
-                    debitChart.data = dataTable;
-                });  
-                document.createElement('google-chart-loader').dataTable(creditArr).then(function(dataTable) {
-                    creditChart.data = dataTable;
-                });
+					});   
             }
             
  

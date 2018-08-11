@@ -1,22 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
-
-
-<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
-<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-selection-column.html">
-<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-sorter.html">
-<link rel="import" href="../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
-<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../../bower_components/isw-dropdown-menu/isw-dropdown-menu.html">
-<link rel="import" href="../../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../../bower_components/paper-item/paper-icon-item.html">
-<link rel="import" href="../../bower_components/paper-item/paper-item-body.html">
-<link rel="import" href="../../bower_components/paper-styles/paper-styles.html">
-<link rel="import" href="../../bower_components/neon-animation/web-animations.html">
-<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
-<script src="../../bower_components/web-animations-js/web-animations.min.js"></script>
-
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="common-styles.html">
@@ -24,339 +7,89 @@
 <link rel="import" href="pie-chart-component.html">
 <link rel="import" href="no-data-found.html">
 <link rel="import" href="sub-header.html">
-<link rel="import" href="msg-component.html">
+<link rel="import" href="analyse-filters.html">
+<link rel="import" href="table-component.html">
+<link rel="import" href="multi-select-dropdown.html">
 
 
 <dom-module id="payment-analyser">
     <template>
-        <style include="common-styles">
-            .amcharts-chart-div a {
-                display: none !important;
-            }
-
-            :host {
-                display: block;
-                padding: 32px;
-            }
-
-            iron-icon.checkbox.checked {
-                color: #00508C;
-            }
-
-            iron-icon.checkbox.unchecked {
-                color: var(--secondary-text-color);
-            }
-
-            paper-icon-item iron-icon.checkbox.checked {
-                display: none;
-            }
-
-            paper-icon-item iron-icon.checkbox.unchecked {
-                display: block;
-            }
-
-            paper-icon-item.iron-selected iron-icon.checkbox.checked {
-                display: block;
-            }
-
-            paper-icon-item.iron-selected iron-icon.checkbox.unchecked {
-                display: none;
-            }
+        <style include="common-styles">                  
+                                  
         </style>
         <style include="shared-styles">
         </style>
-        <sub-header></sub-header>
-        <div class="container fntFamily">
-            <msg-component></msg-component>
-            <h2 class="centerText"> Account Activity Analysis </h2>
+       <sub-header></sub-header>
 
-            <iron-form id="myForm">
-                <form>
-                    <div>
-                        <h4 class="label">Select transaction type</h4>
-                        <paper-dropdown-menu allow-outside-scroll="true" id="period" class="customWidth" on-iron-select="periodChanged" no-label-float>
-                            <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content customWidth" selected="{{selectedPeriod}}">
-                                <template is="dom-repeat" items="[[periodList]]">
-                                    <paper-item value$="[[item.value]]">[[item.type]]</paper-item>
-                                </template>
-                            </paper-listbox>
-                        </paper-dropdown-menu>
-                    </div>
-                    <vaadin-date-picker id='vaadin-date-from' disabled$="[[!isPeriodicSelected]]" placeholder="Select From Date" value={{fromDateVal}}></vaadin-date-picker>
-                    <vaadin-date-picker id='vaadin-date-to' disabled$="[[!isPeriodicSelected]]" placeholder="Select To Date" value={{toDateVal}}></vaadin-date-picker>
-                    <isw-dropdown-menu id="categories" multi attr-for-selected="value" label="Dinosaurs" on-click="changeCategory" selected-values="{{ preselected }}">
-                        <template is="dom-repeat" items="[[ categories ]]">
-                            <paper-icon-item on-click="toggle" value$="[[ item.id ]]" label$="[[ item.value ]]">
-                                <iron-icon class="checkbox unchecked" icon="check-box-outline-blank" slot="item-icon"></iron-icon>
-                                <iron-icon class="checkbox checked" icon="check-box" slot="item-icon"></iron-icon>
-                                <paper-item-body two-line>
-                                    <div>[[ item.value ]]</div>
-                                    <!-- <div secondary>[[ item.description ]]</div> -->
-                                </paper-item-body>
-                            </paper-icon-item>
-                        </template>
-                    </isw-dropdown-menu>
-                    <paper-button disabled="[[isInputEmpty(amount)]]" class="btnPrl" on-click="getCategoryData">
-                        Analyse
-                    </paper-button>
-                </form>
-            </iron-form>
-            <!-- <iron-ajax id="analyser" handle-as="json" last-response="{{activities.data}}" on-response="_handleResponse"></iron-ajax> -->
-            <iron-ajax id="analyser" method="[[api.method]]" handle-as="json" last-response="{{activities.data}}" on-response="_handleResponse"></iron-ajax>
+       <div class="container fntFamily">
+            <template is="dom-if" if="{{makeFilters}}">
+            <!-- <analyse-filters period-list={{periodList}} make-filters="{{makeFilters}}"></analyse-filters>  -->
+                  <analyse-filters api={{api}} make-filters="{{makeFilters}}" current-month-data="{{currentMonthData}}"></analyse-filters>
+
+                  <multi-select-dropdown></multi-select-dropdown>
+                  <!--Table component-->
+
+                  <table-component tabledata="[[currentMonthData.transactions]]"></table-component>
 
 
-            <template is="dom-if" if="{{!dataAvailable}}">
-                <no-data-found></no-data-found>
-            </template>
-            <template is="dom-if" if="{{dataAvailable}}">
-                <vaadin-grid id="analyser_grid" theme="row-dividers" class="gridBorder" border="2px solid #000;" items="[[transactions]]"
-                    page-size="10" height-by-rows>
-                    <vaadin-grid-column items="[[transactions]]" id="border">
-                        <template class="header">
-                            <strong>#</strong>
-                        </template>
-                        <template>
-                            <div class="vaadinCol">[[displayIndex(index)]]</div>
-                        </template>
-                    </vaadin-grid-column>
-                    <vaadin-grid-column>
-                        <template class="header">
-                            <strong>Month</strong>
-                        </template>
-                        <template>[[item.month]]</template>
-                    </vaadin-grid-column>
-
-                    <vaadin-grid-column>
-                        <template class="header">
-                            <strong>Closing Balance</strong>
-                        </template>
-                        <template>[[addCurrency(item.closingBalance)]]</template>
-                    </vaadin-grid-column>
-
-                    <vaadin-grid-column>
-                        <template class="header">
-                            <strong>Debit</strong>
-                        </template>
-                        <template>[[addCurrency(item.totalOutgoing)]]</template>
-                    </vaadin-grid-column>
-
-                    <vaadin-grid-column>
-                        <template class="header">
-                            <strong>Credit</strong>
-                        </template>
-                        <template class="border">[[addCurrency(item.totalIncoming)]]</template>
-                    </vaadin-grid-column>
-                </vaadin-grid>
-            </template>
-
-            <iron-ajax auto method="GET" url="../src/data/category.json" handle-as="json" last-response="{{categories}}" on-response="handleCategoryResponse"></iron-ajax>
-
-            <h2 class="centerText">Spend Analyser</h2>
-            <template is="dom-if" if="{{!dataAvailable}}">
-                <no-data-found></no-data-found>
-            </template>
-            <template is="dom-if" if="{{dataAvailable}}">
-                <barchart-component transactions=[[transactions]]></barchart-component>
-            </template>
-            <piechart-component transactions=[[transactions]]></piechart-component>
-        </div>
+                  <!--Tab component-->
+                    <div class="tabContainer">
+                        <paper-tabs selected="{{selectedTab}}" scrollable>
+                            <paper-tab>Pie chart</paper-tab>
+                            <paper-tab>Bar graph</paper-tab>
+                        </paper-tabs>
+                        <iron-pages selected="{{selectedTab}}">
+                        <piechart-component transactions=[[currentMonthData.totalCreditDebit]]></piechart-component>
+                        <!--<div><template is="dom-if" if="{{dataAvailable}}"> -->
+                            <barchart-component transactions=[[currentMonthData.totalCreditDebit]]></barchart-component> 
+                        <!--</template></div>-->
+                        </iron-pages>
+                  </div>
+                   
+            </template>       
+        </div>      
+    
     </template>
     <script>
-        class paymentAnalyser extends Polymer.Element {
-            static get is() { return 'payment-analyser' }
-            static get properties() {
-                return {
-                    spendChart: {},
-                    periodList: {
-                        type: Array,
-                        value: [{
-                            type: 'CurrentMonth',
-                            value: 'CurrentMonth'
-                        }, {
-                            type: 'Periodic',
-                            value: 'Periodic',
-                        }]
-                    },
-                    preselected: {
-                        type: Array,
-                        value: [],
-                    },
-                    categories: {
-                        type: Array,
-                        value: [],
-                        observer: '_gotCategories'
-                    },
-                    selectedCategory: {
-                        type: String,
-                        value: ''
-                    },
-                    selectedPeriod: {
-                        type: String,
-                        value: 'CurrentMonth' //Set currentMonth as default value
-                    },
-                    fromDateVal: {
-                        type: String
-                    },
-                    toDateVal: {
-                        type: String
-                    },
-                    dataAvailable: {
-                        type: Boolean
-                    },
-                    api: {
-                        type: Object
-                    },
-                    transactions: {
-                        type: Array
-                    },
-                    testdata: {
-                        type: Array
-                    },
-                    amount: {
-                        type: Number
-                    },
-                    custId: {
-                        type: String
-                    },
-                    isPeriodicSelected: {
-                        type: Boolean,
-                        value: false
-                    },
+        class paymentAnalyser extends Polymer.Element{
+            static get is(){ return 'payment-analyser'}
+            static get properties(){
+                return  {
+                    api : {
+                        type    : Object
+                    },  
                     activated: {
                         type: Boolean,
                         observer: '_activationChanged'
+                    },
+                    makeFilters:{
+                        type: Array,
+                        value:"",
+                        notify:true,
+                        reflectToAttribute: true                        
+                    },
+                    currentMonthData:{
+                        type: Array,
+                        value:'',
+                        observer: '_currentMonthDataChanged'
+                    },
+                    selectedTab:{ 
+                        type : String,
+                        value : '0'
                     }
                 }
             }
 
-            _gotCategories() {
-                if (this.categories) {
-                    this.categories.unshift({ "id": "99", "value": 'All' });
-                    for (var index in this.categories) {
-                        this.preselected[index] = this.categories[index].id;
-                    }
+            _activationChanged(newVal, oldVal){
+                if(newVal){
+                   
                 }
-
-            }
-
-            //Called whenever a category change takes place.
-            //selectedDropdown : Contains a list of elements which are selected
-            //This uses a splice and a push for inserting or removing elements from the array to make array changes observable
-            changeCategory() {
-                let selectedDropdown = this.$.categories.selectedValues;
-                let copyArray = [];
-                for (var index in this.categories) {
-                    copyArray[index] = this.categories[index].id;
-                }
-                if (this.selectedCategory === 'All') {
-                    if (selectedDropdown.indexOf("99") >= 0) {
-                        this.preselected = copyArray;
-                    } else {
-                        this.preselected = [];
-                    }
-                } else {
-                    if ((selectedDropdown.length === copyArray.length - 1) && selectedDropdown.indexOf("99") >= 0) {
-                        this.splice('preselected', this.preselected.indexOf("99"), 1);
-                    }
-                    if ((selectedDropdown.length === copyArray.length - 1) && selectedDropdown.indexOf("99") === -1) {
-                        this.push('preselected', "99");
-                    }
-                }
-
-            }
-
-            /**
-            *Function responsible for handling any select or deselect events taking place in the dropdown menu.
-            *This helps in identifying element for which selection or de-selection has occurred.
-            */
-            toggle(event) {
-                this.selectedCategory = event.currentTarget.innerText.trim();
-            }
-
-            findDeselectedValues(originalArray, selectedArray) {
-                Array.prototype.diff = function (a) {
-                    return this.filter(function (i) { return a.indexOf(i) < 0; });
-                };
-                return originalArray.diff(selectedArray);
-            }
-
-            getCategoryData() {
-                console.log(' category data needed');
-            }
-
-
-            handleCategoryResponse(event, request) {
-                // this.items = request.response.data;
-                // let dataAvailable = this.items.length ? true : false;
-                // console.log(dataAvailable);
-                // this.set('dataAvailable', dataAvailable)
-            }
-
-            _activationChanged(newVal, oldVal) {
-                if (newVal) {
-                    this._getTransactionData();
-                }
-                let now = new Date();
-                this.fromDateVal = now.getFullYear() + '-' + (now.getMonth() - 6) + '-' + now.getDate();
-                this.toDateVal = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate();
-            }
-
-            periodChanged() {
-                if (this.$.period.value == 'Periodic') {
-                    this.isPeriodicSelected = true;
-                } else {
-                    this.isPeriodicSelected = false;
-                }
-            }
-
-            isInputEmpty(amount) {
-                return true;
-            }
-
-            //Increment by 1 to index in dom-repeat
-            displayIndex(index) {
-                return index + 1;
-            }
-
-            // _checkAvailability(transactions){
-            //     return transactions.length ? true : false;
-            // }
-
-            // Add currency
-            // Add currency
-            addCurrency(amount) {
-                return '$' + amount;
-            }
-
-            //Get transaction data ffrom API
-            _getTransactionData() {
-
-                try {
-                    this.custId = JSON.parse(sessionStorage.user).customerId;
-                }
-                catch (e) {
-                    console.log('Error getting data from SessionStorage -->' + e)
-                }
-
-                let ajax = this.$.analyser;
-                //ajax.url = "src/data/analyser.json";
-                // ajax.url = "http://192.168.43.118:8080/user/"+this.custId+"/transactionsummary";
-                ajax.url = this.api.url;
-                ajax.generateRequest(); //trigger the iron-ajax                
-            }
-
-            //Store the response 
-            _handleResponse(event, request) {
-                this.testdata = request.response.data;
-                this.testdata.forEach(function (el) {
-                    el.Ccolor = "#ff6600";
-                    el.Dcolor = "#42417a";
-                })
-                this.transactions = this.testdata;
-                let dataAvailable = this.testdata.length ? true : false;
-                // console.log(dataAvailable);
-                this.set('dataAvailable', dataAvailable)
-            }
+                this.makeFilters= ['a'];               
+	        }   
+            _currentMonthDataChanged(){
+                console.log(this.currentMonthData);
+                console.log('chart',this.currentMonthData.totalCreditDebit);
+            }      
         };
         window.customElements.define(paymentAnalyser.is, paymentAnalyser);
     </script>

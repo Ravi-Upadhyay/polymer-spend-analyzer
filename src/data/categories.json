@@ -1,0 +1,16 @@
+{
+    "status": 1,
+    "data": [{
+        "id" : 0,
+        "category":"Travel"
+    },{
+        "id" : 1,
+        "category":"Shopping"
+    },{
+        "id" : 2,
+        "category":"EMI"
+    },{
+        "id" : 3,
+        "category":"Rent"
+    }]
+}

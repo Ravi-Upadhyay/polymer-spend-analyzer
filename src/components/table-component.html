@@ -1,0 +1,182 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-selection-column.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-sorter.html">
+<link rel="import" href="sub-header.html">
+
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="common-styles.html">
+<link rel="import" href="no-data-found.html">
+
+
+
+<dom-module id="table-component">
+    <template>
+        <style include="common-styles">    
+        </style>
+        <style include="shared-styles">
+         
+        </style>
+        <!-- <iron-ajax id="transHistory" method="[[api.method]]" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax> -->
+        <div class="container fntFamily">
+            <h2 class="centerText"> Most Recent Transactions </h2>
+
+        <template is="dom-if" if="{{!dataAvailable}}"> 
+            <no-data-found></no-data-found>
+        </template> 
+         <!-- <template is="dom-if" if="{{dataAvailable}}"> -->
+          <vaadin-grid id="grid" class="gridBorder" theme="row-dividers" items="[[tabledata]]" page-size="10" height-by-rows>
+           <vaadin-grid-column width="1em">
+                <template class="header">
+                    <b>Transaction Id</b>
+                </template>
+                <template>[[item.transactionId]]</template>
+            </vaadin-grid-column>
+            
+            <vaadin-grid-column width="2em">
+                <template class="header">
+                    <b>Transaction Description</b>
+                </template>
+                <template>[[item.description]]</template>
+            </vaadin-grid-column>
+
+            <vaadin-grid-column width="1em">
+                <template class="header">
+                    <b>Transaction Type</b>
+                </template>
+                <template>[[item.paymentType]]</template>
+            </vaadin-grid-column>
+    
+            <vaadin-grid-column width="8em">
+                <template class="header">
+                    <b>Transaction Date</b>
+                </template>
+                <template>[[item.transactionDate]]</template>
+            </vaadin-grid-column>
+    
+            <vaadin-grid-column width="1em">
+                <template class="header">
+                    <b path="amount">Amount</b>
+                </template>
+                <template>[[addCurrency(item.transactionAmount)]]</template>
+            </vaadin-grid-column>
+
+            <vaadin-grid-column width="1em">
+                <template class="header">
+                    <b path="balance">Balance</b>
+                </template>
+                <template>[[addCurrency(item.closingBalance)]]</template>
+            </vaadin-grid-column>
+        </vaadin-grid>
+        <!-- </template> -->
+      <div id="pages">
+            <button on-click="_prev">&lt;</button>
+            <template is="dom-repeat" items="[[pages]]">
+            <button on-click="_select" selected$="[[_isSelected(page, item)]]">[[item]]</button>
+            </template>
+            <button on-click="_next">&gt;</button>
+        </div> 
+      </div>
+    </template>
+
+  <script>
+    class tableComponent extends Polymer.Element {
+      static get is() { return 'table-component'; }
+      static get properties () {
+        return {
+          items: {
+            type    : Array
+          },
+          dataAvailable: {
+              type: Boolean
+          },
+          api : {
+              type    : Object
+          },
+          pages: {
+            type    : Array
+          },
+          page: {
+            type    : Number
+          },
+          user: {
+            type    : Object
+          },
+		    custId:{
+            type    : String,
+            computed: '_getCustId(user)'
+          },
+          tabledata: {
+                       type:Array,
+                       observer:'_itemsChanged'
+                   },
+		  activated: {
+              type: Boolean,
+              observer: '_activationChanged'
+          }
+        };
+      }
+
+       constructor(){
+        super();
+        this.page = 0;
+      }
+
+      
+      ready(){
+            super.ready();
+            this.page = 0;
+      }
+            
+
+      _getCustId(user){
+        return user.customerId;
+      } 
+
+       _activationChanged(newVal, oldVal){
+         this.tabledata;
+         }
+	  
+
+      // Add currency
+      addCurrency(amount){
+        return '$' + amount;
+      }
+
+      _isSelected(page, item) {
+        return page === item - 1;
+      }
+
+      _select(e) {
+        this.page = e.model.item - 1;
+      }
+
+      _next() {
+        this.page = Math.min(this.pages.length - 1, this.page + 1);
+      }
+
+      _prev() {
+        this.page = Math.max(0, this.page - 1);
+      }
+
+      _itemsChanged(items, page) {
+        if (items === undefined) {
+          return;
+        }
+
+        if (!this.pages) {
+          this.pages = Array.apply(null, {length: Math.ceil(items.length / this.$.grid.pageSize)}).map(function(item, index) {
+            return index + 1;
+          });
+        }
+
+        var start = this.page * this.$.grid.pageSize;
+        var end = (this.page + 1) * this.$.grid.pageSize;
+        this.$.grid.items = items.slice(start, end);
+      } 
+    
+    }
+    window.customElements.define(tableComponent.is, tableComponent);
+  </script>
+</dom-module>
