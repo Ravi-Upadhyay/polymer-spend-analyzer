@@ -103,21 +103,22 @@
             //This uses a splice and a push for inserting or removing elements from the array to make array changes observable
             changeCategory() {
                 let selectedDropdown = this.$.categories.selectedValues;
-                let copyArray = [];
+                let referenceArray = [];
                 for (var index in this.categories) {
-                    copyArray[index] = this.categories[index].id;
+                    referenceArray[index] = this.categories[index].id;
                 }
                 if (this.selectedCategory === 'All') {
                     if (selectedDropdown.indexOf("99") >= 0) {
-                        this.preselected = copyArray;
+                        this.preselected = referenceArray;
+                        this.$.categories.value="All";
                     } else {
                         this.preselected = [];
                     }
                 } else {
-                    if ((selectedDropdown.length === copyArray.length - 1) && selectedDropdown.indexOf("99") >= 0) {
+                    if ((selectedDropdown.length === referenceArray.length - 1) && selectedDropdown.indexOf("99") >= 0) {
                         this.splice('preselected', this.preselected.indexOf("99"), 1);
                     }
-                    if ((selectedDropdown.length === copyArray.length - 1) && selectedDropdown.indexOf("99") === -1) {
+                    if ((selectedDropdown.length === referenceArray.length - 1) && selectedDropdown.indexOf("99") === -1) {
                         this.push('preselected', "99");
                     }
                 }

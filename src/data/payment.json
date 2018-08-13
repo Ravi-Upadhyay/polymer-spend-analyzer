@@ -7,6 +7,9 @@
         "amount": 110.04,
         "paymentType": "DEBIT",
         "closingBalance": 156413.15,
-        "category": ["Rent", "Utilities", "Groceries"]
+        "category": {
+            "id": 4,
+            "value": "Medical"
+        }
     }
 }
