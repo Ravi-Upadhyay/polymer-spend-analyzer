@@ -24,7 +24,7 @@
        <div class="container fntFamily">
             <template is="dom-if" if="{{makeFilters}}">
             <!-- <analyse-filters period-list={{periodList}} make-filters="{{makeFilters}}"></analyse-filters>  -->
-                  <analyse-filters api={{api}} make-filters="{{makeFilters}}" current-month-data="{{currentMonthData}}"></analyse-filters>
+                  <analyse-filters api={{api}} make-filters="{{makeFilters}}" current-month-data="{{currentMonthData}}" spend-category-data="{{spendCategoryData}}" is-current-month-selected={{isCurrentMonthSelected}}></analyse-filters>
 
                   <multi-select-dropdown></multi-select-dropdown>
                   <!--Table component-->
@@ -39,10 +39,20 @@
                             <paper-tab>Bar graph</paper-tab>
                         </paper-tabs>
                         <iron-pages selected="{{selectedTab}}">
+                            <div><template is="dom-if" if="{{isCurrentMonthSelected}}"> 
                         <piechart-component transactions=[[currentMonthData.totalCreditDebit]]></piechart-component>
-                        <!--<div><template is="dom-if" if="{{dataAvailable}}"> -->
+                        </template>
+                        <template is="dom-if" if="{{spendCategoryData.analysis}}"> 
+                        <piechart-component transactions=[[spendCategoryData.analysis]]></piechart-component>
+                        </template>
+                        </div>
+                        <div><template is="dom-if" if="{{isCurrentMonthSelected}}"> 
                             <barchart-component transactions=[[currentMonthData.totalCreditDebit]]></barchart-component> 
-                        <!--</template></div>-->
+                        </template>
+                        <template is="dom-if" if="{{spendCategoryData.analysis}}"> 
+                            <barchart-component transactions=[[spendCategoryData.analysis]]></barchart-component> 
+                        </template>
+                        </div>
                         </iron-pages>
                   </div>
                    
@@ -73,6 +83,16 @@
                         value:'',
                         observer: '_currentMonthDataChanged'
                     },
+                    spendCategoryData:{
+                        type: Array,
+                        value:'',
+                        observer: '_spendCategoryDataChanged'
+                    },
+                    isCurrentMonthSelected :{
+                        type: Boolean,
+                        value:'',
+                        observer: '_periodChanged'
+                    },
                     selectedTab:{ 
                         type : String,
                         value : '0'
@@ -85,11 +105,20 @@
                    
                 }
                 this.makeFilters= ['a'];               
-	        }   
+	        }
+
+            _periodChanged(){
+                console.log('i am in period',this.isCurrentMonthSelected)
+            }
+
             _currentMonthDataChanged(){
                 console.log(this.currentMonthData);
                 console.log('chart',this.currentMonthData.totalCreditDebit);
-            }      
+            }
+
+            _spendCategoryDataChanged(){
+                console.log('getting category data',this.spendCategoryData);
+            }
         };
         window.customElements.define(paymentAnalyser.is, paymentAnalyser);
     </script>
