@@ -46,7 +46,7 @@
             <iron-ajax id="transaction" method="[[paymentApi.method]]" content-type="application/json" handle-as="json" on-response="_handleResponse"
                 loading="{{loading}}">
             </iron-ajax>
-            <iron-ajax auto method="[[categoryApi.method]]" url="[[categoryApi.url]]" handle-as="json" last-response="{{categories}}"
+            <iron-ajax id="ajaxcategory" auto method="[[categoryApi.method]]" url="[[categoryApi.url]]" handle-as="json" last-response="{{categories}}"
                 on-response="handleCategoryResponse"></iron-ajax>
 
             <iron-form id="myForm">
@@ -152,11 +152,13 @@
                     },
                     isCategoryPresent: {
                         type: Boolean,
-                        value: true
+                        value: true,
+                        reflectToAttribute: true
                     },
                     isCategoryFetched: {
                         type: Boolean,
-                        value: false
+                        value: false,
+                        reflectToAttribute: true
                     },
                     msg: {
                         type: String,
@@ -175,7 +177,9 @@
                     this.amount = '';
                     this.selectedType = 'DEBIT';
                     this.description = '';
-                    this.selectedCategory = 'Other';
+                    this.isCategoryPresent = true;
+                    let ajax = this.$.ajaxcategory;
+                    ajax.generateRequest();
                 }
             }
 
