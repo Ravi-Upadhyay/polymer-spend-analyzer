@@ -43,18 +43,11 @@
             <!-- <iron-localstorage name="transactionDetails" value="{{transactionDetails}}" on-iron-localstorage-load="initializeStorage"></iron-localstorage> -->
 
             <!-- Ajax component to make a post request to payment API -->
-            <!-- <iron-ajax 
-                id="transaction" 
-                method="post" 
-                content-type="application/json" 
-                handle-as="json" 
-                on-response="_handleResponse" 
-                loading="{{loading}}">
-            </iron-ajax> -->
-            <iron-ajax id="transaction" method="[[api.method]]" content-type="application/json" handle-as="json" on-response="_handleResponse"
+            <iron-ajax id="transaction" method="[[paymentApi.method]]" content-type="application/json" handle-as="json" on-response="_handleResponse"
                 loading="{{loading}}">
             </iron-ajax>
-
+            <iron-ajax auto method="[[categoryApi.method]]" url="[[categoryApi.url]]" handle-as="json" last-response="{{categories}}"
+                on-response="handleCategoryResponse"></iron-ajax>
 
             <iron-form id="myForm">
                 <form>
@@ -80,16 +73,18 @@
                     </div>
 
                     <template is="dom-if" if="[[isCategoryPresent]]">
-                        <div>
-                            <h4 class="label">Select payment category</h4>
-                            <paper-dropdown-menu allow-outside-scroll="true" id="category" class="customWidth" no-label-float>
-                                <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content customWidth" selected="{{selectedCategory}}">
-                                    <template is="dom-repeat" items="[[categories]]">
-                                        <paper-item id="[[item.id]]" value$="[[item.id]]">[[item.value]]</paper-item>
-                                    </template>
-                                </paper-listbox>
-                            </paper-dropdown-menu>
-                        </div>
+                        <template is="dom-if" if="[[isCategoryFetched]]">
+                            <div>
+                                <h4 class="label">Select payment category</h4>
+                                <paper-dropdown-menu allow-outside-scroll="true" id="category" class="customWidth" no-label-float>
+                                    <paper-listbox slot="dropdown-content" class="dropdown-content customWidth" selected="[[selectedCategory]]">
+                                        <template is="dom-repeat" items="[[categories]]">
+                                            <paper-item id="[[item.id]]" value$="[[item.id]]">[[item.value]]</paper-item>
+                                        </template>
+                                    </paper-listbox>
+                                </paper-dropdown-menu>
+                            </div>
+                        </template>
                     </template>
 
                     <div>
@@ -126,21 +121,12 @@
                     },
                     categories: {
                         type: Array,
-                        value: [{
-                            value: 'Rent',
-                            id: 0
-                        }, {
-                            value: 'Utilities',
-                            id: 1,
-                        }, {
-                            value: 'Groceries',
-                            id: 2,
-                        }, {
-                            value: 'Other',
-                            id: 3,
-                        }]
+                        value: []
                     },
-                    api: {
+                    paymentApi: {
+                        type: Object
+                    },
+                    categoryApi: {
                         type: Object
                     },
                     loading: {
@@ -157,8 +143,8 @@
                         value: 'DEBIT' //Set debit as default
                     },
                     selectedCategory: {
-                        type: String,
-                        value: 'Other'  //set Other as default
+                        type: Number,
+                        value: ''  //set Other as default
                     },
                     transactionDetails: {
                         type: Object,
@@ -167,6 +153,10 @@
                     isCategoryPresent: {
                         type: Boolean,
                         value: true
+                    },
+                    isCategoryFetched: {
+                        type: Boolean,
+                        value: false
                     },
                     msg: {
                         type: String,
@@ -208,6 +198,16 @@
                 this.isCategoryPresent = (this.selectedType === 'CREDIT') ? false : true
             }
 
+            handleCategoryResponse(event, request) {
+
+                let categories = request.response;
+                let isCategoryFetched = categories.length ? true : false;
+                this.set('isCategoryFetched', isCategoryFetched)
+                if(isCategoryFetched){
+                    this.selectedCategory = categories.map(e => e.value).indexOf('Misc');
+                }
+            }
+
             _makeTransaction() {
                 localStorage.removeItem('transactionDetails');
                 var amount = this.amount
@@ -217,7 +217,7 @@
                 var ajax = this.$.transaction;
                 let custId = JSON.parse(sessionStorage.user).customerId;
                 // ajax.url = 'http://192.168.43.118:8080/user/'+custId+'/makepayment';
-                ajax.url = this.api.url;
+                ajax.url = this.paymentApi.url;
                 ajax.body = JSON.stringify({
                     "customerId": custId,
                     "amount": amount,

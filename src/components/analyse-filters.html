@@ -13,6 +13,7 @@
 <link rel="import" href="shared-styles.html"> 
 <link rel="import" href="common-styles.html">
 <link rel="import" href="msg-component.html">
+<link rel="import" href="multi-select-dropdown.html">
 <dom-module id="analyse-filters">
     <template>
         <style include="common-styles">                  
@@ -35,7 +36,6 @@
          <iron-ajax id="getPeriod" method="[[api.method]]" handle-as="json" last-response="{{periods}}" on-response="_handlePeriodResponse"></iron-ajax>
          <iron-ajax id="getCurrentMonth" method="[[api.method]]" handle-as="json" last-response="{{currentMonthData}}" on-response="_handleCurrentMonthResponse"></iron-ajax>
          <iron-ajax id="getPreviousMonths" method="[[api.method]]" handle-as="json" last-response="{{currentMonthData}}" on-response="_handlePreviousMonthResponse"></iron-ajax>
-         <iron-ajax id="getCategories" method="[[api.method]]" handle-as="json" last-response="{{categories}}" on-response="_handleCategoriesResponse"></iron-ajax>
 
         <div class="container fntFamily">
             <iron-form id="myForm">
@@ -88,13 +88,7 @@
                         <template is="dom-if" if="{{isFromToSelected}}">
                             <span class="inline-block">
                                 <h4 class="label">Select Category</h4>
-                                <paper-dropdown-menu allow-outside-scroll="true" id="categoriesList" on-iron-select="" no-label-float>
-                                    <paper-listbox slot="dropdown-content" selected="{{selectedCategory}}"attr-for-selected="value" class="dropdown-content">
-                                        <template is="dom-repeat" items="[[categoryList]]">
-                                            <paper-item value$="[[item.category]]">[[item.category]]</paper-item>
-                                        </template>
-                                    </paper-listbox>
-                                </paper-dropdown-menu>
+                                <multi-select-dropdown></multi-select-dropdown>
                             </span>
                             <span class="inline-block">
                                 <msg-component></msg-component>
@@ -197,9 +191,6 @@
                 this.selectedCategory = 'All';
                 this.selectedMonth = '';
                 this._getPeriods();
-                this._getCategories();
-
-                
                 let now = new Date();
                 this.minDateVal = now.getFullYear() +'-' + (now.getMonth()-5)+'-'+now.getDate();
                 this.maxDateVal = now.getFullYear() +'-' + (now.getMonth()+1)+'-'+now.getDate();
@@ -310,14 +301,6 @@
                 if(this.selectedMonth){
                     this.isFromToSelected = true;
                 }
-            }
-            //Call Get categories API
-            _getCategories(){
-                let ajax = this.$.getCategories;                                        
-                ajax.url = this.api.categories.url;               
-                //ajax.body = payload;
-                ajax.generateRequest();
-                
             }
             //When FROM date changed
              _fromDateChanged(e){                

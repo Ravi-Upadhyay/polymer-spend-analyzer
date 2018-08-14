@@ -59,10 +59,12 @@
                             <span>Transaction Type: </span>
                             <span>{{transactionType}}</span>
                         </div>
-                        <div>
-                            <span>Category Type: </span>
-                            <span>{{category}}</span>
-                        </div>
+                        <template is="dom-if" if="[[isCategoryPresent]]">
+                            <div>
+                                <span>Category Type: </span>
+                                <span>{{category}}</span>
+                            </div>
+                        </template>
                     </div>
                     <div>
                         <app-location route="{{route}}"></app-location>
@@ -110,6 +112,9 @@
                     category: {
                         type: Object,
                         value: ''
+                    },
+                    isCategoryPresent: {
+                        type: Boolean
                     }
                 }
             }
@@ -124,7 +129,10 @@
                     this.transactionId = status.transactionId;
                     this.transactionType = status.paymentType;
                     this.transactionAmount = status.amount;
-                    this.category = status.category.value;
+                    if (status.category.value) {
+                        this.isCategoryPresent = true;
+                        this.category = status.category.value;
+                    }
                 }
             }
 

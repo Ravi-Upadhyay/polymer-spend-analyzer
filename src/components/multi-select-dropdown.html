@@ -15,10 +15,9 @@
 <dom-module id="multi-select-dropdown">
     <template>
         <style include="common-styles">
-            
             :host {
                 display: block;
-                padding: 32px;
+                padding: 0px;
             }
 
             iron-icon.checkbox.checked {
@@ -47,10 +46,8 @@
         </style>
         <style include="shared-styles">
         </style>
-        <div class="container fntFamily">
-
-
-            <isw-dropdown-menu id="categories" multi attr-for-selected="value" label="Dinosaurs" on-click="changeCategory" selected-values="{{ preselected }}">
+        <div>
+            <isw-dropdown-menu id="categories" multi attr-for-selected="value" on-click="changeCategory" selected-values="{{ preselected }}">
                 <template is="dom-repeat" items="[[ categories ]]">
                     <paper-icon-item on-click="toggle" value$="[[ item.id ]]" label$="[[ item.value ]]">
                         <iron-icon class="checkbox unchecked" icon="check-box-outline-blank" slot="item-icon"></iron-icon>
@@ -110,7 +107,7 @@
                 if (this.selectedCategory === 'All') {
                     if (selectedDropdown.indexOf("99") >= 0) {
                         this.preselected = referenceArray;
-                        this.$.categories.value="All";
+                        this.$.categories.value = "All";
                     } else {
                         this.preselected = [];
                     }

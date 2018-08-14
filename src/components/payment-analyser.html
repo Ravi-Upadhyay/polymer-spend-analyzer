@@ -25,8 +25,6 @@
             <template is="dom-if" if="{{makeFilters}}">
             <!-- <analyse-filters period-list={{periodList}} make-filters="{{makeFilters}}"></analyse-filters>  -->
                   <analyse-filters api={{api}} make-filters="{{makeFilters}}" current-month-data="{{currentMonthData}}"></analyse-filters>
-
-                  <multi-select-dropdown></multi-select-dropdown>
                   <!--Table component-->
 
                   <table-component tabledata="[[currentMonthData.transactions]]"></table-component>

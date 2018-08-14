@@ -1,16 +1,34 @@
-{
-    "status": 1,
-    "data": [{
-        "id" : 0,
-        "category":"Travel"
-    },{
-        "id" : 1,
-        "category":"Shopping"
-    },{
-        "id" : 2,
-        "category":"EMI"
-    },{
-        "id" : 3,
-        "category":"Rent"
-    }]
-}
+[
+    {
+        "id": 1,
+        "value": "Education"
+    },
+    {
+        "id": 2,
+        "value": "Grocery"
+    },
+    {
+        "id": 3,
+        "value": "Loan"
+    },
+    {
+        "id": 4,
+        "value": "Medical"
+    },
+    {
+        "id": 5,
+        "value": "Misc"
+    },
+    {
+        "id": 6,
+        "value": "Shopping"
+    },
+    {
+        "id": 7,
+        "value": "Travel"
+    },
+    {
+        "id": 8,
+        "value": "Utility Bills"
+    }
+]
