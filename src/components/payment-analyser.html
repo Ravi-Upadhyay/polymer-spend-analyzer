@@ -26,7 +26,9 @@
                 <analyse-filters api={{api}} make-filters="{{makeFilters}}" current-month-data="{{currentMonthData}}" spend-category-data="{{spendCategoryData}}"
                     is-current-month-selected={{isCurrentMonthSelected}}></analyse-filters>
                 <!--Table component-->
-                <table-component tabledata="[[currentMonthData.transactions]]"></table-component>
+                <template is="dom-if" if="{{isCurrentMonthSelected}}">
+                    <table-component tabledata="[[currentMonthData.transactions]]"></table-component>
+                </template>
                 <!--Tab component-->
                 <div class="tabContainer">
                     <paper-tabs selected="{{selectedTab}}" scrollable>
