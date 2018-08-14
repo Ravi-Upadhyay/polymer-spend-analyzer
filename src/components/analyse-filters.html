@@ -34,8 +34,10 @@
          
         </style>
          <iron-ajax id="getPeriod" method="[[api.method]]" handle-as="json" last-response="{{periods}}" on-response="_handlePeriodResponse"></iron-ajax>
-         <iron-ajax id="getCurrentMonth" method="[[api.method]]" handle-as="json" last-response="{{currentMonthData}}" on-response="_handleCurrentMonthResponse"></iron-ajax>
-         <iron-ajax id="getPreviousMonths" method="[[api.method]]" handle-as="json" last-response="{{currentMonthData}}" on-response="_handlePreviousMonthResponse"></iron-ajax>
+         <iron-ajax id="getCurrentMonth" method="[[api.method]]" handle-as="json" on-response="_handleCurrentMonthResponse"></iron-ajax>
+         <iron-ajax id="getPreviousMonths" method="[[api.method]]" handle-as="json" on-response="_handlePreviousMonthResponse"></iron-ajax>
+         <!-- <iron-ajax id="getCategories" method="[[api.method]]" handle-as="json" last-response="{{categories}}" on-response="_handleCategoriesResponse"></iron-ajax> -->
+         <iron-ajax id="getSpendCategory" method="[[api.method]]" handle-as="json" on-response="_handleCategoryResponse"></iron-ajax>
 
         <div class="container fntFamily">
             <iron-form id="myForm">
@@ -132,7 +134,8 @@
                     },
                     isCurrentMonthSelected:{
                         type: Boolean,
-                        value:true
+                        value:true,
+                        notify:true
                     },
                     isMonthlySelected:{
                         type: Boolean,
@@ -140,10 +143,15 @@
                     },
                     isPeriodicSelected : {
                         type: Boolean,
-                        value : false
-                        
+                        value : false,
+                        notify:true
                     },   
                     currentMonthData:{
+                        type:Array,
+                        value:'',
+                        notify:true
+                    },
+                    spendCategoryData:{
                         type:Array,
                         value:'',
                         notify:true
@@ -316,7 +324,13 @@
                 if( this.selectedFromDate && this.selectedToDate){
                      this.isFromToSelected = true;
                  }   
-            }       
+            }
+
+            _handleCategoryResponse(event,request){
+                console.log(request.response.data);
+                this.spendCategoryData = request.response.data;
+            }
+
             //Analyse data
             _analyseData(){
                 var data = {
@@ -329,8 +343,14 @@
                     'categories':[this.selectedCategory]
 
                 }
+
+                let ajax = this.$.getSpendCategory;
+                ajax.url = this.api.spendcategory.url;
+                //ajax.body = payload;
+                ajax.generateRequest();
+
                 console.log('analyser payload',data)
-            }   
+            }
         };
         window.customElements.define(analyseFilters.is,analyseFilters);
     </script>

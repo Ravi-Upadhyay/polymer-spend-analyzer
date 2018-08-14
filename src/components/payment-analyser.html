@@ -14,80 +14,108 @@
 
 <dom-module id="payment-analyser">
     <template>
-        <style include="common-styles">                  
-                                  
+        <style include="common-styles">
         </style>
         <style include="shared-styles">
         </style>
-       <sub-header></sub-header>
+        <sub-header></sub-header>
 
-       <div class="container fntFamily">
+        <div class="container fntFamily">
             <template is="dom-if" if="{{makeFilters}}">
-            <!-- <analyse-filters period-list={{periodList}} make-filters="{{makeFilters}}"></analyse-filters>  -->
-                  <analyse-filters api={{api}} make-filters="{{makeFilters}}" current-month-data="{{currentMonthData}}"></analyse-filters>
-                  <!--Table component-->
 
-                  <table-component tabledata="[[currentMonthData.transactions]]"></table-component>
+                <analyse-filters api={{api}} make-filters="{{makeFilters}}" current-month-data="{{currentMonthData}}" spend-category-data="{{spendCategoryData}}"
+                    is-current-month-selected={{isCurrentMonthSelected}}></analyse-filters>
+                <!--Table component-->
+                <table-component tabledata="[[currentMonthData.transactions]]"></table-component>
+                <!--Tab component-->
+                <div class="tabContainer">
+                    <paper-tabs selected="{{selectedTab}}" scrollable>
+                        <paper-tab>Pie chart</paper-tab>
+                        <paper-tab>Bar graph</paper-tab>
+                    </paper-tabs>
+                    <iron-pages selected="{{selectedTab}}">
+                        <div>
+                            <template is="dom-if" if="{{isCurrentMonthSelected}}">
+                                <piechart-component transactions=[[currentMonthData.totalCreditDebit]]></piechart-component>
+                            </template>
+                            <template is="dom-if" if="{{spendCategoryData.analysis}}">
+                                <piechart-component transactions=[[spendCategoryData.analysis]]></piechart-component>
+                            </template>
+                        </div>
+                        <div>
+                            <template is="dom-if" if="{{isCurrentMonthSelected}}">
+                                <barchart-component transactions=[[currentMonthData.totalCreditDebit]]></barchart-component>
+                            </template>
+                            <template is="dom-if" if="{{spendCategoryData.analysis}}">
+                                <barchart-component transactions=[[spendCategoryData.analysis]]></barchart-component>
+                            </template>
+                        </div>
+                    </iron-pages>
+                </div>
 
+            </template>
+        </div>
 
-                  <!--Tab component-->
-                    <div class="tabContainer">
-                        <paper-tabs selected="{{selectedTab}}" scrollable>
-                            <paper-tab>Pie chart</paper-tab>
-                            <paper-tab>Bar graph</paper-tab>
-                        </paper-tabs>
-                        <iron-pages selected="{{selectedTab}}">
-                        <piechart-component transactions=[[currentMonthData.totalCreditDebit]]></piechart-component>
-                        <!--<div><template is="dom-if" if="{{dataAvailable}}"> -->
-                            <barchart-component transactions=[[currentMonthData.totalCreditDebit]]></barchart-component> 
-                        <!--</template></div>-->
-                        </iron-pages>
-                  </div>
-                   
-            </template>       
-        </div>      
-    
     </template>
     <script>
-        class paymentAnalyser extends Polymer.Element{
-            static get is(){ return 'payment-analyser'}
-            static get properties(){
-                return  {
-                    api : {
-                        type    : Object
-                    },  
+        class paymentAnalyser extends Polymer.Element {
+            static get is() { return 'payment-analyser' }
+            static get properties() {
+                return {
+                    api: {
+                        type: Object
+                    },
                     activated: {
                         type: Boolean,
                         observer: '_activationChanged'
                     },
-                    makeFilters:{
+                    makeFilters: {
                         type: Array,
-                        value:"",
-                        notify:true,
-                        reflectToAttribute: true                        
+                        value: "",
+                        notify: true,
+                        reflectToAttribute: true
                     },
-                    currentMonthData:{
+                    currentMonthData: {
                         type: Array,
-                        value:'',
+                        value: '',
                         observer: '_currentMonthDataChanged'
                     },
-                    selectedTab:{ 
-                        type : String,
-                        value : '0'
+                    spendCategoryData: {
+                        type: Array,
+                        value: '',
+                        observer: '_spendCategoryDataChanged'
+                    },
+                    isCurrentMonthSelected: {
+                        type: Boolean,
+                        value: '',
+                        observer: '_periodChanged'
+                    },
+                    selectedTab: {
+                        type: String,
+                        value: '0'
                     }
                 }
             }
 
-            _activationChanged(newVal, oldVal){
-                if(newVal){
-                   
+            _activationChanged(newVal, oldVal) {
+                if (newVal) {
+
                 }
-                this.makeFilters= ['a'];               
-	        }   
-            _currentMonthDataChanged(){
+                this.makeFilters = ['a'];
+            }
+
+            _periodChanged() {
+                console.log('i am in period', this.isCurrentMonthSelected)
+            }
+
+            _currentMonthDataChanged() {
                 console.log(this.currentMonthData);
-                console.log('chart',this.currentMonthData.totalCreditDebit);
-            }      
+                console.log('chart', this.currentMonthData.totalCreditDebit);
+            }
+
+            _spendCategoryDataChanged() {
+                console.log('getting category data', this.spendCategoryData);
+            }
         };
         window.customElements.define(paymentAnalyser.is, paymentAnalyser);
     </script>
