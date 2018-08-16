@@ -24,40 +24,40 @@
             <template is="dom-if" if="{{makeFilters}}">
 
                 <analyse-filters api={{api}} make-filters="{{makeFilters}}" current-month-data="{{currentMonthData}}" spend-category-data="{{spendCategoryData}}"
-                    is-current-month-selected={{isCurrentMonthSelected}}></analyse-filters>
+                    is-current-month-selected={{isCurrentMonthSelected}} is-scrolled="{{isScrolled}}"></analyse-filters>
                 <!--Table component-->
                 <template is="dom-if" if="{{isCurrentMonthSelected}}">
                     <table-component tabledata="[[currentMonthData.transactions]]"></table-component>
                 </template>
                 <!--Tab component-->
                 <template is="dom-if" if="{{tabFlag}}">
-                <div class="tabContainer">
-                    <paper-tabs selected="{{selectedTab}}" scrollable>
-                        <paper-tab>Pie chart</paper-tab>
-                        <template is="dom-if" if="{{!isCurrentMonthSelected}}">
-                            <paper-tab>Bar graph</paper-tab>
-                        </template>
-                    </paper-tabs>
-                    <iron-pages selected="{{selectedTab}}">
-                        <div>
-                            <template is="dom-if" if="{{isCurrentMonthSelected}}">
-                                <piechart-component transactions=[[currentMonthData.totalCreditDebit]]></piechart-component>
+                    <div class="tabContainer">
+                        <paper-tabs selected="{{selectedTab}}" scrollable>
+                            <paper-tab>Pie chart</paper-tab>
+                            <template is="dom-if" if="{{!isCurrentMonthSelected}}">
+                                <paper-tab>Bar graph</paper-tab>
                             </template>
-                            <template is="dom-if" if="{{spendCategoryData.analysis}}">
-                                <piechart-component transactions=[[spendCategoryData.analysis]]></piechart-component>
-                            </template>
-                        </div>
-                        <div>
-                            <template is="dom-if" if="{{isCurrentMonthSelected}}">
-                                <barchart-component transactions=[[currentMonthData.totalCreditDebit]]></barchart-component>
-                            </template>
-                            <template is="dom-if" if="{{spendCategoryData.analysis}}">
-                                <barchart-component transactions=[[spendCategoryData.analysis]]></barchart-component>
-                            </template>
-                        </div>
-                    </iron-pages>
-                </div>
-            </template>
+                        </paper-tabs>
+                        <iron-pages selected="{{selectedTab}}">
+                            <div>
+                                <template is="dom-if" if="{{isCurrentMonthSelected}}">
+                                    <piechart-component transactions=[[currentMonthData.totalCreditDebit]]></piechart-component>
+                                </template>
+                                <template is="dom-if" if="{{spendCategoryData.analysis}}">
+                                    <piechart-component transactions=[[spendCategoryData.analysis]]></piechart-component>
+                                </template>
+                            </div>
+                            <div>
+                                <template is="dom-if" if="{{isCurrentMonthSelected}}">
+                                    <barchart-component transactions=[[currentMonthData.totalCreditDebit]]></barchart-component>
+                                </template>
+                                <template is="dom-if" if="{{spendCategoryData.analysis}}">
+                                    <barchart-component transactions=[[spendCategoryData.analysis]]></barchart-component>
+                                </template>
+                            </div>
+                        </iron-pages>
+                    </div>
+                </template>
 
 
             </template>
@@ -101,8 +101,12 @@
                         type: String,
                         value: '0'
                     },
-                    tabFlag:{
+                    tabFlag: {
                         type: Boolean
+                    },
+                    isScrolled: {
+                        type: Array,
+                        notify: true
                     }
                 }
             }
@@ -129,6 +133,7 @@
                 console.log('getting category data', this.spendCategoryData);
                 this.tabFlag = this.spendCategoryData.analysis || this.isCurrentMonthSelected;
             }
+
         };
         window.customElements.define(paymentAnalyser.is, paymentAnalyser);
     </script>

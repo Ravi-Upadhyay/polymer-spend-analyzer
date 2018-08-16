@@ -54,58 +54,41 @@
       }
     </style>
 
-<!-- SET PAGE TITLE AS PER THE PAGE --> 
-  <page-title base-title="Spend Analyzer" 
-    page-title="[[page]]">
-  </page-title>
+    <!-- SET PAGE TITLE AS PER THE PAGE -->
+    <page-title base-title="Spend Analyzer" page-title="[[page]]">
+    </page-title>
 
-<!-- FOR ROUTING PURPOSE (APP-ROUTE) -->
-    <app-location
-      route="{{route}}">
+    <!-- FOR ROUTING PURPOSE (APP-ROUTE) -->
+    <app-location route="{{route}}">
     </app-location>
 
-    <app-route
-      route="{{route}}"
-      pattern="/:page"
-      data="{{routeData}}"
-      tail="{{subroute}}"
-      active="{{pageActive}}">
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" active="{{pageActive}}">
     </app-route>
 
-    <api-config root-path = "[[rootPath]]" api-collection="{{apiCollection}}" user = "[[user]]"></api-config>
-    
-<!-- APP-STRUCTURE -->
-    
+    <api-config root-path="[[rootPath]]" api-collection="{{apiCollection}}" user="[[user]]"></api-config>
+
+    <!-- APP-STRUCTURE -->
+
     <div class="main-container">
-      
+
       <div>
-        <common-header 
-          is-logged-in="{{isLoggedIn}}" 
-          menu="[[myMenu]]" 
-          root-path="[[rootPath]]" 
-          selected="[[page]]"
-          logout="[[_logout]]">
+        <common-header is-logged-in="{{isLoggedIn}}" menu="[[myMenu]]" root-path="[[rootPath]]" selected="[[page]]" logout="[[_logout]]">
         </common-header>
-         
-      
+
+
       </div>
 
-      <div class="scrollable-container">
+      <div class="scrollable-container" on-scroll="scrolled">
 
-           <!--<sub-header  is-logged-in="{{isLoggedIn}}" ></sub-header>-->
+        <!--<sub-header  is-logged-in="{{isLoggedIn}}" ></sub-header>-->
         <!-- PAGES/COMPONENTS BASED ON ROUTE     -->
-        <iron-pages
-          selected="[[page]]"
-          attr-for-selected="name"
-          selected-attribute="activated"
-          selected-item="{{selectedPage}}"
-          fallback-selection="view404"
-          role="main">
+        <iron-pages selected="[[page]]" attr-for-selected="name" selected-attribute="activated" selected-item="{{selectedPage}}"
+          fallback-selection="view404" role="main">
           <login-form title='Login' name="login" login-success="[[_loginSuccess]]" api={{apiCollection.login}}></login-form>
-          <make-payment title='Make Payment'  name="payments" category-api="{{apiCollection.categories}}" payment-api="{{apiCollection.payment}}"></make-payment>
-          <payment-status title='Payment Status'  name="status"></payment-status>
-          <payment-history user="[[user]]" title='Transactions'  name="transactions" api={{apiCollection.transactions}}></payment-history>
-          <payment-analyser title='Spend Analyzer'  name="analyser" api={{apiCollection}}></payment-analyser>
+          <make-payment title='Make Payment' name="payments" category-api="{{apiCollection.categories}}" payment-api="{{apiCollection.payment}}"></make-payment>
+          <payment-status title='Payment Status' name="status"></payment-status>
+          <payment-history user="[[user]]" title='Transactions' name="transactions" api={{apiCollection.transactions}}></payment-history>
+          <payment-analyser title='Spend Analyzer' name="analyser" api={{apiCollection}} is-scrolled="{{isScrolled}}"></payment-analyser>
           <view-404 title='Not Found 404' name="view404"></view-404>
         </iron-pages>
 
@@ -125,17 +108,17 @@
         //   console.log(this.apiCollection);
         // },2000);
       }
-      
+
       static get is() { return 'spend-analyser'; }
-      
+
       static get properties() {
         return {
-          isLoggedIn : {
-            type  : Boolean,
-            value : false,
+          isLoggedIn: {
+            type: Boolean,
+            value: false,
           },
           user: {
-            type  : Object,
+            type: Object,
           },
           page: {
             type: String,
@@ -147,25 +130,29 @@
           subroute: Object,
           route: Object,
           rootPath: String,
-          myMenu  : {
-            type  : Array,
-            value : [
+          myMenu: {
+            type: Array,
+            value: [
               {
-                "display" : "Payments",
-                "name"    : "payments",
-                "slug"    : "payments"
+                "display": "Payments",
+                "name": "payments",
+                "slug": "payments"
               },
               {
-                "display" : "Transactions",
-                "name"    : "transactions",
-                "slug"    : "transactions"                
+                "display": "Transactions",
+                "name": "transactions",
+                "slug": "transactions"
               },
               {
-                "display" : "Spend Analyser",
-                "name"    : "analyser",
-                "slug"    : "analyser"                
+                "display": "Spend Analyser",
+                "name": "analyser",
+                "slug": "analyser"
               }
             ]
+          },
+          isScrolled: {
+            type: Array,
+            notify: true
           }
         }
       }
@@ -181,11 +168,11 @@
         // based on page attribute we will tell which file to load, NOTE: not working on
         // routeChanged
         const pathMap = {
-          "login"       : "login-form.html",
-          "payments"    : "make-payment.html",
-          "status"      : "payment-status.html",
+          "login": "login-form.html",
+          "payments": "make-payment.html",
+          "status": "payment-status.html",
           "transactions": "payment-history.html",
-          "analyser"    : "payment-analyser.html"
+          "analyser": "payment-analyser.html"
         };
 
         const fileName = pathMap[page] ? pathMap[page] : "view-404.html";
@@ -198,50 +185,55 @@
           null,
           true);
       }
-      _routeChanged(path){
+      _routeChanged(path) {
 
         let user = JSON.parse(sessionStorage.getItem('user'));
-        this.set('user',user);
+        this.set('user', user);
 
-        let isLoggedIn =  user ? true : false;
-        this.set('isLoggedIn',isLoggedIn);
-        
-        if(!this.isLoggedIn)  {
-          this.set('route.path','/login');
+        let isLoggedIn = user ? true : false;
+        this.set('isLoggedIn', isLoggedIn);
+
+        if (!this.isLoggedIn) {
+          this.set('route.path', '/login');
         }
+      }
+
+      scrolled() {
+        let scroll = 0;
+        this.isScrolled = [scroll++];
       }
 
       _routePageChanged(page) {
         this.page = page || 'login';
       }
 
-      _loginSuccess(user){
+      _loginSuccess(user) {
         // FUNCTION: After authentication at login-form control will be redirected
         // so in case of successful login action can be taken here   
-		    sessionStorage.setItem('user',JSON.stringify(user));
-        this.set('route.path','/payments');
+        sessionStorage.setItem('user', JSON.stringify(user));
+        this.set('route.path', '/payments');
       }
 
-      _logout(){
-        this.set('route.path','/login');
+      _logout() {
+        this.set('route.path', '/login');
         sessionStorage.removeItem('user');
         this.isLoggedIn = false;
       }
 
-      _fileNameFinder(path){
+      _fileNameFinder(path) {
         let pathMap = {
-          "login"       : "login-form.html",
-          "payments"    : "make-payment.html",
-          "status"      : "payment-status.html",
+          "login": "login-form.html",
+          "payments": "make-payment.html",
+          "status": "payment-status.html",
           "transactions": "payment-history.html",
-          "analyser"    : "payment-analyser.html"
+          "analyser": "payment-analyser.html"
         };
 
         let fileName = pathMap.path ? pathMap.path : "view-404.html";
         return fileName;
       }
     }
-  
+
     window.customElements.define(SpendAnalyser.is, SpendAnalyser);
   </script>
 </dom-module>
