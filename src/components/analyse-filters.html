@@ -194,14 +194,9 @@
                         observer: '_activationChanged'
                     },
                     isScrolled: {
-                        type: Boolean,
-                        observer: '_scrolled'
+                        type: Array
                     }
                 }
-            }
-
-            _scrolled() {
-                console.log('scrolled in analyse-filters', this.isScrolled)
             }
 
             //navigate from other tabs without refreshing the page
