@@ -93,7 +93,7 @@
                         <template is="dom-if" if="{{isFromToSelected}}">
                             <span class="inline-block">
                                 <h4 class="label">Select Category</h4>
-                                <multi-select-dropdown></multi-select-dropdown>
+                                <multi-select-dropdown is-scrolled="{{isScrolled}}"></multi-select-dropdown>
                             </span>
                             <span class="inline-block">
                                 <msg-component></msg-component>
@@ -192,8 +192,16 @@
                     makeFilters: {
                         type: Boolean,
                         observer: '_activationChanged'
+                    },
+                    isScrolled: {
+                        type: Boolean,
+                        observer: '_scrolled'
                     }
                 }
+            }
+
+            _scrolled() {
+                console.log('scrolled in analyse-filters', this.isScrolled)
             }
 
             //navigate from other tabs without refreshing the page

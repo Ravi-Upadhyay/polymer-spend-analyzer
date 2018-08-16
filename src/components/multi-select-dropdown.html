@@ -81,7 +81,18 @@
                     },
                     api: {
                         type: Object
+                    },
+                    isScrolled: {
+                        type: Array,
+                        observer: '_scrolled'
                     }
+                }
+            }
+            
+            //Used for closing the dropdown on click of scroll
+            _scrolled() {
+                if(this.isScrolled.length){
+                    this.$.categories.$.dropdown.close()
                 }
             }
 
