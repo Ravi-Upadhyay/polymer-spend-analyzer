@@ -10,45 +10,46 @@
 <link rel="import" href="../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
 <script src="../../bower_components/web-animations-js/web-animations.min.js"></script>
 
-<link rel="import" href="shared-styles.html"> 
+<link rel="import" href="shared-styles.html">
 <link rel="import" href="common-styles.html">
 <link rel="import" href="msg-component.html">
 <link rel="import" href="multi-select-dropdown.html">
 <dom-module id="analyse-filters">
     <template>
-        <style include="common-styles">                  
-            .inline-block{
-                display:inline-block;
+        <style include="common-styles">
+            .inline-block {
+                display: inline-block;
             }
-            .analyseBtnSpan{
+
+            .analyseBtnSpan {
                 float: right;
                 width: 30%;
-            }    
-            span.note{
+            }
+
+            span.note {
                 font-size: 12px;
                 color: #ff6600;
                 margin-left: 10px;
-            } 
-            #filter-container{
+            }
+
+            #filter-container {
                 min-height: 0px;
                 margin: 0px;
             }
-            
         </style>
         <style include="shared-styles">
-         
         </style>
-         <iron-ajax id="getPeriod" method="[[api.method]]" handle-as="json" last-response="{{periods}}" on-response="_handlePeriodResponse"></iron-ajax>
-         <iron-ajax id="getCurrentMonth" method="[[api.method]]" handle-as="json" on-response="_handleCurrentMonthResponse"></iron-ajax>
-         <iron-ajax id="getPreviousMonths" method="[[api.method]]" handle-as="json" on-response="_handlePreviousMonthResponse"></iron-ajax>
-         <!-- <iron-ajax id="getCategories" method="[[api.method]]" handle-as="json" last-response="{{categories}}" on-response="_handleCategoriesResponse"></iron-ajax> -->
-         <iron-ajax id="getSpendCategory" method="[[api.method]]" handle-as="json" on-response="_handleCategoryResponse"></iron-ajax>
+        <iron-ajax id="getPeriod" method="[[api.method]]" handle-as="json" last-response="{{periods}}" on-response="_handlePeriodResponse"></iron-ajax>
+        <iron-ajax id="getCurrentMonth" method="[[api.method]]" handle-as="json" on-response="_handleCurrentMonthResponse"></iron-ajax>
+        <iron-ajax id="getPreviousMonths" method="[[api.method]]" handle-as="json" on-response="_handlePreviousMonthResponse"></iron-ajax>
+        <!-- <iron-ajax id="getCategories" method="[[api.method]]" handle-as="json" last-response="{{categories}}" on-response="_handleCategoriesResponse"></iron-ajax> -->
+        <iron-ajax id="getSpendCategory" method="[[api.method]]" handle-as="json" on-response="_handleCategoryResponse"></iron-ajax>
 
         <div id="filter-container" class="container fntFamily">
             <iron-form id="myForm">
                 <form>
-                    <div>  
-                        <span class="inline-block">                     
+                    <div>
+                        <span class="inline-block">
                             <h4 class="label">Select Period</h4>
                             <paper-dropdown-menu allow-outside-scroll="true" id="period" on-iron-select="_periodChanged" no-label-float>
                                 <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content" selected="{{selectedPeriod}}">
@@ -61,36 +62,31 @@
                         <template is="dom-if" id="periodic" if="{{isPeriodicSelected}}">
                             <span class="inline-block">
                                 <h4 class="label">From Date(dd/mm/yy)</h4>
-                                <vaadin-date-picker 
-                                    id='FromDate' min={{minDateVal}} max={{maxDateVal}}
-                                    placeholder="Select Date" 
-                                    on-change="_fromDateChanged">
+                                <vaadin-date-picker id='FromDate' min={{fromMinDate}} max={{fromMaxDate}} placeholder="Select Date" on-change="_fromDateChanged">
                                 </vaadin-date-picker>
                             </span>
                             <span class="inline-block">
                                 <h4 class="label">To Date(dd/mm/yy)</h4>
-                                <vaadin-date-picker 
-                                    id='vaadinToDate' min={{minDateVal}} max={{maxDateVal}}
-                                    placeholder="Select Date" 
-                                    on-change="_toDateChanged">
+                                <vaadin-date-picker id='vaadinToDate' min={{fromMinDate}} max={{selectedFromDate}} placeholder="Select Date" on-change="_toDateChanged">
                                 </vaadin-date-picker>
                             </span>
                         </template>
 
-                         <template is="dom-if" id="MonthsDropdown" if="{{isMonthlySelected}}">
+                        <template is="dom-if" id="MonthsDropdown" if="{{isMonthlySelected}}">
                             <span class="inline-block">
-                                <h4 class="label">Select Month<span class="note">*Only last 6 months transactions avaliable</span></h4>
-                                <paper-dropdown-menu allow-outside-scroll="true" id="months" 
-                                    no-label-float placeholder="Select">
-                                        <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content" selected="{{selectedMonth}}">
-                                            <template is="dom-repeat" items="[[monthsList]]">
-                                                <paper-item value$="[[item]]" on-click="_monthsChanged">[[item]]</paper-item>
-                                            </template>
-                                         </paper-listbox>
+                                <h4 class="label">Select Month
+                                    <span class="note">*Only last 6 months transactions avaliable</span>
+                                </h4>
+                                <paper-dropdown-menu allow-outside-scroll="true" id="months" no-label-float placeholder="Select">
+                                    <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content" selected="{{selectedMonth}}">
+                                        <template is="dom-repeat" items="[[monthsList]]">
+                                            <paper-item value$="[[item]]" on-click="_monthsChanged">[[item]]</paper-item>
+                                        </template>
+                                    </paper-listbox>
                                 </paper-dropdown-menu>
-                            </span>    
-                         </template>                      
-                    </div>  
+                            </span>
+                        </template>
+                    </div>
                     <div>
                         <template is="dom-if" if="{{isFromToSelected}}">
                             <span class="inline-block">
@@ -106,23 +102,23 @@
                                 </paper-button>
                             </span>
                         </template>
-                          
-                    </div>      
+
+                    </div>
                 </form>
             </iron-form>
         </div>
     </template>
     <script>
-       class analyseFilters extends Polymer.Element{
-            static get is(){ return 'analyse-filters'}
-            static get properties(){
-                return  {      
-                    api : {
-                        type    : Object
-                    },             
+        class analyseFilters extends Polymer.Element {
+            static get is() { return 'analyse-filters' }
+            static get properties() {
+                return {
+                    api: {
+                        type: Object
+                    },
                     periodList: {
                         type: Array,
-                        value:''
+                        value: ''
                         //observer:'_makePeriodDropdown'
                     },
                     selectedPeriod: {
@@ -133,72 +129,72 @@
                         type: String,
                         value: 'All' //Set currentMonth as default value
                     },
-                    selectedMonth:{
-                        type:String,
+                    selectedMonth: {
+                        type: String,
                         value: false
                     },
-                    isCurrentMonthSelected:{
+                    isCurrentMonthSelected: {
                         type: Boolean,
-                        value:true,
-                        notify:true
+                        value: true,
+                        notify: true
                     },
-                    isMonthlySelected:{
-                        type: Boolean,
-                        value:false
-                    },
-                    isPeriodicSelected : {
-                        type: Boolean,
-                        value : false,
-                        notify:true
-                    },   
-                    currentMonthData:{
-                        type:Array,
-                        value:'',
-                        notify:true
-                    },
-                    spendCategoryData:{
-                        type:Array,
-                        value:'',
-                        notify:true
-                    },
-                    isFromToSelected:{
-                        type: Boolean,
-                        value: false
-                    }, 
-                    selectedFromDate:{
+                    isMonthlySelected: {
                         type: Boolean,
                         value: false
                     },
-                    selectedToDate:{
+                    isPeriodicSelected: {
+                        type: Boolean,
+                        value: false,
+                        notify: true
+                    },
+                    currentMonthData: {
+                        type: Array,
+                        value: '',
+                        notify: true
+                    },
+                    spendCategoryData: {
+                        type: Array,
+                        value: '',
+                        notify: true
+                    },
+                    isFromToSelected: {
                         type: Boolean,
                         value: false
-                    },                  
-                    fromDateVal:{
-                        type:String,
+                    },
+                    selectedFromDate: {
+                        type: Boolean,
+                        value: false
+                    },
+                    selectedToDate: {
+                        type: Boolean,
+                        value: false
+                    },
+                    fromDateVal: {
+                        type: String,
                         value: ''
                     },
-                    toDateVal:{
-                        type:String,
+                    toDateVal: {
+                        type: String,
                         value: ''
-                    },                    
+                    },
                     monthsList: {
                         type: Array,
                         value: ''
-                    }, 
-                    categoryList:{
-                        type:Array,
-                        value:''
-                    },               
+                    },
+                    categoryList: {
+                        type: Array,
+                        value: ''
+                    },
                     makeFilters: {
                         type: Boolean,
                         observer: '_activationChanged'
                     }
                 }
             }
-                       
+
             //navigate from other tabs without refreshing the page
-            _activationChanged(newVal, oldVal){
-                console.log('_activationChanged - filters',newVal, "::::", oldVal );
+            _activationChanged(newVal, oldVal) {
+                console.log('_activationChanged - filters', newVal, "::::", oldVal);
                 this.selectedFromDate = '';
                 this.selectedToDate = '';
                 this.selectedCategory = 'All';
@@ -206,39 +202,38 @@
                 this.selectedPeriod = 'Current Month';
                 this._getPeriods();
                 let now = new Date();
-                this.minDateVal = now.getFullYear() +'-' + (now.getMonth()-5)+'-'+now.getDate();
-                this.maxDateVal = now.getFullYear() +'-' + (now.getMonth()+1)+'-'+now.getDate();
-	        }
-        
+                this.fromMinDate = now.getFullYear() + '-' + (now.getMonth() - 5) + '-' + now.getDate();
+                this.fromMaxDate = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
+            }
+
             //get periods from API
-            _getPeriods(){
+            _getPeriods() {
                 let ajax = this.$.getPeriod;
-                
+
                 ajax.url = this.api.periods.url;
                 ajax.generateRequest();
             }
-            
+
             //Handle CURRENT MONTH(Landing page) response once periods are loaded
-            _handlePeriodResponse(event,request){                
+            _handlePeriodResponse(event, request) {
                 this.periodList = request.response.data;
-                console.log('periods',this.periodList);
-                let  payload = [{
-                        "customerId": 2,
-                        "period":{
-                            "from": "",
-                            "to" : "",
-                            "month": this.selectedMonth
-                        }                       
+                let payload = [{
+                    "customerId": 2,
+                    "period": {
+                        "from": "",
+                        "to": "",
+                        "month": this.selectedMonth
+                    }
                 }]
 
-                let ajax = this.$.getCurrentMonth;                                        
-                ajax.url = this.api.currentmonth.url;               
+                let ajax = this.$.getCurrentMonth;
+                ajax.url = this.api.currentmonth.url;
                 //ajax.body = payload;
-                ajax.generateRequest();                
-            } 
-            
+                ajax.generateRequest();
+            }
+
             //Handle current month response - history with debit/credit data
-            _handleCurrentMonthResponse(event,request){
+            _handleCurrentMonthResponse(event, request) {
                 console.log(request.response.data);
                 // request.response.data.totalCreditDebit.forEach(function(el) {
                 //     el.Ccolor = "#ff6600";
@@ -246,107 +241,105 @@
                 // })
                 this.currentMonthData = request.response.data;
             }
-               
+
             // User changes the period 
-            _periodChanged(){                
-                if(this.$.period.value == 'Current Month'){                    
+            _periodChanged() {
+                if (this.$.period.value == 'Current Month') {
                     this.isCurrentMonthSelected = true;
                     this.isMonthlySelected = false;
                     this.isPeriodicSelected = false;
-
-
                     this.isFromToSelected = false;
                     this._resetFileds(this.$.period.value);
-                } else if(this.$.period.value == "Monthly") {
+                } else if (this.$.period.value == "Monthly") {
                     this.isCurrentMonthSelected = false;
                     this.isMonthlySelected = true;
-                    this.isPeriodicSelected = false; 
+                    this.isPeriodicSelected = false;
 
                     this.isFromToSelected = false;
                     this._resetFileds(this.$.period.value);
                     this._getPreviousMonthsList();
-                }else{
+                } else {
                     this.isCurrentMonthSelected = false;
                     this.isMonthlySelected = false;
-                    this.isPeriodicSelected = true; 
+                    this.isPeriodicSelected = true;
                     this.isFromToSelected = false;
                     this._resetFileds(this.$.period.value);
                 }
-	        }
-            
+            }
+
             //get previous 6 months list
-            _getPreviousMonthsList(){
-                let ajax = this.$.getPreviousMonths;                                        
-                ajax.url = this.api.previousmonth.url;               
+            _getPreviousMonthsList() {
+                let ajax = this.$.getPreviousMonths;
+                ajax.url = this.api.previousmonth.url;
                 //ajax.body = payload;
                 ajax.generateRequest();
-                
+
             }
-            _handlePreviousMonthResponse(event,request){
+            _handlePreviousMonthResponse(event, request) {
                 this.monthsList = request.response.data;
-                console.log('previous months list',this.monthsList);
+                console.log('previous months list', this.monthsList);
             }
-            
+
             //Handle categories response
-            _handleCategoriesResponse(event,request){
+            _handleCategoriesResponse(event, request) {
                 this.categoryList = request.response.data;
-                this.categoryList.splice(0,0,{'id':999,'category':'All'});//index,num of elements to be removed,item to be pushed
+                this.categoryList.splice(0, 0, { 'id': 999, 'category': 'All' });//index,num of elements to be removed,item to be pushed
             }
             //reset fields
-            _resetFileds(period){
+            _resetFileds(period) {
                 let periodList = this.periodList;
-                if(period == 'Current Month'){
-                     this.selectedCategory = 'All';
-                     this.selectedMonth = '';
-                }else if(period == 'Periodic'){
-                     this.selectedCategory = 'All';
-                     this.fromDateVal = '';
-                     this.toDateVal= '';
-                }else{
+                if (period == 'Current Month') {
+                    this.selectedCategory = 'All';
+                    this.selectedMonth = '';
+                } else if (period == 'Periodic') {
+                    this.selectedCategory = 'All';
+                    this.fromDateVal = '';
+                    this.toDateVal = '';
+                } else {
                     this.selectedMonth = '';
                     this.selectedCategory = 'All';
                 }
             }
             //User selects the months duration
-             _monthsChanged(e){                
-               // this.$.MonthsDropdown.render();
+            _monthsChanged(e) {
+                // this.$.MonthsDropdown.render();
                 this.selectedMonth = e.target.innerText;//this.$.months.value;
-                console.log('selectedMonth',this.selectedMonth);
-                if(this.selectedMonth){
+                console.log('selectedMonth', this.selectedMonth);
+                if (this.selectedMonth) {
                     this.isFromToSelected = true;
                 }
             }
             //When FROM date changed
-             _fromDateChanged(e){                
+            _fromDateChanged(e) {
                 this.selectedFromDate = e.target.value;
-                 if( this.selectedFromDate && this.selectedToDate){
-                     this.isFromToSelected = true;
-                 }                 
+                if (this.selectedFromDate && this.selectedToDate) {
+                    this.isFromToSelected = true;
+                }
             }
 
             //When TO date changed
-            _toDateChanged(e){
+            _toDateChanged(e) {
                 this.selectedToDate = e.target.value;
-                if( this.selectedFromDate && this.selectedToDate){
-                     this.isFromToSelected = true;
-                 }   
+                if (this.selectedFromDate && this.selectedToDate) {
+                    this.isFromToSelected = true;
+                }
             }
 
-            _handleCategoryResponse(event,request){
+            _handleCategoryResponse(event, request) {
                 console.log(request.response.data);
                 this.spendCategoryData = request.response.data;
             }
 
             //Analyse data
-            _analyseData(){
+            _analyseData() {
                 var data = {
                     'period': this.selectedPeriod,
-                    'duration':{
-                        'from' : this.selectedFromDate ? this.selectedFromDate : '',
-                        'to' : this.selectedToDate ? this.selectedToDate : '',
-                        'month': this.selectedMonth ? this.selectedMonth :''
+                    'duration': {
+                        'from': this.selectedFromDate ? this.selectedFromDate : '',
+                        'to': this.selectedToDate ? this.selectedToDate : '',
+                        'month': this.selectedMonth ? this.selectedMonth : ''
                     },
-                    'categories':[this.selectedCategory]
+                    'categories': [this.selectedCategory]
 
                 }
 
@@ -355,9 +348,9 @@
                 //ajax.body = payload;
                 ajax.generateRequest();
 
-                console.log('analyser payload',data)
+                console.log('analyser payload', data)
             }
         };
-        window.customElements.define(analyseFilters.is,analyseFilters);
+        window.customElements.define(analyseFilters.is, analyseFilters);
     </script>
 </dom-module>
