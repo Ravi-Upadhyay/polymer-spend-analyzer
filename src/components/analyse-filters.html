@@ -29,6 +29,10 @@
                 color: #ff6600;
                 margin-left: 10px;
             } 
+            #filter-container{
+                min-height: 0px;
+                margin: 0px;
+            }
             
         </style>
         <style include="shared-styles">
@@ -40,7 +44,7 @@
          <!-- <iron-ajax id="getCategories" method="[[api.method]]" handle-as="json" last-response="{{categories}}" on-response="_handleCategoriesResponse"></iron-ajax> -->
          <iron-ajax id="getSpendCategory" method="[[api.method]]" handle-as="json" on-response="_handleCategoryResponse"></iron-ajax>
 
-        <div class="container fntFamily">
+        <div id="filter-container" class="container fntFamily">
             <iron-form id="myForm">
                 <form>
                     <div>  
