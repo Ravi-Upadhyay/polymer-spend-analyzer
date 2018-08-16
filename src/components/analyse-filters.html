@@ -62,12 +62,14 @@
                         <template is="dom-if" id="periodic" if="{{isPeriodicSelected}}">
                             <span class="inline-block">
                                 <h4 class="label">From Date(dd/mm/yy)</h4>
-                                <vaadin-date-picker id='FromDate' min={{fromMinDate}} max={{fromMaxDate}} placeholder="Select Date" on-change="_fromDateChanged">
+                                <vaadin-date-picker id='vaadinFromDate' value="{{fromDateVal}}" min={{fromMinDate}} max={{fromMaxDate}} placeholder="Select Date"
+                                    on-change="_fromDateChanged">
                                 </vaadin-date-picker>
                             </span>
                             <span class="inline-block">
                                 <h4 class="label">To Date(dd/mm/yy)</h4>
-                                <vaadin-date-picker id='vaadinToDate' min={{fromMinDate}} max={{selectedFromDate}} placeholder="Select Date" on-change="_toDateChanged">
+                                <vaadin-date-picker id='vaadinToDate' value="{{toDateVal}}" min={{fromDateVal}} max={{fromMaxDate}} placeholder="Select Date"
+                                    on-change="_toDateChanged">
                                 </vaadin-date-picker>
                             </span>
                         </template>
@@ -123,7 +125,8 @@
                     },
                     selectedPeriod: {
                         type: String,
-                        value: 'Current Month' //Set currentMonth as default value
+                        value: 'Current Month', //Set currentMonth as default value
+                        notify: true
                     },
                     selectedCategory: {
                         type: String,
@@ -194,7 +197,6 @@
 
             //navigate from other tabs without refreshing the page
             _activationChanged(newVal, oldVal) {
-                console.log('_activationChanged - filters', newVal, "::::", oldVal);
                 this.selectedFromDate = '';
                 this.selectedToDate = '';
                 this.selectedCategory = 'All';
@@ -254,7 +256,6 @@
                     this.isCurrentMonthSelected = false;
                     this.isMonthlySelected = true;
                     this.isPeriodicSelected = false;
-
                     this.isFromToSelected = false;
                     this._resetFileds(this.$.period.value);
                     this._getPreviousMonthsList();
@@ -311,17 +312,23 @@
             }
             //When FROM date changed
             _fromDateChanged(e) {
-                this.selectedFromDate = e.target.value;
-                if (this.selectedFromDate && this.selectedToDate) {
-                    this.isFromToSelected = true;
+                this.fromDateVal = e.target.value;
+                if (this.fromDateVal) {
+                    this.selectedFromDate = true;
+                    if (this.selectedFromDate && this.selectedToDate) {
+                        this.isFromToSelected = true;
+                    }
                 }
             }
 
             //When TO date changed
             _toDateChanged(e) {
-                this.selectedToDate = e.target.value;
-                if (this.selectedFromDate && this.selectedToDate) {
-                    this.isFromToSelected = true;
+                this.toDateVal = e.target.value;
+                if (this.toDateVal) {
+                    this.selectedToDate = true;
+                    if (this.selectedFromDate && this.selectedToDate) {
+                        this.isFromToSelected = true;
+                    }
                 }
             }
 
