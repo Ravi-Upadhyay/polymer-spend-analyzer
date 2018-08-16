@@ -20,7 +20,9 @@
     "iron-pages": "PolymerElements/iron-pages#^2.1.1",
     "iron-form": "PolymerElements/iron-form#^2.4.0",
     "page-title": "^3.0.0",
-    "paper-toast": "PolymerElements/paper-toast#^2.1.2"
+    "paper-toast": "PolymerElements/paper-toast#^2.1.2",
+    "google-chart": "^2.0.0",
+    "vaadin-date-picker": "vaadin/vaadin-date-picker#^3.1.2"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",

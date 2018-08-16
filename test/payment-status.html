@@ -2,31 +2,50 @@
 <html>
 <head>
   <meta charset="utf-8">
-
-  <script src="../../webcomponentsjs/webcomponents.min.js"></script>
-  <script src="../../web-component-tester/browser.js"></script>
-  <script src="../../test-fixture/test-fixture-mocha.js"></script>
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+    <script src="../../test-fixture/test-fixture-mocha.js"></script>
 
   <!-- Import the element to test -->
   <link rel="import" href="../src/components/payment-status.html">
 </head>
 <body>
-    <test-fixture id="payment">
+    <test-fixture id="status">
         <template>
             <payment-status></payment-status>
         </template>
       </test-fixture>
       <script>
-            describe('<payment-status>', function() {
-                var paymentStatus;
+            suite('<payment-status>', function() {
+                var pStatus;
+                pStatus = fixture("status");
+                // setup(function() {
+                //     stub('transactionButton', {
+                //         _changeRoute: function() {
+                //             route = {'path': '/transactions'};
+                //         }
+                //     })
+                // });
 
-                beforeEach(function() {
-                    paymentStatus = fixture('payment');
+                test('Header should be Payment Status', function() {
+                    var heading = pStatus.shadowRoot.querySelector('.heading');
+                    expect(heading.textContent).to.equal('Payment-Status');
                 });
-                context('common tests', function() {
-                
+
+                // test('', function() {
+
+                // });
+
+                test('Button should be Make new payment', function() {
+                    var btn = pStatus.shadowRoot.querySelector('.btnPrl');
+                    expect(btn.textContent).to.equal('Make new payment');
                 });
-            });
+
+                test('Button should be Transaction history', function() {
+                    var btn = pStatus.shadowRoot.querySelector('#transactionButton');
+                    expect(btn.textContent).to.equal('Transaction history');
+                });
+            })
       </script>
 </body>
 </html>
