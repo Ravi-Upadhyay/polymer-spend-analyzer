@@ -145,6 +145,7 @@
                     isPeriodicSelected: {
                         type: Boolean,
                         value: false,
+
                         notify: true
                     },
                     currentMonthData: {
@@ -236,8 +237,7 @@
             _handleCurrentMonthResponse(event, request) {
                 console.log(request.response.data);
                 // request.response.data.totalCreditDebit.forEach(function(el) {
-                //     el.Ccolor = "#ff6600";
-                //     el.Dcolor = "#42417a";                    
+                //     el.color = "#ff6600";
                 // })
                 this.currentMonthData = request.response.data;
             }
@@ -249,12 +249,13 @@
                     this.isMonthlySelected = false;
                     this.isPeriodicSelected = false;
                     this.isFromToSelected = false;
+                    this.spendCategoryData = {};
                     this._resetFileds(this.$.period.value);
                 } else if (this.$.period.value == "Monthly") {
                     this.isCurrentMonthSelected = false;
                     this.isMonthlySelected = true;
                     this.isPeriodicSelected = false;
-
+                    this.spendCategoryData = {};
                     this.isFromToSelected = false;
                     this._resetFileds(this.$.period.value);
                     this._getPreviousMonthsList();
@@ -263,6 +264,7 @@
                     this.isMonthlySelected = false;
                     this.isPeriodicSelected = true;
                     this.isFromToSelected = false;
+                    this.spendCategoryData = {};
                     this._resetFileds(this.$.period.value);
                 }
             }
@@ -328,6 +330,42 @@
             _handleCategoryResponse(event, request) {
                 console.log(request.response.data);
                 this.spendCategoryData = request.response.data;
+                this._addingCategoryColors();
+            }
+
+            _addingCategoryColors(){
+                let testdata = this.spendCategoryData.analysis;
+                testdata.forEach(function(el) {
+                    switch(el.type){
+                        case "Grocery":
+                            el.catcolor = "#7CFC00";
+                            break;
+                        case "Medical":
+                            el.catcolor = "#006400";
+                            break;
+                        case "Travel":
+                            el.catcolor = "#000080";
+                            break;
+                        case "Loans":
+                            el.catcolor = "#D2691E";
+                            break;
+                        case "Utility Bills":
+                            el.catcolor = "#FFFF00";
+                            break;
+                        case "Education":
+                            el.catcolor = "#87CEFA";
+                            break;
+                        case "Shopping":
+                            el.catcolor = "#800000";
+                            break;
+                        case "Miscellaneous": 
+                            el.catcolor = "#FFDB58";
+                            break;
+                        default:
+                            el.catcolor = "#FF0000";
+                    }
+                })
+                this.spendCategoryData.analysis = testdata;
             }
 
             //Analyse data

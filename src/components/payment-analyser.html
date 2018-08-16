@@ -30,10 +30,13 @@
                     <table-component tabledata="[[currentMonthData.transactions]]"></table-component>
                 </template>
                 <!--Tab component-->
+                <template is="dom-if" if="{{tabFlag}}">
                 <div class="tabContainer">
                     <paper-tabs selected="{{selectedTab}}" scrollable>
                         <paper-tab>Pie chart</paper-tab>
-                        <paper-tab>Bar graph</paper-tab>
+                        <template is="dom-if" if="{{!isCurrentMonthSelected}}">
+                            <paper-tab>Bar graph</paper-tab>
+                        </template>
                     </paper-tabs>
                     <iron-pages selected="{{selectedTab}}">
                         <div>
@@ -54,6 +57,8 @@
                         </div>
                     </iron-pages>
                 </div>
+            </template>
+
 
             </template>
         </div>
@@ -95,6 +100,9 @@
                     selectedTab: {
                         type: String,
                         value: '0'
+                    },
+                    tabFlag:{
+                        type: Boolean
                     }
                 }
             }
@@ -104,10 +112,12 @@
 
                 }
                 this.makeFilters = ['a'];
+                this.tabFlag = this.spendCategoryData.analysis || this.isCurrentMonthSelected;
             }
 
             _periodChanged() {
-                console.log('i am in period', this.isCurrentMonthSelected)
+                console.log('i am in period', this.isCurrentMonthSelected);
+                this.tabFlag = this.spendCategoryData.analysis || this.isCurrentMonthSelected;
             }
 
             _currentMonthDataChanged() {
@@ -117,6 +127,7 @@
 
             _spendCategoryDataChanged() {
                 console.log('getting category data', this.spendCategoryData);
+                this.tabFlag = this.spendCategoryData.analysis || this.isCurrentMonthSelected;
             }
         };
         window.customElements.define(paymentAnalyser.is, paymentAnalyser);
