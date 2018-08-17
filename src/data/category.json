@@ -1,0 +1,18 @@
+[
+    {
+        "id": "0",
+        "value": "shopping"
+    },
+    {
+        "id": "1",
+        "value": "electricity"
+    },
+    {
+        "id": "2",
+        "value": "rent"
+    },
+    {
+        "id": "3",
+        "value": "medical"
+    }
+]

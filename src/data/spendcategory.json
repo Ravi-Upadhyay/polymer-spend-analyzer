@@ -1,0 +1,30 @@
+{
+	"status": 1,
+	"data": {
+		"analysis": [{
+			"type": "Grocery",
+			"amount": 1200
+		}, {
+			"type": "Medical",
+			"amount": 4200
+		}, {
+			"type": "Travel",
+			"amount": 6200
+		}, {
+			"type": "Loans",
+			"amount": 2400
+		}, {
+			"type": "Utility Bills",
+			"amount": 2020
+		}, {
+			"type": "Education",
+			"amount": 12200
+		}, {
+			"type": "Shopping",
+			"amount": 20120
+		}, {
+			"type": "Miscellaneous",
+			"amount": 2001
+		}]
+	}
+}

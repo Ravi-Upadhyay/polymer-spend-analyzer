@@ -10,116 +10,145 @@
 <dom-module id="payment-status">
     <template>
         <style include="common-styles">
-        .detailSec div{
-            padding: 10px;
-        }
-        .btnPrl{
-            width:100%;
-            margin:1.25em auto 0 auto;
-        }
-        iron-image {
-            width: 32px;
-            height: 32px;
-            margin-left: 45%
-        }  
-        .centerTxt{
-            text-align: center;
-        }      
+            .detailSec div {
+                padding: 10px;
+            }
+
+            .btnPrl {
+                width: 100%;
+                margin: 1.25em auto 0 auto;
+            }
+
+            iron-image {
+                width: 32px;
+                height: 32px;
+                margin-left: 45%
+            }
+
+            .centerTxt {
+                text-align: center;
+            }
         </style>
         <iron-localstorage name="transactionDetails" value="{{transactionDetails}}"></iron-localstorage>
-       
-       <sub-header></sub-header>
-        <div class='container fntFamily boxShadow whiteBckgrnd'>
-        <h2 class="heading">Payment Status</h2>
-        <hr>
 
-        <iron-form>
-            <form>
-                <template is="dom-if" if="{{showSuccess}}">
-                        <iron-image src="resources/images/success.png"></iron-image>
+        <sub-header></sub-header>
+        <div class='container fntFamily boxShadow whiteBckgrnd'>
+            <h2 class="heading">Payment Status</h2>
+            <hr>
+
+            <iron-form>
+                <form>
+                    <template is="dom-if" if="{{showSuccess}}">
+                        <iron-image src="src/images/success.png"></iron-image>
                         <h2 class="centerTxt">Success!</h2>
-                </template>
-                <template is="dom-if" if="{{showError}}">
-                    <iron-image src="resources/images/error.png"></iron-image>
-                    <h2 class="centerTxt">Failed!</h2>
-                </template>
-                <div class="detailSec">
-                    <div > <span>Transaction ID: </span><span>{{transactionId}}</span></div>
-                    <div > <span>Amount: </span><span>${{transactionAmount}}</span></div>
-                    <div > <span>Transaction Type: </span><span>{{transactionType}}</span></div>
-                </div>
-                <div>
-                    <app-location route="{{route}}"></app-location>
-                    <paper-button class="btnPrl" nolink on-click="_navigateToPayment">
-                        Make new payment
-                    </paper-button>
-                    <paper-button  class="btnPrl" id="transactionButton" nolink on-click="_navigateToAlanyzer">
-                        Transaction history
-                    </paper-button>
-                </div>
-            </form>
-        </iron-form>
-    </div>
-</div>
+                    </template>
+                    <template is="dom-if" if="{{showError}}">
+                        <iron-image src="src/images/error.png"></iron-image>
+                        <h2 class="centerTxt">Failed!</h2>
+                    </template>
+                    <div class="detailSec">
+                        <div>
+                            <span>Transaction ID: </span>
+                            <span>{{transactionId}}</span>
+                        </div>
+                        <div>
+                            <span>Amount: </span>
+                            <span>${{transactionAmount}}</span>
+                        </div>
+                        <div>
+                            <span>Transaction Type: </span>
+                            <span>{{transactionType}}</span>
+                        </div>
+                        <template is="dom-if" if="[[isCategoryPresent]]">
+                            <div>
+                                <span>Category Type: </span>
+                                <span>{{category}}</span>
+                            </div>
+                        </template>
+                    </div>
+                    <div>
+                        <app-location route="{{route}}"></app-location>
+                        <paper-button class="btnPrl" nolink on-click="_navigateToPayment">
+                            Make new payment
+                        </paper-button>
+                        <paper-button class="btnPrl" id="transactionButton" nolink on-click="_navigateToAlanyzer">
+                            Spend Analyser
+                        </paper-button>
+                    </div>
+                </form>
+            </iron-form>
+        </div>
+        </div>
     </template>
     <script>
-    class paymentStatus extends Polymer.Element {
-        static get is() { return 'payment-status' }
-        static get properties() {
-            return {
-                showSuccess: {
-                    type: Boolean,
-                    value: true,
-                },
-                showError: {
-                    type: Boolean,
-                    value: false,
-                },
-				transactionId:{
-                    type:String,
-                    value:''
-                },
-                  transactionAmount:{
-                    type:String,
-                    value:''
-                },
-                  transactionType:{
-                    type:String,
-                    value:''
-                },
-				  activated: {
-                    type: Boolean,
-                    observer: '_activationChanged'
+        class paymentStatus extends Polymer.Element {
+            static get is() { return 'payment-status' }
+            static get properties() {
+                return {
+                    showSuccess: {
+                        type: Boolean,
+                        value: true,
+                    },
+                    showError: {
+                        type: Boolean,
+                        value: false,
+                    },
+                    transactionId: {
+                        type: String,
+                        value: ''
+                    },
+                    transactionAmount: {
+                        type: String,
+                        value: ''
+                    },
+                    transactionType: {
+                        type: String,
+                        value: ''
+                    },
+                    activated: {
+                        type: Boolean,
+                        observer: '_activationChanged'
+                    },
+                    category: {
+                        type: Object,
+                        value: ''
+                    },
+                    isCategoryPresent: {
+                        type: Boolean
+                    }
                 }
             }
-        }
-        ready() {
-            super.ready();
+            ready() {
+                super.ready();
+            }
+
+            _getTransactionStatus() {
+                this.transactionDetails = JSON.parse(localStorage.getItem('transactionDetails'));
+                if (this.transactionDetails) {
+                    let status = this.transactionDetails;
+                    this.transactionId = status.transactionId;
+                    this.transactionType = status.paymentType;
+                    this.transactionAmount = status.amount;
+                    if (status.category.value) {
+                        this.isCategoryPresent = true;
+                        this.category = status.category.value;
+                    }
+                }
+            }
+
+            _activationChanged() {
+                this._getTransactionStatus()
+            }
+
+            _navigateToPayment() {
+                this.set("route.path", "/payments");
+            }
+
+            _navigateToAlanyzer() {
+                this.set("route.path", "/analyser");
+            }
         }
 
-        _getTransactionStatus() {
-			this.transactionDetails = JSON.parse(localStorage.getItem('transactionDetails'));
-            if(this.transactionDetails){
-            let status = this.transactionDetails;
-            this.transactionId = status.transactionId
-            this.transactionType  = status.paymentType
-            this.transactionAmount = status.amount
-            } 
-        }
-		
-		_activationChanged(){
-             this._getTransactionStatus()
-        }
-
-        _navigateToPayment() {
-            this.set("route.path", "/payments");
-        }
-        
-        _navigateToAlanyzer() {
-             this.set("route.path", "/transactions");
-        }
-    }
-
-    window.customElements.define(paymentStatus.is, paymentStatus);
+        window.customElements.define(paymentStatus.is, paymentStatus);
     </script>
 </dom-module>
