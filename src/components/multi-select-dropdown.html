@@ -24,6 +24,10 @@
                 color: #00508C;
             }
 
+            paper-item-body{
+                width:120px;
+            }
+
             iron-icon.checkbox.unchecked {
                 color: var(--secondary-text-color);
             }
@@ -52,7 +56,7 @@
                     <paper-icon-item on-click="toggle" value$="[[ item.id ]]" label$="[[ item.value ]]">
                         <iron-icon class="checkbox unchecked" icon="check-box-outline-blank" slot="item-icon"></iron-icon>
                         <iron-icon class="checkbox checked" icon="check-box" slot="item-icon"></iron-icon>
-                        <paper-item-body two-line>
+                        <paper-item-body>
                             <div>[[ item.value ]]</div>
                         </paper-item-body>
                     </paper-icon-item>
