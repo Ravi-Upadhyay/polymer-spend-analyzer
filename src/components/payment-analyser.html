@@ -110,27 +110,9 @@
                 console.log('i am in period', this.isCurrentMonthSelected)
             }
 
-<<<<<<< HEAD
-            //Get transaction data ffrom API
-            _getTransactionData(){
-
-                try{
-                    this.custId = JSON.parse(sessionStorage.user).customerId;
-                }
-                catch(e){
-                    console.log('Error getting data from SessionStorage -->' + e)
-                }
-
-                let ajax = this.$.analyser;
-                //ajax.url = "resources/data/analyser.json";
-                // ajax.url = "http://192.168.43.118:8080/user/"+this.custId+"/transactionsummary";
-                ajax.url = this.api.url;
-                ajax.generateRequest(); //trigger the iron-ajax                
-=======
             _currentMonthDataChanged() {
                 console.log(this.currentMonthData);
                 console.log('chart', this.currentMonthData.totalCreditDebit);
->>>>>>> a318a5d9bf349b5d43a9f0df4cd9526af2437570
             }
 
             _spendCategoryDataChanged() {
