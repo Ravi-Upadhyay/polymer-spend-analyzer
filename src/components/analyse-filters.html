@@ -42,7 +42,7 @@
         <iron-ajax id="getPeriod" method="[[api.method]]" handle-as="json" last-response="{{periods}}" on-response="_handlePeriodResponse"></iron-ajax>
         <iron-ajax id="getCurrentMonth" method="[[api.method]]" handle-as="json" on-response="_handleCurrentMonthResponse"></iron-ajax>
         <iron-ajax id="getPreviousMonths" method="[[api.method]]" handle-as="json" on-response="_handlePreviousMonthResponse"></iron-ajax>
-        <!-- <iron-ajax id="getCategories" method="[[api.method]]" handle-as="json" last-response="{{categories}}" on-response="_handleCategoriesResponse"></iron-ajax> -->
+        <iron-ajax id="getCategories" auto url="[[api.categories.url]]" method="[[api.categories.method]]" handle-as="json" on-response="_handleCategoriesResponse"></iron-ajax>
         <iron-ajax id="getSpendCategory" method="[[api.method]]" handle-as="json" on-response="_handleCategoryResponse"></iron-ajax>
 
         <div id="filter-container" class="container fntFamily">
@@ -62,12 +62,14 @@
                         <template is="dom-if" id="periodic" if="{{isPeriodicSelected}}">
                             <span class="inline-block">
                                 <h4 class="label">From Date(dd/mm/yy)</h4>
-                                <vaadin-date-picker id='FromDate' min={{fromMinDate}} max={{fromMaxDate}} placeholder="Select Date" on-change="_fromDateChanged">
+                                <vaadin-date-picker id='vaadinFromDate' value="{{fromDateVal}}" min={{fromMinDate}} max={{fromMaxDate}} placeholder="Select Date"
+                                    on-change="_fromDateChanged">
                                 </vaadin-date-picker>
                             </span>
                             <span class="inline-block">
                                 <h4 class="label">To Date(dd/mm/yy)</h4>
-                                <vaadin-date-picker id='vaadinToDate' min={{fromMinDate}} max={{selectedFromDate}} placeholder="Select Date" on-change="_toDateChanged">
+                                <vaadin-date-picker id='vaadinToDate' value="{{toDateVal}}" min={{fromDateVal}} max={{fromMaxDate}} placeholder="Select Date"
+                                    on-change="_toDateChanged">
                                 </vaadin-date-picker>
                             </span>
                         </template>
@@ -91,7 +93,7 @@
                         <template is="dom-if" if="{{isFromToSelected}}">
                             <span class="inline-block">
                                 <h4 class="label">Select Category</h4>
-                                <multi-select-dropdown></multi-select-dropdown>
+                                <multi-select-dropdown categories="{{categoryList}}" is-scrolled="{{isScrolled}}"></multi-select-dropdown>
                             </span>
                             <span class="inline-block">
                                 <msg-component></msg-component>
@@ -114,7 +116,8 @@
             static get properties() {
                 return {
                     api: {
-                        type: Object
+                        type: Object,
+                        observer: '_apiObserver'
                     },
                     periodList: {
                         type: Array,
@@ -123,7 +126,8 @@
                     },
                     selectedPeriod: {
                         type: String,
-                        value: 'Current Month' //Set currentMonth as default value
+                        value: 'Current Month', //Set currentMonth as default value
+                        notify: true
                     },
                     selectedCategory: {
                         type: String,
@@ -145,6 +149,7 @@
                     isPeriodicSelected: {
                         type: Boolean,
                         value: false,
+
                         notify: true
                     },
                     currentMonthData: {
@@ -183,18 +188,23 @@
                     },
                     categoryList: {
                         type: Array,
-                        value: ''
+                        value: []
                     },
                     makeFilters: {
                         type: Boolean,
                         observer: '_activationChanged'
+                    },
+                    isScrolled: {
+                        type: Array
                     }
                 }
             }
 
+            // _apiObserver
+
             //navigate from other tabs without refreshing the page
             _activationChanged(newVal, oldVal) {
-                console.log('_activationChanged - filters', newVal, "::::", oldVal);
+                console.log('api', this.api);
                 this.selectedFromDate = '';
                 this.selectedToDate = '';
                 this.selectedCategory = 'All';
@@ -236,8 +246,7 @@
             _handleCurrentMonthResponse(event, request) {
                 console.log(request.response.data);
                 // request.response.data.totalCreditDebit.forEach(function(el) {
-                //     el.Ccolor = "#ff6600";
-                //     el.Dcolor = "#42417a";                    
+                //     el.color = "#ff6600";
                 // })
                 this.currentMonthData = request.response.data;
             }
@@ -249,12 +258,13 @@
                     this.isMonthlySelected = false;
                     this.isPeriodicSelected = false;
                     this.isFromToSelected = false;
+                    this.spendCategoryData = {};
                     this._resetFileds(this.$.period.value);
                 } else if (this.$.period.value == "Monthly") {
                     this.isCurrentMonthSelected = false;
                     this.isMonthlySelected = true;
                     this.isPeriodicSelected = false;
-
+                    this.spendCategoryData = {};
                     this.isFromToSelected = false;
                     this._resetFileds(this.$.period.value);
                     this._getPreviousMonthsList();
@@ -263,6 +273,7 @@
                     this.isMonthlySelected = false;
                     this.isPeriodicSelected = true;
                     this.isFromToSelected = false;
+                    this.spendCategoryData = {};
                     this._resetFileds(this.$.period.value);
                 }
             }
@@ -282,8 +293,12 @@
 
             //Handle categories response
             _handleCategoriesResponse(event, request) {
-                this.categoryList = request.response.data;
-                this.categoryList.splice(0, 0, { 'id': 999, 'category': 'All' });//index,num of elements to be removed,item to be pushed
+                let categories = request.response;
+                categories.unshift({ "id": "99", "value": 'All' });
+                for (let category of categories) {
+                    this.categoryList.push({ "id": category.id.toString(), "value": category.value });
+                }
+                // this.categoryList.splice(0, 0, { 'id': 999, 'category': 'All' });//index,num of elements to be removed,item to be pushed
             }
             //reset fields
             _resetFileds(period) {
@@ -311,23 +326,65 @@
             }
             //When FROM date changed
             _fromDateChanged(e) {
-                this.selectedFromDate = e.target.value;
-                if (this.selectedFromDate && this.selectedToDate) {
-                    this.isFromToSelected = true;
+                this.fromDateVal = e.target.value;
+                if (this.fromDateVal) {
+                    this.selectedFromDate = true;
+                    if (this.selectedFromDate && this.selectedToDate) {
+                        this.isFromToSelected = true;
+                    }
                 }
             }
 
             //When TO date changed
             _toDateChanged(e) {
-                this.selectedToDate = e.target.value;
-                if (this.selectedFromDate && this.selectedToDate) {
-                    this.isFromToSelected = true;
+                this.toDateVal = e.target.value;
+                if (this.toDateVal) {
+                    this.selectedToDate = true;
+                    if (this.selectedFromDate && this.selectedToDate) {
+                        this.isFromToSelected = true;
+                    }
                 }
             }
 
             _handleCategoryResponse(event, request) {
                 console.log(request.response.data);
                 this.spendCategoryData = request.response.data;
+                this._addingCategoryColors();
+            }
+
+            _addingCategoryColors() {
+                let testdata = this.spendCategoryData.analysis;
+                testdata.forEach(function (el) {
+                    switch (el.type) {
+                        case "Grocery":
+                            el.catcolor = "#7CFC00";
+                            break;
+                        case "Medical":
+                            el.catcolor = "#006400";
+                            break;
+                        case "Travel":
+                            el.catcolor = "#000080";
+                            break;
+                        case "Loans":
+                            el.catcolor = "#D2691E";
+                            break;
+                        case "Utility Bills":
+                            el.catcolor = "#FFFF00";
+                            break;
+                        case "Education":
+                            el.catcolor = "#87CEFA";
+                            break;
+                        case "Shopping":
+                            el.catcolor = "#800000";
+                            break;
+                        case "Miscellaneous":
+                            el.catcolor = "#FFDB58";
+                            break;
+                        default:
+                            el.catcolor = "#FF0000";
+                    }
+                })
+                this.spendCategoryData.analysis = testdata;
             }
 
             //Analyse data

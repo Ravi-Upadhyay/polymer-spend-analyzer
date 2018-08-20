@@ -24,6 +24,10 @@
                 color: #00508C;
             }
 
+            paper-item-body{
+                width:120px;
+            }
+
             iron-icon.checkbox.unchecked {
                 color: var(--secondary-text-color);
             }
@@ -52,13 +56,13 @@
                     <paper-icon-item on-click="toggle" value$="[[ item.id ]]" label$="[[ item.value ]]">
                         <iron-icon class="checkbox unchecked" icon="check-box-outline-blank" slot="item-icon"></iron-icon>
                         <iron-icon class="checkbox checked" icon="check-box" slot="item-icon"></iron-icon>
-                        <paper-item-body two-line>
+                        <paper-item-body>
                             <div>[[ item.value ]]</div>
                         </paper-item-body>
                     </paper-icon-item>
                 </template>
             </isw-dropdown-menu>
-            <iron-ajax auto method="GET" url="../src/data/category.json" handle-as="json" last-response="{{categories}}" on-response="handleCategoryResponse"></iron-ajax>
+            <!-- <iron-ajax auto method="GET" url="../src/data/category.json" handle-as="json" last-response="{{categories}}" on-response="handleCategoryResponse"></iron-ajax> -->
         </div>
     </template>
     <script>
@@ -72,7 +76,7 @@
                     },
                     categories: {
                         type: Array,
-                        value: [],
+                        // value: [],
                         observer: '_gotCategories'
                     },
                     selectedCategory: {
@@ -81,13 +85,23 @@
                     },
                     api: {
                         type: Object
+                    },
+                    isScrolled: {
+                        type: Array,
+                        observer: '_scrolled'
                     }
+                }
+            }
+            
+            //Used for closing the dropdown on click of scroll
+            _scrolled() {
+                if(this.isScrolled.length){
+                    this.$.categories.$.dropdown.close()
                 }
             }
 
             _gotCategories() {
                 if (this.categories) {
-                    this.categories.unshift({ "id": "99", "value": 'All' });
                     for (var index in this.categories) {
                         this.preselected[index] = this.categories[index].id;
                     }
