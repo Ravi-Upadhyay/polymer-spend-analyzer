@@ -88,7 +88,7 @@
                     <div>
                         <h4 class="label">Enter amount</h4>
                         <paper-input 
-                        on-keyup="_clearError" 
+                        
                         allowed-pattern="[0-9.]" 
                         minlength="1" 
                         maxlength="10" 
@@ -143,8 +143,8 @@
             static get properties() {
                 return {
                     transactionType: {
-                        type: Array,
-                        value: [{
+                        type    : Array,
+                        value   : [{
                             type    : 'DEBIT',
                             display : 'Make payment',
                             value   : 0
@@ -154,85 +154,78 @@
                             value   : 1
                         }]
                     },
-                    categories: {
-                        type: Array,
-                        value: []
+                    categories  : {
+                        type        : Array,
+                        value       : []
                     },
-                    paymentApi: {
-                        type: Object
+                    paymentApi  : {
+                        type        : Object
                     },
-                    categoryApi: {
-                        type: Object
+                    categoryApi : {
+                        type        : Object
                     },
-                    loading: {
-                        type: Boolean,
-                        value: false,
-                        notify: true
+                    loading     : {
+                        type        : Boolean,
+                        value       : false,
+                        notify      : true
                     },
-                    description: {
-                        type: String,
-                        value: ''
+                    description : {
+                        type        : String,
+                        value       : ''
                     },
                     selectedType: {
-                        type: String,
-                        value: 'DEBIT', //Set debit as default\
-                        observer: '_changeType'
+                        //DEBIT, is default
+                        type        : String,
+                        value       : 'DEBIT', 
+                        observer    : '_changeType'
                     },
                     selectedCategory: {
-                        type: Number,
-                        value: ''  //set Other as default
+                        type        : Number,
+                        value       : ''
                     },
                     transactionDetails: {
-                        type: Object,
-                        value: {}
+                        type        : Object,
+                        value       : {}
                     },
                     isCategoryPresent: {
-                        type: Boolean,
-                        value: true,
+                        type        : Boolean,
+                        value       : true,
                         reflectToAttribute: true
                     },
                     isCategoryFetched: {
-                        type: Boolean,
-                        value: false,
+                        type        : Boolean,
+                        value       : false,
                         reflectToAttribute: true
                     },
                     msg: {
-                        type: String,
-                        value: "Successfully logged in"
+                        type        : String,
+                        value       : "Successfully logged in"
                     },
-                    activated: {
-                        type: Boolean,
-                        observer: '_activationChanged'
+                    activated       : {
+                        type        : Boolean,
+                        observer    : '_activationChanged'
                     }
                 }
             }
 
-            
 
             _activationChanged(newVal, oldVal) {
                 this.$.amount.invalid = false;
                 if (newVal) {
-                    this.amount = '';
-                    this.selectedType = 'DEBIT';
-                    this.description = '';
-                    this.isCategoryPresent = true;
-                    let ajax = this.$.ajaxcategory;
+                    this.amount             = '';
+                    this.selectedType       = 'DEBIT';
+                    this.description        = '';
+                    this.isCategoryPresent  = true;
+                    let ajax                = this.$.ajaxcategory;
                     ajax.generateRequest();
                 }
             }
 
-            //Initialize localstorage
             initializeStorage() {
                 this.transactionDetails = {};
             }
-
-            _clearError() {
-                this.$.amount.invalid = false; //remove error message
-            }
-
+            
             _removeInvalid() {
-                // FUNCTION: This function will take care, if we have inputs in invalid state
-                // We need to remove that state when user changes the value
                 this.$.amount.invalid = false;
             }
 
@@ -251,16 +244,22 @@
                     this.selectedCategory = categories.map(e => e.value).indexOf('Misc');
                 }
             }
-
+            
+            // METHOD: This Method Will be commiting transaction
+            // 1. Configure AJAX
+            // 2. Validation
+            // 3. Hit AJAX Request    ---> _handleResponse()
             _makeTransaction() {
+                
                 localStorage.removeItem('transactionDetails');
+                
                 var amount = this.amount
                 var paymentType = this.selectedType
                 var categoryId = this.selectedCategory
                 var description = this.description
                 var ajax = this.$.transaction;
                 let custId = JSON.parse(sessionStorage.user).customerId;
-                // ajax.url = 'http://192.168.43.118:8080/user/'+custId+'/makepayment';
+                
                 ajax.url = this.paymentApi.url;
                 ajax.body = JSON.stringify({
                     "customerId": custId,
@@ -269,41 +268,39 @@
                     "description": description,
                     "categoryId": (paymentType === 'DEBIT') ? parseInt(categoryId) : undefined
                 });
-                console.log(categoryId);
-                console.log(ajax.body);
 
+                // Validate amount and hit API if it is all good
                 if (amount > 0) {
-                    ajax.generateRequest(); // triggers the iron-ajax
+                    ajax.generateRequest();
                 } else if (amount === null || amount === "") {
-                    //Set error message
                     this.amountError = "Amount should not be empty";
-                    this.$.amount.invalid = true; //show message error
+                    this.$.amount.invalid = true;
                 } else if (amount === '0') {
-                    //Set error message
                     this.amountError = "Amount should not be Zero";
-                    this.$.amount.invalid = true; //show message error   
+                    this.$.amount.invalid = true;    
                 } else {
-                    //Set error message
                     this.amountError = "Please enter valid amount";
-                    this.$.amount.invalid = true; //show message error
+                    this.$.amount.invalid = true;
                 }
             }
-
+            
+            // METHOD: This will handle response after payment is done.
+            // 1. Handle Payment Response
+            // 2. Redirect to status change
             _handleResponse(response) {
                 var data = response.detail.__data.response;
-                //spot data
+                
                 if (data.status) {
-                    //this.transactionDetails = data.data
                     localStorage.setItem('transactionDetails', JSON.stringify(data.data))
-                    //Take care of routing
+                    
                     this.set("route.path", "/status");
+                    
                     window.location.hash = "no-back-button";
                     window.location.hash = "Again-No-back-button";
                     window.onhashchange = function () { window.location.hash = "no-back-button"; }
                 } else {
-                    //Set error message
                     this.amountError = data.errors[0].errorMessage
-                    this.$.amount.invalid = true; //show message error
+                    this.$.amount.invalid = true; 
 
                 }
             }
