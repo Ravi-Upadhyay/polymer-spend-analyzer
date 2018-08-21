@@ -207,7 +207,7 @@
                 let categories = request.response;
                 let isCategoryFetched = categories.length ? true : false;
                 this.set('isCategoryFetched', isCategoryFetched)
-                if(isCategoryFetched){
+                if (isCategoryFetched) {
                     this.selectedCategory = categories.map(e => e.value).indexOf('Misc');
                 }
             }
@@ -222,14 +222,23 @@
                 let custId = JSON.parse(sessionStorage.user).customerId;
                 // ajax.url = 'http://192.168.43.118:8080/user/'+custId+'/makepayment';
                 ajax.url = this.paymentApi.url;
-                ajax.body = JSON.stringify({
-                    "customerId": custId,
-                    "amount": amount,
-                    "paymentType": paymentType,
-                    "description": description,
-                    "categoryId": parseInt(categoryId)
-                });
-
+                if (paymentType === 'CREDIT') {
+                    ajax.body = JSON.stringify({
+                        "customerId": custId,
+                        "amount": amount,
+                        "paymentType": paymentType,
+                        "description": description
+                    });
+                } else if (paymentType === 'DEBIT') {
+                    ajax.body = JSON.stringify({
+                        "customerId": custId,
+                        "amount": amount,
+                        "paymentType": paymentType,
+                        "description": description,
+                        "categoryId": parseInt(categoryId)
+                    });
+                }
+                
                 if (amount > 0) {
                     ajax.generateRequest(); // triggers the iron-ajax
                 } else if (amount === null || amount === "") {
