@@ -40,10 +40,10 @@
         <style include="shared-styles">
         </style>
         <iron-ajax id="getPeriod" method="[[api.method]]" handle-as="json" last-response="{{periods}}" on-response="_handlePeriodResponse"></iron-ajax>
-        <iron-ajax id="getCurrentMonth" method="[[api.method]]" handle-as="json" on-response="_handleCurrentMonthResponse"></iron-ajax>
         <iron-ajax id="getPreviousMonths" method="[[api.method]]" handle-as="json" on-response="_handlePreviousMonthResponse"></iron-ajax>
-        <iron-ajax id="getCategories" auto url="[[api.categories.url]]" method="[[api.categories.method]]" handle-as="json" on-response="_handleCategoriesResponse"></iron-ajax>
-        <iron-ajax id="getSpendCategory" method="[[api.method]]" handle-as="json" on-response="_handleCategoryResponse"></iron-ajax>
+        <iron-ajax id="getCategories" auto url="[[api.categorieslist.url]]" method="[[api.categorieslist.method]]" handle-as="json" on-response="_handleCategoriesResponse"></iron-ajax>
+        <iron-ajax id="getCurrentMonth" method="[[api.currentmonth.method]]" content-type="application/json" handle-as="json" on-response="_handleCurrentMonthResponse"></iron-ajax>
+        <iron-ajax id="getSpendCategory" method="[[api.spendcategory.method]]" content-type="application/json" handle-as="json" on-response="_handleCategoryResponse"></iron-ajax>
 
         <div id="filter-container" class="container fntFamily">
             <iron-form id="myForm">
@@ -208,7 +208,7 @@
                 this.selectedFromDate = '';
                 this.selectedToDate = '';
                 this.selectedCategory = 'All';
-                this.selectedMonth = '';
+                this.selectedMonth = 'CURRENT';
                 this.selectedPeriod = 'CURRENT';
                 this._getPeriods();
                 let now = new Date();
@@ -220,7 +220,7 @@
             _getPeriods() {
                 let ajax = this.$.getPeriod;
 
-                ajax.url = this.api.periods.url;
+                ajax.url = this.api.periodslist.url;
                 ajax.generateRequest();
             }
 
@@ -229,18 +229,18 @@
                 let periodArr = [];
                 request.response.forEach(function(el){periodArr.push(el.value)});
                 this.periodList = periodArr;
-                let payload = [{
-                    "customerId": 2,
+                let payload = {
+                    "customerId": 100,
                     "period": {
                         "from": "",
                         "to": "",
                         "month": this.selectedMonth
                     }
-                }]
+                };
 
                 let ajax = this.$.getCurrentMonth;
                 ajax.url = this.api.currentmonth.url;
-                //ajax.body = payload;
+                ajax.body = JSON.stringify(payload);
                 ajax.generateRequest();
             }
 
@@ -283,7 +283,7 @@
             //get previous 6 months list
             _getPreviousMonthsList() {
                 let ajax = this.$.getPreviousMonths;
-                ajax.url = this.api.previousmonth.url;
+                ajax.url = this.api.previousmonthslist.url;
                 //ajax.body = payload;
                 ajax.generateRequest();
 
@@ -393,23 +393,40 @@
 
             //Analyse data
             _analyseData() {
-                var data = {
-                    'period': this.selectedPeriod,
-                    'duration': {
-                        'from': this.selectedFromDate ? this.selectedFromDate : '',
-                        'to': this.selectedToDate ? this.selectedToDate : '',
-                        'month': this.selectedMonth ? this.selectedMonth : ''
-                    },
-                    'categories': [this.selectedCategory]
+                // var data = {
+                //     'period': this.selectedPeriod,
+                //     'duration': {
+                //         'from': this.selectedFromDate ? this.selectedFromDate : '',
+                //         'to': this.selectedToDate ? this.selectedToDate : '',
+                //         'month': this.selectedMonth ? this.selectedMonth : ''
+                //     },
+                //     'categories': [this.selectedCategory]
+                // }
 
-                }
+                let monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                let fromValArr = this.fromDateVal.split('-');
+                fromValArr[1] = monthNames[parseInt(fromValArr[1]-1)];
+                let fromVal = fromValArr.reverse().join('-');
+
+                let toValArr = this.toDateVal.split('-');
+                toValArr[1] = monthNames[parseInt(toValArr[1]-1)];
+                let toVal = toValArr.reverse().join('-');
+
+                let payload = {
+                    "customerId": 100,
+                    "period": {
+                        "from": this.selectedFromDate ? fromVal : '',
+                        "to": this.selectedToDate ? toVal : '',
+                        "month": this.selectedFromDate? '' : this.selectedMonth
+                    }
+                };
 
                 let ajax = this.$.getSpendCategory;
                 ajax.url = this.api.spendcategory.url;
-                //ajax.body = payload;
+                ajax.body = JSON.stringify(payload);
                 ajax.generateRequest();
 
-                console.log('analyser payload', data)
+                console.log('analyser payload', payload)
             }
         };
         window.customElements.define(analyseFilters.is, analyseFilters);

@@ -116,12 +116,12 @@
 
                 }
                 this.makeFilters = ['a'];
-                this.tabFlag = this.spendCategoryData.analysis || this.isCurrentMonthSelected;
+                this.tabFlag = (this.spendCategoryData.analysis && this.spendCategoryData.analysis.length > 0) || this.isCurrentMonthSelected;
             }
 
             _periodChanged() {
                 console.log('i am in period', this.isCurrentMonthSelected);
-                this.tabFlag = this.spendCategoryData.analysis || this.isCurrentMonthSelected;
+                this.tabFlag = (this.spendCategoryData.analysis && this.spendCategoryData.analysis.length > 0) || this.isCurrentMonthSelected;
             }
 
             _currentMonthDataChanged() {
@@ -131,7 +131,7 @@
 
             _spendCategoryDataChanged() {
                 console.log('getting category data', this.spendCategoryData);
-                this.tabFlag = this.spendCategoryData.analysis || this.isCurrentMonthSelected;
+                this.tabFlag = (this.spendCategoryData.analysis && this.spendCategoryData.analysis.length > 0) || this.isCurrentMonthSelected;
             }
 
         };
