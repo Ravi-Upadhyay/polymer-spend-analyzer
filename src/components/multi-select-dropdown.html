@@ -62,7 +62,7 @@
                     </paper-icon-item>
                 </template>
             </isw-dropdown-menu>
-            <iron-ajax auto method="GET" url="../src/data/category.json" handle-as="json" last-response="{{categories}}" on-response="handleCategoryResponse"></iron-ajax>
+            <!-- <iron-ajax auto method="GET" url="../src/data/category.json" handle-as="json" last-response="{{categories}}" on-response="handleCategoryResponse"></iron-ajax> -->
         </div>
     </template>
     <script>
@@ -76,7 +76,7 @@
                     },
                     categories: {
                         type: Array,
-                        value: [],
+                        // value: [],
                         observer: '_gotCategories'
                     },
                     selectedCategory: {
@@ -102,7 +102,6 @@
 
             _gotCategories() {
                 if (this.categories) {
-                    this.categories.unshift({ "id": "99", "value": 'All' });
                     for (var index in this.categories) {
                         this.preselected[index] = this.categories[index].id;
                     }

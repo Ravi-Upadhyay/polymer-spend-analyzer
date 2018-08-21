@@ -42,7 +42,7 @@
         <iron-ajax id="getPeriod" method="[[api.method]]" handle-as="json" last-response="{{periods}}" on-response="_handlePeriodResponse"></iron-ajax>
         <iron-ajax id="getCurrentMonth" method="[[api.method]]" handle-as="json" on-response="_handleCurrentMonthResponse"></iron-ajax>
         <iron-ajax id="getPreviousMonths" method="[[api.method]]" handle-as="json" on-response="_handlePreviousMonthResponse"></iron-ajax>
-        <!-- <iron-ajax id="getCategories" method="[[api.method]]" handle-as="json" last-response="{{categories}}" on-response="_handleCategoriesResponse"></iron-ajax> -->
+        <iron-ajax id="getCategories" auto url="[[api.categories.url]]" method="[[api.categories.method]]" handle-as="json" on-response="_handleCategoriesResponse"></iron-ajax>
         <iron-ajax id="getSpendCategory" method="[[api.method]]" handle-as="json" on-response="_handleCategoryResponse"></iron-ajax>
 
         <div id="filter-container" class="container fntFamily">
@@ -93,7 +93,7 @@
                         <template is="dom-if" if="{{isFromToSelected}}">
                             <span class="inline-block">
                                 <h4 class="label">Select Category</h4>
-                                <multi-select-dropdown is-scrolled="{{isScrolled}}"></multi-select-dropdown>
+                                <multi-select-dropdown categories="{{categoryList}}" is-scrolled="{{isScrolled}}"></multi-select-dropdown>
                             </span>
                             <span class="inline-block">
                                 <msg-component></msg-component>
@@ -116,7 +116,8 @@
             static get properties() {
                 return {
                     api: {
-                        type: Object
+                        type: Object,
+                        observer: '_apiObserver'
                     },
                     periodList: {
                         type: Array,
@@ -187,7 +188,7 @@
                     },
                     categoryList: {
                         type: Array,
-                        value: ''
+                        value: []
                     },
                     makeFilters: {
                         type: Boolean,
@@ -199,8 +200,11 @@
                 }
             }
 
+            // _apiObserver
+
             //navigate from other tabs without refreshing the page
             _activationChanged(newVal, oldVal) {
+                console.log('api', this.api);
                 this.selectedFromDate = '';
                 this.selectedToDate = '';
                 this.selectedCategory = 'All';
@@ -292,8 +296,12 @@
 
             //Handle categories response
             _handleCategoriesResponse(event, request) {
-                this.categoryList = request.response.data;
-                this.categoryList.splice(0, 0, { 'id': 999, 'category': 'All' });//index,num of elements to be removed,item to be pushed
+                let categories = request.response;
+                categories.unshift({ "id": "99", "value": 'All' });
+                for (let category of categories) {
+                    this.categoryList.push({ "id": category.id.toString(), "value": category.value });
+                }
+                // this.categoryList.splice(0, 0, { 'id': 999, 'category': 'All' });//index,num of elements to be removed,item to be pushed
             }
             //reset fields
             _resetFileds(period) {
@@ -347,7 +355,7 @@
                 this._addingCategoryColors();
             }
 
-            _addingCategoryColors(){
+            _addingCategoryColors() {
                 let testdata = this.spendCategoryData.analysis;
                 testdata.forEach(function(el) {
                     el.type = el.category;
