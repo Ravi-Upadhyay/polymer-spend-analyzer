@@ -1,4 +1,10 @@
 {
-    "status": 1,
-    "data": ["March","April","May","June","July","August"]
+    "month": [
+        "AUGUST",
+        "JULY",
+        "JUNE",
+        "MAY",
+        "APRIL",
+        "MARCH"
+    ]
 }

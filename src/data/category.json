@@ -1,18 +1,34 @@
 [
     {
-        "id": "0",
-        "value": "shopping"
+        "id": 1,
+        "value": "Education"
     },
     {
-        "id": "1",
-        "value": "electricity"
+        "id": 2,
+        "value": "Grocery"
     },
     {
-        "id": "2",
-        "value": "rent"
+        "id": 3,
+        "value": "Loan"
     },
     {
-        "id": "3",
-        "value": "medical"
+        "id": 4,
+        "value": "Medical"
+    },
+    {
+        "id": 7,
+        "value": "Travel"
+    },
+    {
+        "id": 8,
+        "value": "Utility Bills"
+    },
+    {
+        "id": 6,
+        "value": "Shopping"
+    },
+    {
+        "id": 5,
+        "value": "Misc"
     }
 ]

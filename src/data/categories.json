@@ -1,3 +1,4 @@
+
 [
     {
         "id": 1,
@@ -16,19 +17,20 @@
         "value": "Medical"
     },
     {
-        "id": 5,
-        "value": "Misc"
-    },
-    {
-        "id": 6,
-        "value": "Shopping"
-    },
-    {
         "id": 7,
         "value": "Travel"
     },
     {
         "id": 8,
         "value": "Utility Bills"
+    },
+    {
+        "id": 6,
+        "value": "Shopping"
+    },
+    {
+        "id": 5,
+        "value": "Misc"
     }
 ]
+

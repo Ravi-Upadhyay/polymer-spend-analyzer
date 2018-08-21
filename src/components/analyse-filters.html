@@ -125,7 +125,7 @@
                     },
                     selectedPeriod: {
                         type: String,
-                        value: 'Current Month', //Set currentMonth as default value
+                        value: 'CURRENT', //Set currentMonth as default value
                         notify: true
                     },
                     selectedCategory: {
@@ -205,7 +205,7 @@
                 this.selectedToDate = '';
                 this.selectedCategory = 'All';
                 this.selectedMonth = '';
-                this.selectedPeriod = 'Current Month';
+                this.selectedPeriod = 'CURRENT';
                 this._getPeriods();
                 let now = new Date();
                 this.fromMinDate = now.getFullYear() + '-' + (now.getMonth() - 5) + '-' + now.getDate();
@@ -222,7 +222,9 @@
 
             //Handle CURRENT MONTH(Landing page) response once periods are loaded
             _handlePeriodResponse(event, request) {
-                this.periodList = request.response.data;
+                let periodArr = [];
+                request.response.forEach(function(el){periodArr.push(el.value)});
+                this.periodList = periodArr;
                 let payload = [{
                     "customerId": 2,
                     "period": {
@@ -249,14 +251,14 @@
 
             // User changes the period 
             _periodChanged() {
-                if (this.$.period.value == 'Current Month') {
+                if (this.$.period.value == 'CURRENT') {
                     this.isCurrentMonthSelected = true;
                     this.isMonthlySelected = false;
                     this.isPeriodicSelected = false;
                     this.isFromToSelected = false;
                     this.spendCategoryData = {};
                     this._resetFileds(this.$.period.value);
-                } else if (this.$.period.value == "Monthly") {
+                } else if (this.$.period.value == "MONTHLY") {
                     this.isCurrentMonthSelected = false;
                     this.isMonthlySelected = true;
                     this.isPeriodicSelected = false;
@@ -282,8 +284,9 @@
                 ajax.generateRequest();
 
             }
+
             _handlePreviousMonthResponse(event, request) {
-                this.monthsList = request.response.data;
+                this.monthsList = request.response.month;
                 console.log('previous months list', this.monthsList);
             }
 
@@ -295,10 +298,10 @@
             //reset fields
             _resetFileds(period) {
                 let periodList = this.periodList;
-                if (period == 'Current Month') {
+                if (period == 'CURRENT') {
                     this.selectedCategory = 'All';
                     this.selectedMonth = '';
-                } else if (period == 'Periodic') {
+                } else if (period == 'PERIODIC') {
                     this.selectedCategory = 'All';
                     this.fromDateVal = '';
                     this.toDateVal = '';
@@ -347,6 +350,7 @@
             _addingCategoryColors(){
                 let testdata = this.spendCategoryData.analysis;
                 testdata.forEach(function(el) {
+                    el.type = el.category;
                     switch(el.type){
                         case "Grocery":
                             el.catcolor = "#7CFC00";
@@ -369,7 +373,7 @@
                         case "Shopping":
                             el.catcolor = "#800000";
                             break;
-                        case "Miscellaneous": 
+                        case "Misc": 
                             el.catcolor = "#FFDB58";
                             break;
                         default:
