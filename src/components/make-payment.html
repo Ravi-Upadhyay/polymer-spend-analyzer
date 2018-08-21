@@ -103,11 +103,11 @@
                     <template is="dom-if" if="[[isCategoryPresent]]">
                         <template is="dom-if" if="[[isCategoryFetched]]">
                             <div>
-                                <h4 class="label">Select payment category</h4>
+                                <h4 class="label">Select paymensst category</h4>
                                 <paper-dropdown-menu allow-outside-scroll="true" id="category" 
                                 class="customWidth" no-label-float>
                                     <paper-listbox slot="dropdown-content" class="dropdown-content customWidth" 
-                                    selected="[[selectedCategory]]">
+                                    selected="{{selectedCategory}}">
                                         <template is="dom-repeat" items="[[categories]]">
                                             <paper-item id="[[item.id]]" value$="[[item.id]]">
                                             [[item.value]]</paper-item>
@@ -240,7 +240,6 @@
                 this.isCategoryPresent = (this.selectedType === 'CREDIT') ? false : true;
                 const transactionType = this.transactionType.find(element => element.type === newValue);
                 if(newValue !== oldValue) this.$.paymentButton.textContent = transactionType.display;
-                // console.log(transactionType);
             }
 
             handleCategoryResponse(event, request) {
@@ -268,7 +267,7 @@
                     "amount": amount,
                     "paymentType": paymentType,
                     "description": description,
-                    "categoryId": parseInt(categoryId)
+                    "categoryId": (paymentType === 'DEBIT') ? parseInt(categoryId) : undefined
                 });
                 console.log(categoryId);
                 console.log(ajax.body);
