@@ -83,75 +83,11 @@
                content-type="application/json"
                timeout = 15000
                ></iron-ajax>   -->
-<<<<<<< HEAD
-            <iron-ajax id="xhr"
-            url = "[[api.url]]"
-            method="[[api.method]]"
-            body = "{{bodyData}}"
-            handle-as = "json" 
-            on-response = "_handleResponse"
-            on-error = "_handleError"
-            content-type="application/json"
-            timeout = 15000
-            ></iron-ajax>  
-            <paper-button class="btnPrl" submit on-click="login">LOGIN</paper-button>      
-            <paper-toast id="toast" text="{{msg}}"></paper-toast>       
-         
-        </form>
-     </iron-form>
-    </div>
-    <app-location route="{{route}}"></app-location>
-  </template>
-
-  <script>
-
-    class LoginForm extends Polymer.Element {
-      static get is() { return 'login-form'; }
-      static get properties() {
-        return {
-            loginSuccess : {
-                type: Object,
-            },
-            api          : {
-                type    : Object
-            },
-            username: {
-                type    : String,
-                value   : ""
-            },
-            password: {
-                type    : String,
-                value   : ""
-            },
-            loginBtnDisabled : {
-                type    : Boolean,
-                value   : true,
-                computed: '_toggleLoginBtn(username,password)'
-            },
-            userDetails: {
-                type: Object,
-                value: {}
-            },
-            bodyData: {
-                type: Object
-            },
-            ajaxResponse: {
-            type: String,
-            value: []
-            },
-            msg: {
-                type: String,
-                value: ""
-            },
-            bodyData: {
-                type: String
-=======
                     <iron-ajax id="xhr" url="[[api.url]]" method="[[api.method]]" body="{{bodyData}}" handle-as="json" on-response="_handleResponse"
                         on-error="_handleError" content-type="application/json" timeout=15000></iron-ajax>
                     <paper-button class="btnPrl" submit on-click="login">{{pageValues.login}}</paper-button>
                     <paper-toast id="toast" text="{{msg}}"></paper-toast>
 
-                </form>
             </iron-form>
 
         </div>
@@ -223,7 +159,6 @@
                     this.msg = response.errors[0].errorMessage;
                     this.$.toast.open();
                 }
->>>>>>> 3d4fa1b264d7e0e4f44fd3a110e5eb1f010361e3
             }
 
             _handleError(request, error) {
