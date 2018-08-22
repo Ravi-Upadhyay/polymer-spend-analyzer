@@ -22,7 +22,7 @@
 <link rel="import" href="common-styles.html">
 
 <dom-module id="make-payment">
-   
+
     <template>
         <style include="common-styles">
             paper-dropdown-menu {
@@ -43,28 +43,17 @@
         </style>
 
         <sub-header></sub-header>
-        
+
         <div class="container fntFamily boxShadow whiteBckgrnd">
             <h2 class="heading">Payments</h2>
             <hr>
 
-            <iron-ajax 
-            id="transaction" 
-            method="[[paymentApi.method]]" 
-            content-type="application/json" 
-            handle-as="json" 
-            on-response="_handleResponse"
-            loading="{{loading}}">
+            <iron-ajax id="transaction" method="[[paymentApi.method]]" content-type="application/json" handle-as="json" on-response="_handleResponse"
+                loading="{{loading}}">
             </iron-ajax>
 
-            <iron-ajax 
-            id="ajaxcategory" 
-            auto 
-            method="[[categoryApi.method]]" 
-            url="[[categoryApi.url]]" 
-            handle-as="json" 
-            last-response="{{categories}}"
-            on-response="handleCategoryResponse">
+            <iron-ajax id="ajaxcategory" auto method="[[categoryApi.method]]" url="[[categoryApi.url]]" handle-as="json" last-response="{{categories}}"
+                on-response="handleCategoryResponse">
             </iron-ajax>
 
             <iron-form id="myForm">
@@ -72,12 +61,9 @@
 
                     <div>
                         <h4 class="label">Select transaction type</h4>
-                        <paper-dropdown-menu allow-outside-scroll="true" 
-                        id="type" class="customWidth" no-label-float>
-                            <paper-listbox 
-                            slot="dropdown-content" attr-for-selected="value" 
-                            class="dropdown-content customWidth" selected="{{selectedType}}"
-                            on-tap="_removeInvalid">
+                        <paper-dropdown-menu allow-outside-scroll="true" id="type" class="customWidth" no-label-float>
+                            <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content customWidth" selected="{{selectedType}}"
+                                on-tap="_removeInvalid">
                                 <template is="dom-repeat" items="[[transactionType]]">
                                     <paper-item value$="[[item.type]]">[[item.display]]</paper-item>
                                 </template>
@@ -87,15 +73,8 @@
 
                     <div>
                         <h4 class="label">Enter amount</h4>
-                        <paper-input 
-                        
-                        allowed-pattern="[0-9.]" 
-                        minlength="1" 
-                        maxlength="10" 
-                        no-label-float id="amount" 
-                        error-message="{{amountError}}"
-                        value="{{amount}}" 
-                        on-change="_removeInvalid">
+                        <paper-input allowed-pattern="[0-9.]" minlength="1" maxlength="10" no-label-float id="amount" error-message="{{amountError}}"
+                            value="{{amount}}" on-change="_removeInvalid">
                             <div slot="prefix">$ &nbsp</div>
                         </paper-input>
                     </div>
@@ -103,14 +82,12 @@
                     <template is="dom-if" if="[[isCategoryPresent]]">
                         <template is="dom-if" if="[[isCategoryFetched]]">
                             <div>
-                                <h4 class="label">Select paymensst category</h4>
-                                <paper-dropdown-menu allow-outside-scroll="true" id="category" 
-                                class="customWidth" no-label-float>
-                                    <paper-listbox slot="dropdown-content" class="dropdown-content customWidth" 
-                                    selected="{{selectedCategory}}">
+                                <h4 class="label">Select payment category</h4>
+                                <paper-dropdown-menu allow-outside-scroll="true" id="category" class="customWidth" no-label-float>
+                                    <paper-listbox slot="dropdown-content" class="dropdown-content customWidth" selected="{{selectedCategory}}">
                                         <template is="dom-repeat" items="[[categories]]">
                                             <paper-item id="[[item.id]]" value$="[[item.id]]">
-                                            [[item.value]]</paper-item>
+                                                [[item.value]]</paper-item>
                                         </template>
                                     </paper-listbox>
                                 </paper-dropdown-menu>
@@ -143,67 +120,67 @@
             static get properties() {
                 return {
                     transactionType: {
-                        type    : Array,
-                        value   : [{
-                            type    : 'DEBIT',
-                            display : 'Make payment',
-                            value   : 0
+                        type: Array,
+                        value: [{
+                            type: 'DEBIT',
+                            display: 'Make payment',
+                            value: 0
                         }, {
-                            type    : 'CREDIT',
-                            display : 'Receive payment',
-                            value   : 1
+                            type: 'CREDIT',
+                            display: 'Receive payment',
+                            value: 1
                         }]
                     },
-                    categories  : {
-                        type        : Array,
-                        value       : []
+                    categories: {
+                        type: Array,
+                        value: []
                     },
-                    paymentApi  : {
-                        type        : Object
+                    paymentApi: {
+                        type: Object
                     },
-                    categoryApi : {
-                        type        : Object
+                    categoryApi: {
+                        type: Object
                     },
-                    loading     : {
-                        type        : Boolean,
-                        value       : false,
-                        notify      : true
+                    loading: {
+                        type: Boolean,
+                        value: false,
+                        notify: true
                     },
-                    description : {
-                        type        : String,
-                        value       : ''
+                    description: {
+                        type: String,
+                        value: ''
                     },
                     selectedType: {
                         //DEBIT, is default
-                        type        : String,
-                        value       : 'DEBIT', 
-                        observer    : '_changeType'
+                        type: String,
+                        value: 'DEBIT',
+                        observer: '_changeType'
                     },
                     selectedCategory: {
-                        type        : Number,
-                        value       : ''
+                        type: Number,
+                        value: ''
                     },
                     transactionDetails: {
-                        type        : Object,
-                        value       : {}
+                        type: Object,
+                        value: {}
                     },
                     isCategoryPresent: {
-                        type        : Boolean,
-                        value       : true,
+                        type: Boolean,
+                        value: true,
                         reflectToAttribute: true
                     },
                     isCategoryFetched: {
-                        type        : Boolean,
-                        value       : false,
+                        type: Boolean,
+                        value: false,
                         reflectToAttribute: true
                     },
                     msg: {
-                        type        : String,
-                        value       : "Successfully logged in"
+                        type: String,
+                        value: "Successfully logged in"
                     },
-                    activated       : {
-                        type        : Boolean,
-                        observer    : '_activationChanged'
+                    activated: {
+                        type: Boolean,
+                        observer: '_activationChanged'
                     }
                 }
             }
@@ -212,11 +189,11 @@
             _activationChanged(newVal, oldVal) {
                 this.$.amount.invalid = false;
                 if (newVal) {
-                    this.amount             = '';
-                    this.selectedType       = 'DEBIT';
-                    this.description        = '';
-                    this.isCategoryPresent  = true;
-                    let ajax                = this.$.ajaxcategory;
+                    this.amount = '';
+                    this.selectedType = 'DEBIT';
+                    this.description = '';
+                    this.isCategoryPresent = true;
+                    let ajax = this.$.ajaxcategory;
                     ajax.generateRequest();
                 }
             }
@@ -224,15 +201,15 @@
             initializeStorage() {
                 this.transactionDetails = {};
             }
-            
+
             _removeInvalid() {
                 this.$.amount.invalid = false;
             }
 
-            _changeType(newValue,oldValue) {
+            _changeType(newValue, oldValue) {
                 this.isCategoryPresent = (this.selectedType === 'CREDIT') ? false : true;
                 const transactionType = this.transactionType.find(element => element.type === newValue);
-                if(newValue !== oldValue) this.$.paymentButton.textContent = transactionType.display;
+                if (newValue !== oldValue) this.$.paymentButton.textContent = transactionType.display;
             }
 
             handleCategoryResponse(event, request) {
@@ -240,26 +217,26 @@
                 let categories = request.response;
                 let isCategoryFetched = categories.length ? true : false;
                 this.set('isCategoryFetched', isCategoryFetched)
-                if(isCategoryFetched){
+                if (isCategoryFetched) {
                     this.selectedCategory = categories.map(e => e.value).indexOf('Misc');
                 }
             }
-            
+
             // METHOD: This Method Will be commiting transaction
             // 1. Configure AJAX
             // 2. Validation
             // 3. Hit AJAX Request    ---> _handleResponse()
             _makeTransaction() {
-                
+
                 localStorage.removeItem('transactionDetails');
-                
+
                 var amount = this.amount
                 var paymentType = this.selectedType
                 var categoryId = this.selectedCategory
                 var description = this.description
                 var ajax = this.$.transaction;
                 let custId = JSON.parse(sessionStorage.user).customerId;
-                
+
                 ajax.url = this.paymentApi.url;
                 ajax.body = JSON.stringify({
                     "customerId": custId,
@@ -277,30 +254,30 @@
                     this.$.amount.invalid = true;
                 } else if (amount === '0') {
                     this.amountError = "Amount should not be Zero";
-                    this.$.amount.invalid = true;    
+                    this.$.amount.invalid = true;
                 } else {
                     this.amountError = "Please enter valid amount";
                     this.$.amount.invalid = true;
                 }
             }
-            
+
             // METHOD: This will handle response after payment is done.
             // 1. Handle Payment Response
             // 2. Redirect to status change
             _handleResponse(response) {
                 var data = response.detail.__data.response;
-                
+
                 if (data.status) {
                     localStorage.setItem('transactionDetails', JSON.stringify(data.data))
-                    
+
                     this.set("route.path", "/status");
-                    
+
                     window.location.hash = "no-back-button";
                     window.location.hash = "Again-No-back-button";
                     window.onhashchange = function () { window.location.hash = "no-back-button"; }
                 } else {
                     this.amountError = data.errors[0].errorMessage
-                    this.$.amount.invalid = true; 
+                    this.$.amount.invalid = true;
 
                 }
             }

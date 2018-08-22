@@ -59,8 +59,15 @@
                 <template class="header">
                     <b path="amount">Amount</b>
                 </template>
-                <template>[[addCurrency(item.transactionAmount)]]</template>
+                <template>[[addCurrency(item.amount)]]</template>
             </vaadin-grid-column>
+
+            <vaadin-grid-column width="1em">
+              <template class="header">
+                  <b path="amount">Category</b>
+              </template>
+              <template>[[item.category.value]]</template>
+          </vaadin-grid-column>
 
             <vaadin-grid-column width="1em">
                 <template class="header">
