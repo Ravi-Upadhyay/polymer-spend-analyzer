@@ -53,7 +53,7 @@
                     },
                     prodBaseURL: {
                         type: String,
-                        value: "http://10.138.65.43:8888"
+                        value: "http://localhost:8085"
                     },
                     apiCollection: {
                         type: Object,
@@ -106,21 +106,25 @@
                         "analyser"      : { "url"     : `${baseURL}/user/${customerId}/transactionsummary`,
                                             "method"  : "GET"
                                           },
-                        "periods"       : {
-                                            "url"     : `${baseURL}/user/${customerId}/getperiods`,
+                        "periodslist"       : {
+                                            "url"     : `${baseURL}/getperiodlist`,
                                             "method"  : "GET"
                                           },
+                        "categorieslist" : {
+                                            "url"     : `${baseURL}/getcategorylist`,
+                                            "method"  : "GET" 
+                        },                  
+                        "previousmonthslist" : {
+                                            "url"     : `${baseURL}/getmonthlist`,
+                                            "method"  : "GET" 
+                        },
                         "currentmonth"       : {
-                                            "url"     : `${baseURL}/user/${customerId}/currentmonth`,
+                                            "url"     : `${baseURL}/user/${customerId}/defaultAnalyzerSummary`,
                                             "method"  : "POST"
                         },
-                        "previousMonths" : {
-                                            "url"     : `${baseURL}/user/${customerId}/previousmonth`,
-                                            "method"  : "GET" 
-                        },
-                        "categories" : {
-                                            "url"     : `${baseURL}/user/getcategorylist`,
-                                            "method"  : "GET" 
+                        "spendcategory"       : {
+                                            "url"     : `${baseURL}/user/${customerId}/customAnalyzerSummary`,
+                                            "method"  : "POST"
                         }
 
                     }; 
@@ -139,20 +143,20 @@
                         "analyser"      : { "url"     : `src/data/analyser.json`,
                                             "method"  : "GET"
                                           },
-                        "periods"       : {
+                        "periodslist"       : {
                                             "url"     : `src/data/periods.json`,
+                                            "method"  : "GET"
+                        },
+                        "previousmonthslist"       : {
+                                            "url"     : `src/data/previousmonths.json`,
+                                            "method"  : "GET"
+                        },
+                        "categorieslist"       : {
+                                            "url"     : `src/data/categories.json`,
                                             "method"  : "GET"
                         },
                         "currentmonth"       : {
                                             "url"     : `src/data/currentmonth.json`,
-                                            "method"  : "GET"
-                        },
-                        "previousmonth"       : {
-                                            "url"     : `src/data/previousmonths.json`,
-                                            "method"  : "GET"
-                        },
-                        "categories"       : {
-                                            "url"     : `src/data/categories.json`,
                                             "method"  : "GET"
                         },
                         "spendcategory"       : {
