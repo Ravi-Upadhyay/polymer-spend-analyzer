@@ -263,25 +263,6 @@
                 let custId = JSON.parse(sessionStorage.user).customerId;
                 // ajax.url = 'http://192.168.43.118:8080/user/'+custId+'/makepayment';
                 ajax.url = this.paymentApi.url;
-<<<<<<< HEAD
-                if (paymentType === 'CREDIT') {
-                    ajax.body = JSON.stringify({
-                        "customerId": custId,
-                        "amount": amount,
-                        "paymentType": paymentType,
-                        "description": description
-                    });
-                } else if (paymentType === 'DEBIT') {
-                    ajax.body = JSON.stringify({
-                        "customerId": custId,
-                        "amount": amount,
-                        "paymentType": paymentType,
-                        "description": description,
-                        "categoryId": parseInt(categoryId)
-                    });
-                }
-                
-=======
                 ajax.body = JSON.stringify({
                     "customerId": custId,
                     "amount": amount,
@@ -292,7 +273,6 @@
                 console.log(categoryId);
                 console.log(ajax.body);
 
->>>>>>> ddaf25767f58842c39f521b5db41ce170254f937
                 if (amount > 0) {
                     ajax.generateRequest(); // triggers the iron-ajax
                 } else if (amount === null || amount === "") {

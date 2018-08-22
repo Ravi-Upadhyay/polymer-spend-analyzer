@@ -54,25 +54,26 @@
             }
         </style>
         <div class="container fntFamily boxShadow whiteBckgrnd loginCompTopMargin">
-            <template is="dom-if" if="{{pageValues}}">
-                <h2 class="heading">{{pageValues.login}}</h2>
-                <paper-toast duration="10000" id="toast" text="{{msg}}"></paper-toast>
-                <hr>
-                <iron-form id="myForm" on-submit="login">
-                    <form>
-                        <div>
-                            <h4 class="label">{{pageValues.loginUserid}}</h4>
-                            <paper-input type="text" label="{{pageValues.loginUserid}}" id="username" no-label-float value="{{username}}" on-change="_removeInvalid" required></paper-input>
-                        </div>
 
-                        <div>
-                            <h4 class="label">{{pageValues.loginPassword}}</h4>
-                            <paper-input type="password" label="{{pageValues.loginPassword}}" id="password" no-label-float value="{{password}}" on-change="_removeInvalid"
-                                required></paper-input>
-                        </div>
+            <h2 class="heading">{{pageValues.login}}</h2>
+            <paper-toast duration="10000" id="toast" text="{{msg}}"></paper-toast>
+            <hr>
+            <iron-form id="myForm" on-submit="login">
+                <form>
+                    <div>
+                        <h4 class="label">{{pageValues.loginUserid}}</h4>
+                        <paper-input type="text" label="{{pageValues.loginUserid}}" id="username" no-label-float value="{{username}}" on-change="_removeInvalid"
+                            required></paper-input>
+                    </div>
 
-                        <!-- <iron-request id="xhr"></iron-request> -->
-                        <!-- <iron-ajax id="xhr"
+                    <div>
+                        <h4 class="label">{{pageValues.loginPassword}}</h4>
+                        <paper-input type="password" label="{{pageValues.loginPassword}}" id="password" no-label-float value="{{password}}" on-change="_removeInvalid"
+                            required></paper-input>
+                    </div>
+
+                    <!-- <iron-request id="xhr"></iron-request> -->
+                    <!-- <iron-ajax id="xhr"
                url = "http://192.168.43.118:8080/user/login"
                method="POST"
                body = "{{bodyData}}"
@@ -82,14 +83,14 @@
                content-type="application/json"
                timeout = 15000
                ></iron-ajax>   -->
-                        <iron-ajax id="xhr" url="[[api.url]]" method="[[api.method]]" body="{{bodyData}}" handle-as="json" on-response="_handleResponse"
-                            on-error="_handleError" content-type="application/json" timeout=1 5000></iron-ajax>
-                        <paper-button class="btnPrl" submit on-click="login">{{pageValues.login}}</paper-button>
-                        <paper-toast id="toast" text="{{msg}}"></paper-toast>
+                    <iron-ajax id="xhr" url="[[api.url]]" method="[[api.method]]" body="{{bodyData}}" handle-as="json" on-response="_handleResponse"
+                        on-error="_handleError" content-type="application/json" timeout=15000></iron-ajax>
+                    <paper-button class="btnPrl" submit on-click="login">{{pageValues.login}}</paper-button>
+                    <paper-toast id="toast" text="{{msg}}"></paper-toast>
 
-                    </form>
-                </iron-form>
-            </template>
+                </form>
+            </iron-form>
+
         </div>
         <app-location route="{{route}}"></app-location>
     </template>
