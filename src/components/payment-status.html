@@ -1,12 +1,16 @@
 <!-- 
-** STATUS COMPONENT
+** PAYMENT STATUS COMPONENT
 * This will be a component to show the payment status
+* Will inform whether the payment is success/failure
+* Redirected after payment page
 -->
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../../bower_components/polymer/lib/elements/dom-if.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
 <link rel="import" href="common-styles.html">
+
 <dom-module id="payment-status">
     <template>
         <style include="common-styles">
@@ -34,6 +38,7 @@
         <sub-header></sub-header>
         <div class='container fntFamily boxShadow whiteBckgrnd'>
             <h2 class="heading">Payment Status</h2>
+            
             <hr>
 
             <iron-form>
