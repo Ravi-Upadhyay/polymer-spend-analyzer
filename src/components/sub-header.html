@@ -1,12 +1,16 @@
 <!--Component for sub header to show the information of page and user-->
 
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+
 <link rel="import" href="common-styles.html">
 
 <dom-module id="sub-header">
    <template>
+        
         <style include="common-styles">
-        .subheader{
+            .subheader{
                 height: 50px;
                 display: flex;
                 align-items: center;
@@ -14,17 +18,15 @@
                 margin-left: 8.33%;
                 margin-right: 8.33%;
                 margin-bottom: 50px;
-        }
+            }
         
         </style>
-         <app-location route="{{route}}"></app-location>
-            <div class="subheader">
-                <!--<template is="dom-if" if="{{isLoggedIn}}">-->
+
+        <app-location route="{{route}}"></app-location>
+        <div class="subheader">
             <span class="floatLeft fntFamily fontBold"> {{route.path}}</span>
             <span class="floatRight fntFamily fontBold"> Welcome, {{userName}} </span>
-            
-                <!--</template>-->
-            </div>           
+        </div>           
        
     </template>
     <script>
