@@ -12,6 +12,30 @@
       "login": "Login",
       "loginUserid": "Enter User Id",
       "loginPassword": "Enter Password"
+    },
+    "commonHeader": {
+      "payments": "Payments",
+      "transactions": "Transactions",
+      "spendAnalyzer": "Spend Analyzer",
+      "logout": "Logout"
+    },
+    "paymentStatus": {
+      "transactionId": "Transaction ID",
+      "amount": "Amount",
+      "transactionType": "Transaction Type",
+      "categoryType": "Category Type",
+      "makeNewPayment": "Make New Payment",
+      "spendAnalyzer": "Spend Analyzer",
+      "success": "Success",
+      "failed": "Failed",
+      "status": "Payment Status"
+    },
+    "spendAnalyser": {
+      "selectPeriod": "Select Period",
+      "fromDate": "From Date",
+      "toDate": "To Date",
+      "selectCategory": "Select Category",
+      "analyse": "Analyse"
     }
   },
   "fr": {
@@ -29,6 +53,30 @@
       "login": "Log in",
       "loginUserid": "Voer gebruikers-ID in",
       "loginPassword": "Voer wachtwoord in"
+    },
+    "commonHeader": {
+      "payments": "Betalingen",
+      "transactions": "Transacties",
+      "spendAnalyzer": "Besteed Analyzer",
+      "logout": "Uitloggen"
+    },
+    "paymentStatus": {
+      "transactionId": "Transactie ID",
+      "amount": "Bedrag",
+      "transactionType": "Transactie Type",
+      "categoryType": "Categorie Type",
+      "makeNewPayment": "Maak Nieuwe Betaling",
+      "spendAnalyzer": "Besteed Analyzer",
+      "success": "Succes",
+      "failed": "Mislukt",
+      "status": "Betalings Status"
+    },
+    "spendAnalyser": {
+      "selectPeriod": "Selecteer Periode",
+      "fromDate": "Van Datum",
+      "toDate": "Daten",
+      "selectCategory": "Selecteer Categorie",
+      "analyse": "analyseren"
     }
   }
 }
