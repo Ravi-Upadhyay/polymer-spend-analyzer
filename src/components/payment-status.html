@@ -7,7 +7,9 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../../bower_components/polymer/lib/elements/dom-if.html">
-<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html"> 
+
+<link rel="import" href="../components/sub-header.html">
 
 <link rel="import" href="common-styles.html">
 
@@ -33,16 +35,16 @@
                 text-align: center;
             }
         </style>
-        <iron-localstorage name="transactionDetails" value="{{transactionDetails}}"></iron-localstorage>
+        <!-- <iron-localstorage name="transactionDetails" value="{{transactionDetails}}"></iron-localstorage> -->
 
         <sub-header></sub-header>
-        <div class='container fntFamily boxShadow whiteBckgrnd'>
-            <h2 class="heading">Payment Status</h2>
-            
-            <hr>
+        <div class='container fntFamily'>
+            <!-- <h2 class="heading">Payment Status</h2>
 
-            <iron-form>
-                <form>
+            <hr> -->
+
+            <!-- <iron-form>
+                <form> -->
                     <template is="dom-if" if="{{showSuccess}}">
                         <iron-image src="src/images/success.png"></iron-image>
                         <h2 class="centerTxt">Success!</h2>
@@ -80,8 +82,8 @@
                             Spend Analyser
                         </paper-button>
                     </div>
-                </form>
-            </iron-form>
+                <!-- </form>
+            </iron-form> -->
         </div>
         </div>
     </template>
@@ -142,6 +144,7 @@
             }
 
             _activationChanged() {
+                
                 this._getTransactionStatus()
             }
 
@@ -150,6 +153,7 @@
             }
 
             _navigateToAlanyzer() {
+
                 this.set("route.path", "/analyser");
             }
         }

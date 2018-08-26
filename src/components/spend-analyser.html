@@ -10,7 +10,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/polymer/lib/utils/import-href.html">
 
-
 <!-- IMPORT DEPENDENCIES -->
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
@@ -19,7 +18,6 @@
 <link rel="import" href="../../bower_components/page-title/page-title.html">
 
 <!-- IMPORT COMPONENTS -->
-
 <link rel="lazy-import" href="./make-payment.html">
 <link rel="lazy-import" href="./payment-status.html">
 <link rel="lazy-import" href="./payment-history.html">
@@ -32,7 +30,6 @@
 <link rel="import" href="./bar-chart-component.html">
 <link rel="import" href="../configuration/translate.html">
 
-<!--<link rel="import" href="../components/sub-header.html">-->
 <link rel="import" href="../configuration/api-config.html">
 
 
@@ -92,7 +89,7 @@
             fallback-selection="view404" role="main">
             <login-form title='Login' name="login" page-values="[[pageValues.loginPage]]" login-success="[[_loginSuccess]]"
               api={{apiCollection.login}}></login-form>
-            <make-payment title='Make Payment' name="payments" category-api="{{apiCollection.categories}}" payment-api="{{apiCollection.payment}}"></make-payment>
+            <make-payment title='Make Payment' name="payments" category-api="{{apiCollection.categorieslist}}" payment-api="{{apiCollection.payment}}"></make-payment>
             <payment-status title='Payment Status' name="status"></payment-status>
             <payment-history user="[[user]]" title='Transactions' name="transactions" api={{apiCollection.transactions}}></payment-history>
             <payment-analyser title='Spend Analyzer' name="analyser" api={{apiCollection}} is-scrolled="{{isScrolled}}"></payment-analyser>
