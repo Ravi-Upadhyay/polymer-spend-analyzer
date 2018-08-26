@@ -47,28 +47,28 @@
                 <form> -->
                     <template is="dom-if" if="{{showSuccess}}">
                         <iron-image src="src/images/success.png"></iron-image>
-                        <h2 class="centerTxt">Success!</h2>
+                        <h2 class="centerTxt">{{pageValues.success}}!</h2>
                     </template>
                     <template is="dom-if" if="{{showError}}">
                         <iron-image src="src/images/error.png"></iron-image>
-                        <h2 class="centerTxt">Failed!</h2>
+                        <h2 class="centerTxt">{{pageValues.failed}}!</h2>
                     </template>
                     <div class="detailSec">
                         <div>
-                            <span>Transaction ID: </span>
+                            <span>{{pageValues.transactionId}}: </span>
                             <span>{{transactionId}}</span>
                         </div>
                         <div>
-                            <span>Amount: </span>
+                            <span>{{pageValues.amount}}: </span>
                             <span>${{transactionAmount}}</span>
                         </div>
                         <div>
-                            <span>Transaction Type: </span>
+                            <span>{{pageValues.transactionType}}: </span>
                             <span>{{transactionType}}</span>
                         </div>
                         <template is="dom-if" if="[[isCategoryPresent]]">
                             <div>
-                                <span>Category Type: </span>
+                                <span>{{pageValues.categoryType}}: </span>
                                 <span>{{category}}</span>
                             </div>
                         </template>
@@ -76,10 +76,10 @@
                     <div>
                         <app-location route="{{route}}"></app-location>
                         <paper-button class="btnPrl" nolink on-click="_navigateToPayment">
-                            Make new payment
+                            {{pageValues.makeNewPayment}}
                         </paper-button>
                         <paper-button class="btnPrl" id="transactionButton" nolink on-click="_navigateToAlanyzer">
-                            Spend Analyser
+                            {{pageValues.spendAnalyzer}}
                         </paper-button>
                     </div>
                 <!-- </form>
@@ -122,9 +122,13 @@
                     },
                     isCategoryPresent: {
                         type: Boolean
+                    },
+                    pageValues: {
+                        type: Object
                     }
                 }
             }
+
             ready() {
                 super.ready();
             }
