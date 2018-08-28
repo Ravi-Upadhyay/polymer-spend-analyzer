@@ -16,24 +16,47 @@
 <dom-module id="payment-status">
     <template>
         <style include="common-styles">
+
+            .detailSec {
+                margin-bottom: 30px;
+            }
             .detailSec div {
-                padding: 10px;
-            }
-
-            .btnPrl {
-                width: 100%;
-                margin: 1.25em auto 0 auto;
-            }
-
-            iron-image {
-                width: 32px;
-                height: 32px;
-                margin-left: 45%
-            }
-
-            .centerTxt {
+                padding: 5px;
                 text-align: center;
             }
+            .statusSec {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 30px;
+            }
+            .statusSec h3 {
+                margin: 5px 0px 5px 0px;
+            }
+            .statusSec h4 {
+                margin: 10px 0px 10px 0px;
+            }
+            .actionSec{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            .primaryButton {
+                align-self: center;
+                margin: 5px 0px;
+                height:3em;
+            }
+            .secondaryButton {
+                align-self: center;
+                margin: 5px 0px;
+                height:3em;
+            }
+
+
+
+            
         </style>
         <!-- <iron-localstorage name="transactionDetails" value="{{transactionDetails}}"></iron-localstorage> -->
 
@@ -45,14 +68,22 @@
 
             <!-- <iron-form>
                 <form> -->
+                    <div class="statusSec">
                     <template is="dom-if" if="{{showSuccess}}">
-                        <iron-image src="src/images/success.png"></iron-image>
-                        <h2 class="centerTxt">{{pageValues.success}}!</h2>
+                        <image src="src/images/success/success-128x128.png" alt="success" 
+                        width="100px" height="100px">
+                        <h3 class="success-txt uppercase">{{pageValues.success}}</h3>
+                        <h4>{{pageValues.successMessage}}</h4>
                     </template>
+
                     <template is="dom-if" if="{{showError}}">
-                        <iron-image src="src/images/error.png"></iron-image>
-                        <h2 class="centerTxt">{{pageValues.failed}}!</h2>
+                        <image src="src/images/error/error-128x128.png" alt="error" 
+                        width="100px" height="100px">
+                        <h3 class="error-txt uppercase">{{pageValues.failed}}</h3>
+                        <h4>{{pageValues.failureMessage}}</h4>
                     </template>
+                    </div>
+
                     <div class="detailSec">
                         <div>
                             <span>{{pageValues.transactionId}}: </span>
@@ -73,13 +104,24 @@
                             </div>
                         </template>
                     </div>
-                    <div>
+
+                    <div class="actionSec">
                         <app-location route="{{route}}"></app-location>
-                        <paper-button class="btnPrl" nolink on-click="_navigateToPayment">
-                            {{pageValues.makeNewPayment}}
-                        </paper-button>
-                        <paper-button class="btnPrl" id="transactionButton" nolink on-click="_navigateToAlanyzer">
-                            {{pageValues.spendAnalyzer}}
+                        
+                        <template is="dom-if" if="{{showSuccess}}">
+                            <paper-button class="secondaryButton" nolink on-click="_navigateToPayment">
+                                {{pageValues.anotherPayment}}
+                            </paper-button>
+                        </template>
+
+                        <template is="dom-if" if="{{showError}}">
+                            <paper-button class="secondaryButton" nolink on-click="_navigateToPayment">
+                                {{pageValues.tryAgain}}
+                            </paper-button>
+                        </template>
+
+                        <paper-button class="primaryButton" id="transactionButton" nolink on-click="_navigateToDashboard">
+                            {{pageValues.dashboard}}
                         </paper-button>
                     </div>
                 <!-- </form>
@@ -156,9 +198,9 @@
                 this.set("route.path", "/payments");
             }
 
-            _navigateToAlanyzer() {
+            _navigateToDashboard() {
 
-                this.set("route.path", "/analyser");
+                this.set("route.path", "/dashboard");
             }
         }
 

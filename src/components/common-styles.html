@@ -75,6 +75,47 @@
             opacity: 0.8;
           }
 
+          .secondaryButton {
+            display: flex;
+            display: -webkit-flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            height:2.2em;
+            border-radius:5px;
+            background-color: #42417A;
+            color:#ffffff;
+            border: none;
+            width:90%;
+            cursor: pointer;
+          }
+
+          .secondaryButton:hover {
+            opacity: 0.8;
+          }
+          .primaryButton {
+            display: flex;
+            display: -webkit-flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            height:2.2em;
+            border-radius:5px;
+            background-color: #ff6600;
+            color:#ffffff;
+            border: none;
+            width:90%;
+            cursor: pointer;
+          }
+
+          .primaryButton:hover {
+            opacity: 0.8;
+          }
+
           
           .height100{
               height:6.25em; 
@@ -96,6 +137,9 @@
             padding-top: 3.4375rem;
             margin-bottom: 0;
             padding-left: 3.125rem;
+        }
+        .uppercase{
+            text-transform: uppercase;
         }
         form {
             /* border: 3px solid #f1f1f1; */
@@ -139,10 +183,35 @@
         }
 
         .btnPrl:hover {
-            background-color:rgb(51, 51, 97);
+            opacity: 0.8;
         }
 
         .btnPrl[disabled] {
+            background-color: #c3c0c0 !important;
+            color: #000;
+            border: 1px solid #c3c0c0;
+            cursor: auto;
+            pointer-events: none;
+            text-transform: capitalize !important;
+        }
+        .btnOrn {
+            display: block;
+            /* padding: 0.625rem 1.5625rem 0.625rem 1.5625rem; */
+            margin: 2.25em auto 0 auto;           
+            border-radius: 10px;
+            background-color:#ff6600;
+            color: white;
+            border: 1px solid #ff6600;
+            text-align:center;
+            width:60%;
+            cursor: pointer;
+        }
+
+        .btnOrn:hover {
+            opacity: 0.8;
+        }
+
+        .btnOrn[disabled] {
             background-color: #c3c0c0 !important;
             color: #000;
             border: 1px solid #c3c0c0;
@@ -164,11 +233,15 @@
 
         .floatLeft{
             float:left
-
         }
         .info-txt{
             color: #17a2b8;
-
+        }
+        .success-txt{
+            color: #28A745;
+        }
+        .error-txt{
+            color: #DC3545;
         }
           
         </style>

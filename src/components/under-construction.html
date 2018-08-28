@@ -1,0 +1,48 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="common-styles.html">
+
+<dom-module id="view-404">
+    <template>
+        <style include="common-styles">
+            :host   {
+                display: flex;
+                display: -webkit-flex; 
+                min-height: 500px;
+                width: 100%;
+                justify-content: center;
+                align-content: center;
+            }
+            .container-nf   {
+                display: flex;
+                display: -webkit-flex;
+                width: 33.33%;
+                justify-content: center;
+                margin-top: 100px;
+                margin-bottom: 100px;
+                flex-direction: column;
+                align-items: center;
+            }
+            
+
+        </style>
+
+        <div class="container-nf fntFamily">
+            <img src="/src/images/error-404.png" alt="Page Not Found" height="128px" width="128px"/>
+            <h4 class="info-txt">PAGE NOT FOUND</h4>
+            <br>
+            <br>
+            <p>
+                We are unable to process your request
+            </p>
+        </div>
+    </template>
+    <script>
+        class View404 extends Polymer.Element  {
+
+            static get is() { return 'view-404' }
+
+        }
+
+        window.customElements.define(View404.is,View404);
+    </script>
+</dom-module>

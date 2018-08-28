@@ -26,8 +26,13 @@
       "categoryType": "Category Type",
       "makeNewPayment": "Make New Payment",
       "spendAnalyzer": "Spend Analyzer",
+      "anotherPayment":"Make another payment",
+      "tryAgain":"Try once more",
+      "dashboard":"Dashboard",
       "success": "Success",
-      "failed": "Failed",
+      "successMessage": "Successfully made the payment",
+      "failed": "Something went Wrong",
+      "failureMessage": "We could not make payment",
       "status": "Payment Status"
     },
     "spendAnalyser": {
@@ -67,8 +72,13 @@
       "categoryType": "Categorie Type",
       "makeNewPayment": "Maak Nieuwe Betaling",
       "spendAnalyzer": "Besteed Analyzer",
+      "anotherPayment":"Nog een betaling doen",
+      "tryAgain":"Probeer nog een keer",
+      "dashboard":"Dashboard",
       "success": "Succes",
-      "failed": "Mislukt",
+      "successMessage": "De betaling is voltooid",
+      "failed": "Er is iets fout gegaan",
+      "failureMessage":"We konden niet betalen",
       "status": "Betalings Status"
     },
     "spendAnalyser": {

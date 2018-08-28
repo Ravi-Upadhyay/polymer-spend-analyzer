@@ -90,7 +90,7 @@
             <login-form title='Login' name="login" page-values="[[pageValues.loginPage]]" login-success="[[_loginSuccess]]"
               api={{apiCollection.login}}></login-form>
             <make-payment title='Make Payment' name="payments" category-api="{{apiCollection.categorieslist}}" payment-api="{{apiCollection.payment}}"></make-payment>
-            <payment-status title='Payment Status' name="status"></payment-status>
+            <payment-status title='Payment Status' name="status" page-values="[[pageValues.paymentStatus]]"></payment-status>
             <payment-history user="[[user]]" title='Transactions' name="transactions" api={{apiCollection.transactions}}></payment-history>
             <payment-analyser title='Spend Analyzer' name="analyser" api={{apiCollection}} is-scrolled="{{isScrolled}}"></payment-analyser>
             <view-404 title='Not Found 404' name="view404"></view-404>
@@ -140,19 +140,34 @@
             type: Array,
             value: [
               {
+                "display": "Dashboard",
+                "name": "dashboard",
+                "slug": "dashboard"
+              },
+              {
                 "display": "Payments",
                 "name": "payments",
                 "slug": "payments"
               },
-              {
-                "display": "Transactions",
-                "name": "transactions",
-                "slug": "transactions"
-              },
+              // {
+              //   "display": "Transactions",
+              //   "name": "transactions",
+              //   "slug": "transactions"
+              // },
               {
                 "display": "Spend Analyser",
                 "name": "analyser",
                 "slug": "analyser"
+              },
+              {
+                "display": "Support",
+                "name": "support",
+                "slug": "support"
+              },
+              {
+                "display": "About",
+                "name": "about",
+                "slug": "about"
               }
             ]
           },
