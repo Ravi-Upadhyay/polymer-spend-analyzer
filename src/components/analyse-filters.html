@@ -93,7 +93,7 @@
                         <template is="dom-if" if="{{isFromToSelected}}">
                             <span class="inline-block">
                                 <h4 class="label">Select Category</h4>
-                                <multi-select-dropdown categories="{{categoryList}}" is-scrolled="{{isScrolled}}"></multi-select-dropdown>
+                                <multi-select-dropdown categories="{{categoryList}}" selected-cat-arr={{selectedCatArr}} is-scrolled="{{isScrolled}}"></multi-select-dropdown>
                             </span>
                             <span class="inline-block">
                                 <msg-component></msg-component>
@@ -161,6 +161,11 @@
                         type: Array,
                         value: '',
                         notify: true
+                    },
+                    selectedCatArr:{
+                        type: Array,
+                        value : [],
+                        notify:true
                     },
                     isFromToSelected: {
                         type: Boolean,
@@ -393,16 +398,7 @@
 
             //Analyse data
             _analyseData() {
-                // var data = {
-                //     'period': this.selectedPeriod,
-                //     'duration': {
-                //         'from': this.selectedFromDate ? this.selectedFromDate : '',
-                //         'to': this.selectedToDate ? this.selectedToDate : '',
-                //         'month': this.selectedMonth ? this.selectedMonth : ''
-                //     },
-                //     'categories': [this.selectedCategory]
-                // }
-
+                this.spendCategoryData = {};
                 let monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
                 let fromValArr = this.fromDateVal.split('-');
                 fromValArr[1] = monthNames[parseInt(fromValArr[1]-1)];
@@ -412,19 +408,25 @@
                 toValArr[1] = monthNames[parseInt(toValArr[1]-1)];
                 let toVal = toValArr.reverse().join('-');
 
+				if(this.selectedCatArr.indexOf('99') > -1){
+                    this.selectedCatArr.splice(this.selectedCatArr.indexOf("99"), 1);	
+                }
+
                 let payload = {
                     "customerId": 100,
                     "period": {
                         "from": this.selectedFromDate ? fromVal : '',
                         "to": this.selectedToDate ? toVal : '',
-                        "month": this.selectedFromDate? '' : this.selectedMonth
-                    }
+                        "month": (this.selectedFromDate && this.selectedToDate) ? 'PERIODIC' : this.selectedMonth
+                    },
+                    "categories":this.selectedCatArr
                 };
 
                 let ajax = this.$.getSpendCategory;
                 ajax.url = this.api.spendcategory.url;
                 ajax.body = JSON.stringify(payload);
                 ajax.generateRequest();
+                this._resetFileds(this.$.period.value);
 
                 console.log('analyser payload', payload)
             }

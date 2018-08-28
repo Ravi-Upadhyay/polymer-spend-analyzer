@@ -243,7 +243,7 @@
                     "amount": amount,
                     "paymentType": paymentType,
                     "description": description,
-                    "categoryId": (paymentType === 'DEBIT') ? parseInt(categoryId) : undefined
+                    "categoryId": (paymentType === 'DEBIT') ? parseInt(this.shadowRoot.querySelector('#category').selectedItem.id) : undefined
                 });
 
                 // Validate amount and hit API if it is all good

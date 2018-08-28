@@ -83,6 +83,11 @@
                         type: String,
                         value: ''
                     },
+                    selectedCatArr:{
+                        type: Array,
+                        value : [],
+                        notify:true
+                    },
                     api: {
                         type: Object
                     },
@@ -106,7 +111,7 @@
                         this.preselected[index] = this.categories[index].id;
                     }
                 }
-
+                this.selectedCatArr = this.preselected;
             }
 
             //Called whenever a category change takes place.
@@ -133,6 +138,8 @@
                         this.push('preselected', "99");
                     }
                 }
+                this.selectedCatArr = selectedDropdown;
+                console.log('in multi getting categories', this.selectedCatArr)
 
             }
 
