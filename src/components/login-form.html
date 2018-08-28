@@ -23,8 +23,9 @@
 <dom-module id="login-form">
     <template>
         <style include="common-styles">
-            .btnPrl {
-                width: 50%;
+            paper-button.secondaryButton {
+                min-width: 50%;
+                margin: auto;
             }
 
             paper-toast {
@@ -53,45 +54,51 @@
             .loginCompTopMargin {
                 margin-top: 100px
             }
+            .button-container{
+                margin: 40px 0px 0px;
+            }
         </style>
+        
         <div class="container fntFamily boxShadow whiteBckgrnd loginCompTopMargin">
 
             <h2 class="heading">{{pageValues.login}}</h2>
-            <paper-toast duration="10000" id="toast" text="{{msg}}"></paper-toast>
             <hr>
             <iron-form id="myForm" on-submit="login">
                 <form>
                     <div>
                         <h4 class="label">{{pageValues.loginUserid}}</h4>
-                        <paper-input type="text" label="{{pageValues.loginUserid}}" id="username" no-label-float value="{{username}}" on-change="_removeInvalid"
-                            required></paper-input>
+                        <paper-input type="text" label="{{pageValues.loginUserid}}" 
+                        id="username" no-label-float value="{{username}}" 
+                        on-change="_removeInvalid" required></paper-input>
                     </div>
 
                     <div>
                         <h4 class="label">{{pageValues.loginPassword}}</h4>
-                        <paper-input type="password" label="{{pageValues.loginPassword}}" id="password" no-label-float value="{{password}}" on-change="_removeInvalid"
-                            required></paper-input>
+                        <paper-input type="password" label="{{pageValues.loginPassword}}" 
+                        id="password" no-label-float value="{{password}}" 
+                        on-change="_removeInvalid" required></paper-input>
                     </div>
 
-                    <!-- <iron-request id="xhr"></iron-request> -->
-                    <!-- <iron-ajax id="xhr"
-               url = "http://192.168.43.118:8080/user/login"
-               method="POST"
-               body = "{{bodyData}}"
-               handle-as = "json" 
-               on-response = "_handleResponse"
-               on-error = "_handleError"
-               content-type="application/json"
-               timeout = 15000
-               ></iron-ajax>   -->
-                    <iron-ajax id="xhr" url="[[api.url]]" method="[[api.method]]" body="{{bodyData}}" handle-as="json" on-response="_handleResponse"
-                        on-error="_handleError" content-type="application/json" timeout=15000></iron-ajax>
-                    <paper-button class="btnPrl" submit on-click="login">{{pageValues.login}}</paper-button>
-                    <paper-toast id="toast" text="{{msg}}"></paper-toast>
-
+                    <div class="button-container">
+                        <paper-button class="secondaryButton button-med" submit 
+                        on-click="login">{{pageValues.login}}</paper-button>
+                    </div>
+                </form>
             </iron-form>
 
         </div>
+        <iron-ajax 
+        id="xhr" 
+        url="[[api.url]]" 
+        method="[[api.method]]" 
+        body="{{bodyData}}" 
+        handle-as="json" 
+        on-response="_handleResponse"
+        on-error="_handleError" 
+        content-type="application/json" 
+        timeout=15000>
+        </iron-ajax>
+        <paper-toast duration="10000" id="toast" text="{{msg}}"></paper-toast>
         <app-location route="{{route}}"></app-location>
     </template>
 
@@ -192,11 +199,6 @@
                     this.$.toast.open();
                 }
             }
-
-            // attached() {
-            //     console.log('inside attached function');
-            //     this.loadResources(this.resolveUrl('../configuration/locales.json'));
-            // }
 
             _toggleLoginBtn(loginId, password) {
                 // FUNCTION: This function will validate loginId and password should

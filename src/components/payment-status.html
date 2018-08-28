@@ -43,90 +43,69 @@
                 justify-content: center;
                 align-items: center;
             }
-            .primaryButton {
-                align-self: center;
-                margin: 5px 0px;
-                height:3em;
+            paper-button {
+                margin-bottom: 10px;
             }
-            .secondaryButton {
-                align-self: center;
-                margin: 5px 0px;
-                height:3em;
-            }
-
-
-
-            
         </style>
-        <!-- <iron-localstorage name="transactionDetails" value="{{transactionDetails}}"></iron-localstorage> -->
 
         <sub-header></sub-header>
         <div class='container fntFamily'>
-            <!-- <h2 class="heading">Payment Status</h2>
+            <div class="statusSec">
+                <template is="dom-if" if="{{showSuccess}}">
+                    <image src="src/images/success/success-128x128.png" alt="success" 
+                    width="100px" height="100px">
+                    <h3 class="success-txt uppercase">{{pageValues.success}}</h3>
+                    <h4>{{pageValues.successMessage}}</h4>
+                </template>
 
-            <hr> -->
+                <template is="dom-if" if="{{showError}}">
+                    <image src="src/images/error/error-128x128.png" alt="error" 
+                    width="100px" height="100px">
+                    <h3 class="error-txt uppercase">{{pageValues.failed}}</h3>
+                    <h4>{{pageValues.failureMessage}}</h4>
+                </template>
+            </div>
 
-            <!-- <iron-form>
-                <form> -->
-                    <div class="statusSec">
-                    <template is="dom-if" if="{{showSuccess}}">
-                        <image src="src/images/success/success-128x128.png" alt="success" 
-                        width="100px" height="100px">
-                        <h3 class="success-txt uppercase">{{pageValues.success}}</h3>
-                        <h4>{{pageValues.successMessage}}</h4>
-                    </template>
-
-                    <template is="dom-if" if="{{showError}}">
-                        <image src="src/images/error/error-128x128.png" alt="error" 
-                        width="100px" height="100px">
-                        <h3 class="error-txt uppercase">{{pageValues.failed}}</h3>
-                        <h4>{{pageValues.failureMessage}}</h4>
-                    </template>
+            <div class="detailSec">
+                <div>
+                    <span>{{pageValues.transactionId}}: </span>
+                    <span>{{transactionId}}</span>
+                </div>
+                <div>
+                    <span>{{pageValues.amount}}: </span>
+                    <span>${{transactionAmount}}</span>
+                </div>
+                <div>
+                    <span>{{pageValues.transactionType}}: </span>
+                    <span>{{transactionType}}</span>
+                </div>
+                <template is="dom-if" if="[[isCategoryPresent]]">
+                    <div>
+                        <span>{{pageValues.categoryType}}: </span>
+                        <span>{{category}}</span>
                     </div>
+                </template>
+            </div>
 
-                    <div class="detailSec">
-                        <div>
-                            <span>{{pageValues.transactionId}}: </span>
-                            <span>{{transactionId}}</span>
-                        </div>
-                        <div>
-                            <span>{{pageValues.amount}}: </span>
-                            <span>${{transactionAmount}}</span>
-                        </div>
-                        <div>
-                            <span>{{pageValues.transactionType}}: </span>
-                            <span>{{transactionType}}</span>
-                        </div>
-                        <template is="dom-if" if="[[isCategoryPresent]]">
-                            <div>
-                                <span>{{pageValues.categoryType}}: </span>
-                                <span>{{category}}</span>
-                            </div>
-                        </template>
-                    </div>
+            <div class="actionSec">
+                <app-location route="{{route}}"></app-location>
+                
+                <template is="dom-if" if="{{showSuccess}}">
+                    <paper-button class="secondaryButton button-med" nolink on-click="_navigateToPayment">
+                        {{pageValues.anotherPayment}}
+                    </paper-button>
+                </template>
 
-                    <div class="actionSec">
-                        <app-location route="{{route}}"></app-location>
-                        
-                        <template is="dom-if" if="{{showSuccess}}">
-                            <paper-button class="secondaryButton" nolink on-click="_navigateToPayment">
-                                {{pageValues.anotherPayment}}
-                            </paper-button>
-                        </template>
+                <template is="dom-if" if="{{showError}}">
+                    <paper-button class="secondaryButton button-med" nolink on-click="_navigateToPayment">
+                        {{pageValues.tryAgain}}
+                    </paper-button>
+                </template>
 
-                        <template is="dom-if" if="{{showError}}">
-                            <paper-button class="secondaryButton" nolink on-click="_navigateToPayment">
-                                {{pageValues.tryAgain}}
-                            </paper-button>
-                        </template>
-
-                        <paper-button class="primaryButton" id="transactionButton" nolink on-click="_navigateToDashboard">
-                            {{pageValues.dashboard}}
-                        </paper-button>
-                    </div>
-                <!-- </form>
-            </iron-form> -->
-        </div>
+                <paper-button class="primaryButton button-med" id="transactionButton" nolink on-click="_navigateToDashboard">
+                    {{pageValues.dashboard}}
+                </paper-button>
+            </div>
         </div>
     </template>
     <script>

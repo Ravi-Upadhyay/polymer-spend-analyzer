@@ -37,15 +37,20 @@
                 background-color: #dbdbdb;
             }
 
-            .paper-button {
-                margin-top: 1.25em
+            paper-button.secondaryButton {
+                min-width: 50%;
+                margin: auto;
+            }
+
+            .button-container{
+                margin: 40px 0px 0px;
             }
         </style>
 
         <sub-header></sub-header>
 
         <div class="container fntFamily boxShadow whiteBckgrnd">
-            <h2 class="heading">Payments</h2>
+            <h2 class="heading">[[pageValues.payments]]</h2>
             <hr>
 
             <iron-ajax id="transaction" method="[[paymentApi.method]]" content-type="application/json" handle-as="json" on-response="_handleResponse"
@@ -60,7 +65,7 @@
                 <form>
 
                     <div>
-                        <h4 class="label">Select transaction type</h4>
+                        <h4 class="label">[[pageValues.transactionType]]</h4>
                         <paper-dropdown-menu allow-outside-scroll="true" id="type" class="customWidth" no-label-float>
                             <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content customWidth" selected="{{selectedType}}"
                                 on-tap="_removeInvalid">
@@ -72,7 +77,7 @@
                     </div>
 
                     <div>
-                        <h4 class="label">Enter amount</h4>
+                        <h4 class="label">[[pageValues.amount]]</h4>
                         <paper-input allowed-pattern="[0-9.]" minlength="1" maxlength="10" no-label-float id="amount" error-message="{{amountError}}"
                             value="{{amount}}" on-change="_removeInvalid">
                             <div slot="prefix">$ &nbsp</div>
@@ -82,7 +87,7 @@
                     <template is="dom-if" if="[[isCategoryPresent]]">
                         <template is="dom-if" if="[[isCategoryFetched]]">
                             <div>
-                                <h4 class="label">Select payment category</h4>
+                                <h4 class="label">[[pageValues.category]]</h4>
                                 <paper-dropdown-menu allow-outside-scroll="true" id="category" class="customWidth" no-label-float>
                                     <paper-listbox slot="dropdown-content" class="dropdown-content customWidth" selected="{{selectedCategory}}">
                                         <template is="dom-repeat" items="[[categories]]">
@@ -96,21 +101,23 @@
                     </template>
 
                     <div>
-                        <h4 class="label">Enter description</h4>
+                        <h4 class="label">[[pageValues.description]]</h4>
                         <paper-input id="description" no-label-float error-message="{{amountError}}" value="{{description}}" on-change="_removeInvalid">
                             <div></div>
                         </paper-input>
                     </div>
-
-                    <app-location route="{{route}}"></app-location>
-                    <paper-spinner-lite active="[[loading]]"></paper-spinner-lite>
-                    <paper-button class="btnPrl" on-click="_makeTransaction" id="paymentButton">
-                        Make Payment
-                    </paper-button>
-                    <paper-toast id="toast" text="{{msg}}"></paper-toast>
+                    <div class="button-container">
+                        <paper-button class="secondaryButton button-med" on-click="_makeTransaction" id="paymentButton">
+                            <!-- This will be dynamic based on transaction type -->
+                        </paper-button>
+                    </div>
+                    
                 </form>
             </iron-form>
         </div>
+        <app-location route="{{route}}"></app-location>
+        <!-- <paper-toast id="toast" text="{{msg}}"></paper-toast> -->
+        <paper-spinner-lite active="[[loading]]"></paper-spinner-lite>
     </template>
 
     <script>
@@ -181,6 +188,9 @@
                     activated: {
                         type: Boolean,
                         observer: '_activationChanged'
+                    },
+                    pageValues:{
+                        type: Object
                     }
                 }
             }

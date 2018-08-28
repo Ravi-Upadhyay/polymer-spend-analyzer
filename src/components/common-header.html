@@ -74,7 +74,7 @@
                 width: 90%;   
             }
         </style>
-
+        <template is="dom-if" if=[[pageValues]]>
         <!-- #2. SECTION-2: TEMPLATE -->
         <div class="h-container height100">
             
@@ -85,18 +85,19 @@
             <div class="menu-wrapper">
                 <template is="dom-if" if="{{isLoggedIn}}">
                     <template is="dom-repeat" items={{menu}}>
-                        <span><a class$="secondaryLinkButton [[item.class]]" href="{{_generateURL(rootPath,item.slug)}}">[[item.display]]</a></span>
+                        <span><a class$="secondaryLinkButton [[item.class]]" href="{{_generateURL(rootPath,item.slug)}}">{{_getDisplayTxt(item.name)}}</a></span>
                     </template>
                 </template>
             </div>
 
             <div class="logout-wrapper">
                 <template is="dom-if" if="{{isLoggedIn}}">
-                    <button on-click="_logout" class="primaryButton">Logout</button>
+                    <button on-click="_logout" class="primaryButton">[[pageValues.logout]]</button>
                 </template>
             </div>
 
         </div>
+        </template>
 
         <app-location route="{{route}}"></app-location>
     </template>
@@ -128,6 +129,9 @@
                     },
                     route       : {
                         type        : Object
+                    },
+                    pageValues  : {
+                        type        : Object
                     }
                 }
             }
@@ -155,6 +159,11 @@
 
             _generateURL(rootPath, slug) {
                 return `${rootPath}${slug}`;
+            }
+
+            _getDisplayTxt(name){
+                console.log(this.pageValues);
+                return this.pageValues[name];
             }
 
             _logout(){
