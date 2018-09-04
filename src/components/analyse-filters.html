@@ -1,30 +1,64 @@
-<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<!-- 
+** ANALYSE FILTERS
 
+* Component will contain whole logic and form of spend analyser screen
+* It will take data from user and generate ajax calls accordingly to get further data.
+
+PART OF SPEND ANALYSER SCREEN
+
+-->
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
 
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
 <link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/neon-animation/web-animations.html">
 <link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
+<link rel="import" href="../../bower_components/iron-form/iron-form.html">
 <script src="../../bower_components/web-animations-js/web-animations.min.js"></script>
 
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="common-styles.html">
 <link rel="import" href="msg-component.html">
 <link rel="import" href="multi-select-dropdown.html">
+
 <dom-module id="analyse-filters">
     <template>
+        
         <style include="common-styles">
+            :host{
+                display: flex;
+                display: -webkit-flex;
+                flex-direction: row;
+                width: 100%;
+            }
+
+            form{
+                margin: 0px;
+                padding: 0px;
+                display: flex;
+                display: -webkit-flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-evenly;
+                align-items: flex-end;
+            }
+
+            form div{
+                flex: 0 1 18%;
+            }
+
             .inline-block {
                 display: inline-block;
             }
 
-            .analyseBtnSpan {
+            /* .analyseBtnSpan {
                 float: right;
                 width: 30%;
-            }
+            } */
 
             span.note {
                 font-size: 12px;
@@ -37,8 +71,10 @@
                 margin: 0px;
             }
         </style>
+        
         <style include="shared-styles">
         </style>
+        
         <iron-ajax id="getPeriod" method="[[api.method]]" handle-as="json" last-response="{{periods}}" on-response="_handlePeriodResponse"></iron-ajax>
         <iron-ajax id="getPreviousMonths" method="[[api.method]]" handle-as="json" on-response="_handlePreviousMonthResponse"></iron-ajax>
         <iron-ajax id="getCategories" auto url="[[api.categorieslist.url]]" method="[[api.categorieslist.method]]" handle-as="json" on-response="_handleCategoriesResponse"></iron-ajax>
@@ -48,68 +84,79 @@
         <div id="filter-container" class="container fntFamily">
             <iron-form id="myForm">
                 <form>
+
                     <div>
-                        <span class="inline-block">
-                            <h4 class="label">Select Period</h4>
-                            <paper-dropdown-menu allow-outside-scroll="true" id="period" on-iron-select="_periodChanged" no-label-float>
-                                <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content" selected="{{selectedPeriod}}">
-                                    <template is="dom-repeat" items="[[periodList]]">
-                                        <paper-item value$="[[item]]">[[item]]</paper-item>
+                        <h4 class="label">[[pageValues.selectPeriod]]</h4>
+                        <paper-dropdown-menu allow-outside-scroll="true" id="period" on-iron-select="_periodChanged" no-label-float>
+                            <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content" selected="{{selectedPeriod}}">
+                                <template is="dom-repeat" items="[[periodList]]">
+                                    <paper-item value$="[[item]]">[[item]]</paper-item>
+                                </template>
+                            </paper-listbox>
+                        </paper-dropdown-menu>
+                    </div>
+
+                    <!-- SHOW-IF: (PERIODIC) Selected -->
+                    <template is="dom-if" id="periodic" if="{{isPeriodicSelected}}">
+
+                        <div>
+                            <h4 class="label">[[pageValues.fromDate]] (dd/mm/yy)</h4>
+                            <vaadin-date-picker id='vaadinFromDate' value="{{fromDateVal}}" min={{fromMinDate}} max={{fromMaxDate}} placeholder="Select Date"
+                                on-change="_fromDateChanged">
+                            </vaadin-date-picker>
+                        </div>
+
+                        <div>
+                            <h4 class="label">[[pageValues.toDate]] (dd/mm/yy)</h4>
+                            <vaadin-date-picker id='vaadinToDate' value="{{toDateVal}}" min={{fromDateVal}} max={{fromMaxDate}} placeholder="Select Date"
+                                on-change="_toDateChanged">
+                            </vaadin-date-picker>
+                        </div>
+                    </template>
+
+                    <!-- SHOW-IF: (MONTHLY) Selected -->
+                    <template is="dom-if" id="MonthsDropdown" if="{{isMonthlySelected}}">
+                    
+                        <div>
+                            <h4 class="label">[[pageValues.selectMonth]]
+                                <!-- <span class="note">*Only last 6 months transactions avaliable</span> -->
+                            </h4>
+                            <paper-dropdown-menu allow-outside-scroll="true" id="months" no-label-float placeholder="Select">
+                                <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content" selected="{{selectedMonth}}">
+                                    <template is="dom-repeat" items="[[monthsList]]">
+                                        <paper-item value$="[[item]]" on-click="_monthsChanged">[[item]]</paper-item>
                                     </template>
                                 </paper-listbox>
                             </paper-dropdown-menu>
-                        </span>
-                        <template is="dom-if" id="periodic" if="{{isPeriodicSelected}}">
-                            <span class="inline-block">
-                                <h4 class="label">From Date(dd/mm/yy)</h4>
-                                <vaadin-date-picker id='vaadinFromDate' value="{{fromDateVal}}" min={{fromMinDate}} max={{fromMaxDate}} placeholder="Select Date"
-                                    on-change="_fromDateChanged">
-                                </vaadin-date-picker>
-                            </span>
-                            <span class="inline-block">
-                                <h4 class="label">To Date(dd/mm/yy)</h4>
-                                <vaadin-date-picker id='vaadinToDate' value="{{toDateVal}}" min={{fromDateVal}} max={{fromMaxDate}} placeholder="Select Date"
-                                    on-change="_toDateChanged">
-                                </vaadin-date-picker>
-                            </span>
-                        </template>
+                        </div>
+                    </template>
 
-                        <template is="dom-if" id="MonthsDropdown" if="{{isMonthlySelected}}">
-                            <span class="inline-block">
-                                <h4 class="label">Select Month
-                                    <span class="note">*Only last 6 months transactions avaliable</span>
-                                </h4>
-                                <paper-dropdown-menu allow-outside-scroll="true" id="months" no-label-float placeholder="Select">
-                                    <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content" selected="{{selectedMonth}}">
-                                        <template is="dom-repeat" items="[[monthsList]]">
-                                            <paper-item value$="[[item]]" on-click="_monthsChanged">[[item]]</paper-item>
-                                        </template>
-                                    </paper-listbox>
-                                </paper-dropdown-menu>
-                            </span>
-                        </template>
-                    </div>
-                    <div>
-                        <template is="dom-if" if="{{isFromToSelected}}">
-                            <span class="inline-block">
-                                <h4 class="label">Select Category</h4>
-                                <multi-select-dropdown categories="{{categoryList}}" selected-cat-arr={{selectedCatArr}} is-scrolled="{{isScrolled}}"></multi-select-dropdown>
-                            </span>
-                            <span class="inline-block">
-                                <msg-component></msg-component>
-                            </span>
-                            <span class="inline-block analyseBtnSpan">
-                                <paper-button disabled="[[isInputEmpty(amount)]]" class="btnPrl" on-click="_analyseData">
-                                    Analyse
-                                </paper-button>
-                            </span>
-                        </template>
+                    <!-- SHOW-IF: Only if from and to selected. -->
+                    <template is="dom-if" if="{{isFromToSelected}}">
 
-                    </div>
+                        <div>
+                            <h4 class="label">[[pageValues.selectCategory]]</h4>
+                            <multi-select-dropdown categories="{{categoryList}}" 
+                            selected-cat-arr={{selectedCatArr}} is-scrolled="{{isScrolled}}">
+                            </multi-select-dropdown>
+                        </div>
+
+                        <!-- </span> -->
+                        <!-- <span class="inline-block">
+                            <msg-component></msg-component>
+                        </span> -->
+                        <!-- <span class="inline-block analyseBtnSpan"> -->
+                        <div>
+                            <paper-button disabled="[[isInputEmpty(amount)]]" class="secondaryButton button-med" on-click="_analyseData">
+                                [[pageValues.analyse]]
+                            </paper-button>
+                        </div>
+                    </template>
                 </form>
             </iron-form>
         </div>
     </template>
+
     <script>
         class analyseFilters extends Polymer.Element {
             static get is() { return 'analyse-filters' }
@@ -201,13 +248,13 @@
                     },
                     isScrolled: {
                         type: Array
+                    },
+                    pageValues:{
+                        type: Object
                     }
                 }
             }
 
-            // _apiObserver
-
-            //navigate from other tabs without refreshing the page
             _activationChanged(newVal, oldVal) {
                 console.log('api', this.api);
                 this.selectedFromDate = '';
@@ -221,7 +268,6 @@
                 this.fromMaxDate = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
             }
 
-            //get periods from API
             _getPeriods() {
                 let ajax = this.$.getPeriod;
 
@@ -251,7 +297,7 @@
 
             //Handle current month response - history with debit/credit data
             _handleCurrentMonthResponse(event, request) {
-                console.log(request.response.data);
+                // console.log(request.response.data);
                 // request.response.data.totalCreditDebit.forEach(function(el) {
                 //     el.color = "#ff6600";
                 // })

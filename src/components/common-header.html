@@ -85,7 +85,7 @@
             <div class="menu-wrapper">
                 <template is="dom-if" if="{{isLoggedIn}}">
                     <template is="dom-repeat" items={{menu}}>
-                        <span id="[[item.name]]"><a class$="secondaryLinkButton [[item.class]]" href="{{_generateURL(rootPath,item.slug)}}">[[item.display]]</a></span>
+                        <span><a class$="secondaryLinkButton [[item.class]]" href="{{_generateURL(rootPath,item.slug)}}">{{_getDisplayTxt(item.name)}}</a></span>
                     </template>
                 </template>
             </div>

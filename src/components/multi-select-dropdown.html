@@ -51,7 +51,7 @@
         <style include="shared-styles">
         </style>
         <div>
-            <isw-dropdown-menu id="categories" multi attr-for-selected="value" on-click="changeCategory" selected-values="{{ preselected }}">
+            <isw-dropdown-menu id="categories" multi attr-for-selected="value" no-label-float = true on-click="changeCategory" selected-values="{{ preselected }}">
                 <template is="dom-repeat" items="[[ categories ]]">
                     <paper-icon-item on-click="toggle" value$="[[ item.id ]]" label$="[[ item.value ]]">
                         <iron-icon class="checkbox unchecked" icon="check-box-outline-blank" slot="item-icon"></iron-icon>

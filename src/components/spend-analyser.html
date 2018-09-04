@@ -144,7 +144,8 @@
             title='Spend Analyzer' 
             name="analyser" 
             api={{apiCollection}} 
-            is-scrolled="{{isScrolled}}"></payment-analyser>
+            is-scrolled="{{isScrolled}}"
+            page-values=[[pageValues.spendAnalyser]]></payment-analyser>
             
             <view-404 
             title='Not Found 404' 
@@ -255,11 +256,11 @@
         // based on page attribute we will tell which file to load, NOTE: not working on
         // routeChanged
         const pathMap = {
-          "login": "login-form.html",
-          "payments": "make-payment.html",
-          "status": "payment-status.html",
+          "login"       : "login-form.html",
+          "payments"    : "make-payment.html",
+          "status"      : "payment-status.html",
           "transactions": "payment-history.html",
-          "analyser": "payment-analyser.html"
+          "analyser"    : "payment-analyser.html"
         };
 
         const fileName = pathMap[page] ? pathMap[page] : "view-404.html";

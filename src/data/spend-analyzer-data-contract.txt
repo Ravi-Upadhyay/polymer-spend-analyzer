@@ -1,0 +1,162 @@
+// LOGIN-API
+
+    // REQUEST-POST
+    {
+        "loginId"   : "xxx",
+        "password"  : "xxx"
+    }
+
+    // RESPONSE (application/json)
+        // SUCCESS
+
+        {
+            "status"    : 1,
+            "data"      : [
+                {
+                    "customerId"    : "xxx",
+                    "loginId"       : "xxx",
+                    "customerName"  : "xxx"
+                }
+            ]
+        }
+
+        // FAILURE
+
+        {
+            "status"    : 0,
+            "data"      : [
+                {
+                    "errorCode": "400",
+                    "message": "UserName minimum length is 6 and maximum is 20"
+                },
+                {
+                    "errorCode": "400",
+                    "message": "Password minimum length is 6 and maximum is 20"
+                }
+            ] 
+        }
+
+
+
+// MAKE PAYMENT-API
+
+        // REQUEST-POST
+        {
+            "customerId"    : "xxx",
+            "amount"        : 110.04,
+            "paymentType"   : "DEBIT/CREDIT",
+            "description"   : "xxx"
+        }
+
+        //RESPONSE(application/json)
+            //SUCCESS
+            {
+                "status"        : 1,
+                "data"          : [
+                    {
+                        "transactionId"     : "xxx",
+                        "transactionDate"   : "19-11-2017 10:27:44",
+                        "description"       : "Loan EMItoacc 12345678",
+                        "amount"            : 16.70,
+                        "paymentType"       : "DEBIT/CREDIT",
+                        "closingBalance"    : 1060.70
+                    }
+                ]
+
+                }
+            }
+
+            //FAILURE
+            {
+                "status"    : 0,
+                "data"      : [
+                    {
+                        "errorCode": "400",
+            		    "message": "Email minimum length is 6 and maximum is 50"
+                    },
+                    {
+                        "errorCode": "400",
+            		    "message": "Email minimum length is 6 and maximum is 50"
+                    }
+                ]
+            }
+
+// VIEW TRANSACTIONS-API
+    // REQUEST-GET 
+    // (/user/{customerId}/transactions/)
+    
+    // RESPONSE (application/json)
+        //SUCCESS
+        {
+            "status"    : 1,
+            "data"      : [
+                {
+                    "transactionId"     : "xxx",
+                    "transactionDate"   : "19-11-2017 10:27:44",
+                    "description"       : " Loan EMItoacc 12345678",
+                    "amount"            : 16.70,
+                    "paymentType"       : "DEBIT/CREDIT",
+                    "closingBalance"    : 1060.70
+                }
+            ]
+        }
+
+        //FAILURE
+        {
+            "status"    : 0,
+            "data"      : [
+          		{
+                	"errorCode": "400",
+                	"message": "Email minimum length is 6 and maximum is 50"
+            	},
+          		{
+                    "errorCode": "400",
+                    "message": "Email minimum length is 6 and maximum is 50"
+                }
+            ]
+        }
+
+// TRANSACTION SUMMARY/ANALYZE-API
+    // REQUEST-GET
+    // (/user/{customerId}/transactionsummary)
+
+    // RESPONSE (application/json)
+        //SUCCESS
+
+        {
+            "status"    : 1,
+            "data"      : [
+                {
+                    "month"	        : "xxx",
+                    "loginId"       : "xxx",
+                    "customerId"    : "xxx",
+                    "totalIncoming"	: 100.00,
+                    "totalOutgoing"	: 40.00, 
+                    "closingBalance": 60.00,
+                },
+                {
+                    "month"	        : "xxx",
+                    "loginId"       : "xxx",
+                    "customerId"    : "xxx",
+                    "totalIncoming"	: 100.00,
+                    "totalOutgoing"	: 40.00, 
+                    "closingBalance": 60.00,
+                }
+            ]
+        }
+
+        //FAILURE
+
+        {
+            "status"    : 0,
+            "data"      : [
+                {
+                    "errorCode": "400",
+            		"message": "Email minimum length is 6 and maximum is 50"
+                },
+                {
+                    "errorCode": "400",
+            		"message": "Email minimum length is 6 and maximum is 50"
+                }
+            ]
+        }

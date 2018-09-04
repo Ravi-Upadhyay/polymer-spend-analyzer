@@ -15,6 +15,9 @@
 <dom-module id="payment-analyser">
     <template>
         <style include="common-styles">
+            .container {
+                min-width: 80%;
+            }
         </style>
         <style include="shared-styles">
         </style>
@@ -24,7 +27,7 @@
             <template is="dom-if" if="{{makeFilters}}">
 
                 <analyse-filters api={{api}} make-filters="{{makeFilters}}" current-month-data="{{currentMonthData}}" spend-category-data="{{spendCategoryData}}"
-                    is-current-month-selected={{isCurrentMonthSelected}} is-scrolled="{{isScrolled}}"></analyse-filters>
+                    is-current-month-selected={{isCurrentMonthSelected}} is-scrolled="{{isScrolled}}" page-values="[[pageValues.filtersSection]]"></analyse-filters>
                 <!--Table component-->
                 <template is="dom-if" if="{{isCurrentMonthSelected}}">
                     <table-component tabledata="[[currentMonthData.transactions]]"></table-component>
@@ -107,6 +110,9 @@
                     isScrolled: {
                         type: Array,
                         notify: true
+                    },
+                    pageValues: {
+                        type: Object
                     }
                 }
             }

@@ -37,11 +37,14 @@
       "status"          : "Payment Status"
     },
     "spendAnalyser"   : {
-      "selectPeriod"    : "Select Period",
-      "fromDate"        : "From Date",
-      "toDate"          : "To Date",
-      "selectCategory"  : "Select Category",
-      "analyse"         : "Analyse"
+      "filtersSection"  : {
+        "selectPeriod"    : "Select period",
+        "fromDate"        : "From date",
+        "toDate"          : "To date",
+        "selectMonth"     : "Select month",
+        "selectCategory"  : "Select category",
+        "analyse"         : "Analyse"
+      }
     }
   },
 
@@ -83,11 +86,14 @@
       "status"          : "Betalings Status"
     },
     "spendAnalyser"   : {
-      "selectPeriod"    : "Selecteer Periode",
-      "fromDate"        : "Van Datum",
-      "toDate"          : "Daten",
-      "selectCategory"  : "Selecteer Categorie",
-      "analyse"         : "analyseren"
+      "filtersSection"  : {
+        "selectPeriod"    : "Selecteer periode",
+        "fromDate"        : "Van datum",
+        "toDate"          : "Daten",
+        "selectMonth"     : "Selecteer maand",
+        "selectCategory"  : "Selecteer categorie",
+        "analyse"         : "analyseren"
+      }
     }
   }
 }
