@@ -1,83 +1,111 @@
 <!-- 
-** STATUS COMPONENT
+** PAYMENT STATUS COMPONENT
 * This will be a component to show the payment status
+* Will inform whether the payment is success/failure
+* Redirected after payment page
 -->
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../../bower_components/polymer/lib/elements/dom-if.html">
-<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html"> 
+
+<link rel="import" href="../components/sub-header.html">
+
 <link rel="import" href="common-styles.html">
+
 <dom-module id="payment-status">
     <template>
         <style include="common-styles">
+
+            .detailSec {
+                margin-bottom: 30px;
+            }
             .detailSec div {
-                padding: 10px;
-            }
-
-            .btnPrl {
-                width: 100%;
-                margin: 1.25em auto 0 auto;
-            }
-
-            iron-image {
-                width: 32px;
-                height: 32px;
-                margin-left: 45%
-            }
-
-            .centerTxt {
+                padding: 5px;
                 text-align: center;
             }
+            .statusSec {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 30px;
+            }
+            .statusSec h3 {
+                margin: 5px 0px 5px 0px;
+            }
+            .statusSec h4 {
+                margin: 10px 0px 10px 0px;
+            }
+            .actionSec{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            paper-button {
+                margin-bottom: 10px;
+            }
         </style>
-        <iron-localstorage name="transactionDetails" value="{{transactionDetails}}"></iron-localstorage>
 
         <sub-header></sub-header>
-        <div class='container fntFamily boxShadow whiteBckgrnd'>
-            <h2 class="heading">Payment Status</h2>
-            <hr>
+        <div class='container fntFamily'>
+            <div class="statusSec">
+                <template is="dom-if" if="{{showSuccess}}">
+                    <image src="src/images/success/success-128x128.png" alt="success" 
+                    width="100px" height="100px">
+                    <h3 class="success-txt uppercase">{{pageValues.success}}</h3>
+                    <h4>{{pageValues.successMessage}}</h4>
+                </template>
 
-            <iron-form>
-                <form>
-                    <template is="dom-if" if="{{showSuccess}}">
-                        <iron-image src="src/images/success.png"></iron-image>
-                        <h2 class="centerTxt">Success!</h2>
-                    </template>
-                    <template is="dom-if" if="{{showError}}">
-                        <iron-image src="src/images/error.png"></iron-image>
-                        <h2 class="centerTxt">Failed!</h2>
-                    </template>
-                    <div class="detailSec">
-                        <div>
-                            <span>Transaction ID: </span>
-                            <span>{{transactionId}}</span>
-                        </div>
-                        <div>
-                            <span>Amount: </span>
-                            <span>${{transactionAmount}}</span>
-                        </div>
-                        <div>
-                            <span>Transaction Type: </span>
-                            <span>{{transactionType}}</span>
-                        </div>
-                        <template is="dom-if" if="[[isCategoryPresent]]">
-                            <div>
-                                <span>Category Type: </span>
-                                <span>{{category}}</span>
-                            </div>
-                        </template>
-                    </div>
+                <template is="dom-if" if="{{showError}}">
+                    <image src="src/images/error/error-128x128.png" alt="error" 
+                    width="100px" height="100px">
+                    <h3 class="error-txt uppercase">{{pageValues.failed}}</h3>
+                    <h4>{{pageValues.failureMessage}}</h4>
+                </template>
+            </div>
+
+            <div class="detailSec">
+                <div>
+                    <span>{{pageValues.transactionId}}: </span>
+                    <span>{{transactionId}}</span>
+                </div>
+                <div>
+                    <span>{{pageValues.amount}}: </span>
+                    <span>${{transactionAmount}}</span>
+                </div>
+                <div>
+                    <span>{{pageValues.transactionType}}: </span>
+                    <span>{{transactionType}}</span>
+                </div>
+                <template is="dom-if" if="[[isCategoryPresent]]">
                     <div>
-                        <app-location route="{{route}}"></app-location>
-                        <paper-button class="btnPrl" nolink on-click="_navigateToPayment">
-                            Make new payment
-                        </paper-button>
-                        <paper-button class="btnPrl" id="transactionButton" nolink on-click="_navigateToAlanyzer">
-                            Spend Analyser
-                        </paper-button>
+                        <span>{{pageValues.categoryType}}: </span>
+                        <span>{{category}}</span>
                     </div>
-                </form>
-            </iron-form>
-        </div>
+                </template>
+            </div>
+
+            <div class="actionSec">
+                <app-location route="{{route}}"></app-location>
+                
+                <template is="dom-if" if="{{showSuccess}}">
+                    <paper-button class="secondaryButton button-med" nolink on-click="_navigateToPayment">
+                        {{pageValues.anotherPayment}}
+                    </paper-button>
+                </template>
+
+                <template is="dom-if" if="{{showError}}">
+                    <paper-button class="secondaryButton button-med" nolink on-click="_navigateToPayment">
+                        {{pageValues.tryAgain}}
+                    </paper-button>
+                </template>
+
+                <paper-button class="primaryButton button-med" id="transactionButton" nolink on-click="_navigateToDashboard">
+                    {{pageValues.dashboard}}
+                </paper-button>
+            </div>
         </div>
     </template>
     <script>
@@ -115,9 +143,13 @@
                     },
                     isCategoryPresent: {
                         type: Boolean
+                    },
+                    pageValues: {
+                        type: Object
                     }
                 }
             }
+
             ready() {
                 super.ready();
             }
@@ -137,6 +169,7 @@
             }
 
             _activationChanged() {
+                
                 this._getTransactionStatus()
             }
 
@@ -144,8 +177,9 @@
                 this.set("route.path", "/payments");
             }
 
-            _navigateToAlanyzer() {
-                this.set("route.path", "/analyser");
+            _navigateToDashboard() {
+
+                this.set("route.path", "/dashboard");
             }
         }
 

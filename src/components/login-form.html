@@ -6,6 +6,7 @@
 -->
 
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
 <link rel="import" href="../../bower_components/polymer/lib/utils/gestures.html">
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 
@@ -13,200 +14,208 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../../bower_components/app-localize-behavior/app-localize-behavior.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../configuration/translate.html">
 
 <link rel="import" href="common-styles.html">
 
 <dom-module id="login-form">
-  <template>
-    <style include="common-styles">
-        .btnPrl{
-            width: 50%;
-         }
-
-         paper-toast{
-             position: absolute !important;
-            /* display: block !important; */
-            left: 48.5% !important;
-            top: 22% !important;
-            transform: translateX(-50%) translateY(-50%);
-            color: #fff;
-            letter-spacing: 0.06em;
-            font-size: 15px;
-            background-color: rgb(221, 44, 0);
-            text-align: center;
-        
-         }
-        
-        a {
-            text-decoration: none; 
-            color:rgb(42, 94, 192);
-        }
-        a:hover {
-            color:rgb(23, 66, 146);
-        }
-
-        .loginCompTopMargin{
-            margin-top:100px
-        }
-       
-    </style>
-    <div class="container fntFamily boxShadow whiteBckgrnd loginCompTopMargin">
-        <h2 class="heading">Login</h2>
-		<paper-toast duration="10000" id="toast" text="{{msg}}"></paper-toast>
-        <hr>
-        <iron-form id="myForm" on-submit="login"> 
-        <form>
-            <div>
-                <h4 class="label">Enter User Id</h4>
-                <paper-input type="text" label="User id" id="username" no-label-float value="{{username}}" on-change="_removeInvalid" required></paper-input>
-            </div>
-
-            <div>
-                <h4 class="label">Enter Password</h4>
-                <paper-input type="password" label="Enter Password" id="password" no-label-float value="{{password}}" on-change="_removeInvalid" required></paper-input>
-            </div>
-
-            <!-- <iron-request id="xhr"></iron-request> -->
-            <!-- <iron-ajax id="xhr"
-               url = "http://192.168.43.118:8080/user/login"
-               method="POST"
-               body = "{{bodyData}}"
-               handle-as = "json" 
-               on-response = "_handleResponse"
-               on-error = "_handleError"
-               content-type="application/json"
-               timeout = 15000
-               ></iron-ajax>   -->
-            <iron-ajax id="xhr"
-               url = "[[api.url]]"
-               method="[[api.method]]"
-               body = "{{bodyData}}"
-               handle-as = "json" 
-               on-response = "_handleResponse"
-               on-error = "_handleError"
-               content-type="application/json"
-               timeout = 15000
-               ></iron-ajax>  
-            <paper-button class="btnPrl" submit on-click="login">LOGIN</paper-button>      
-            <paper-toast id="toast" text="{{msg}}"></paper-toast>       
-         
-        </form>
-     </iron-form>
-    </div>
-    <app-location route="{{route}}"></app-location>
-  </template>
-
-  <script>
-
-    class LoginForm extends Polymer.Element {
-      static get is() { return 'login-form'; }
-      static get properties() {
-        return {
-            loginSuccess : {
-                type: Object,
-            },
-            api          : {
-                type    : Object
-            },
-            username: {
-                type    : String,
-                value   : ""
-            },
-            password: {
-                type    : String,
-                value   : ""
-            },
-            loginBtnDisabled : {
-                type    : Boolean,
-                value   : true,
-                computed: '_toggleLoginBtn(username,password)'
-            },
-            userDetails: {
-                type: Object,
-                value: {}
-            },
-            bodyData: {
-                type: Object
-            },
-            ajaxResponse: {
-            type: String,
-            value: []
-            },
-            msg: {
-                type: String,
-                value: ""
-            },
-            bodyData: {
-                type: String
+    <template>
+        <style include="common-styles">
+            paper-button.secondaryButton {
+                min-width: 50%;
+                margin: auto;
             }
-        };
-      }
-        _handleResponse(event, request) {
-            let response = request.response;
-            let status  = response.status;
-            console.log(response);
-            if(status) {
-                this.loginSuccess(response.data);
-                this.username = "";
-                this.password = "";
-            } else {
-                this.$.username.invalid = true;
-                this.$.password.invalid = true;
-                this.username = "";
-                this.password = "";
-                this.msg = response.errors[0].errorMessage;
+
+            paper-toast {
+                position: absolute !important;
+                /* display: block !important; */
+                left: 48.5% !important;
+                top: 22% !important;
+                transform: translateX(-50%) translateY(-50%);
+                color: #fff;
+                letter-spacing: 0.06em;
+                font-size: 15px;
+                background-color: rgb(221, 44, 0);
+                text-align: center;
+
+            }
+
+            a {
+                text-decoration: none;
+                color: rgb(42, 94, 192);
+            }
+
+            a:hover {
+                color: rgb(23, 66, 146);
+            }
+
+            .loginCompTopMargin {
+                margin-top: 100px
+            }
+            .button-container{
+                margin: 40px 0px 0px;
+            }
+        </style>
+        
+        <div class="container fntFamily boxShadow whiteBckgrnd loginCompTopMargin">
+
+            <h2 class="heading">{{pageValues.login}}</h2>
+            <hr>
+            <iron-form id="myForm" on-submit="login">
+                <form>
+                    <div>
+                        <h4 class="label">{{pageValues.loginUserid}}</h4>
+                        <paper-input type="text" label="{{pageValues.loginUserid}}" 
+                        id="username" no-label-float value="{{username}}" 
+                        on-change="_removeInvalid" required></paper-input>
+                    </div>
+
+                    <div>
+                        <h4 class="label">{{pageValues.loginPassword}}</h4>
+                        <paper-input type="password" label="{{pageValues.loginPassword}}" 
+                        id="password" no-label-float value="{{password}}" 
+                        on-change="_removeInvalid" required></paper-input>
+                    </div>
+
+                    <div class="button-container">
+                        <paper-button class="secondaryButton button-med" submit 
+                        on-click="login">{{pageValues.login}}</paper-button>
+                    </div>
+                </form>
+            </iron-form>
+
+        </div>
+        <iron-ajax 
+        id="xhr" 
+        url="[[api.url]]" 
+        method="[[api.method]]" 
+        body="{{bodyData}}" 
+        handle-as="json" 
+        on-response="_handleResponse"
+        on-error="_handleError" 
+        content-type="application/json" 
+        timeout=15000>
+        </iron-ajax>
+        <paper-toast duration="10000" id="toast" text="{{msg}}"></paper-toast>
+        <app-location route="{{route}}"></app-location>
+    </template>
+
+    <script>
+
+        class LoginForm extends Polymer.Element {
+            static get is() { return 'login-form'; }
+            static get properties() {
+                return {
+                    loginSuccess: {
+                        type: Object,
+                    },
+                    api: {
+                        type: Object
+                    },
+                    username: {
+                        type: String,
+                        value: ""
+                    },
+                    password: {
+                        type: String,
+                        value: ""
+                    },
+                    loginBtnDisabled: {
+                        type: Boolean,
+                        value: true,
+                        computed: '_toggleLoginBtn(username,password)'
+                    },
+                    userDetails: {
+                        type: Object,
+                        value: {}
+                    },
+                    bodyData: {
+                        type: Object
+                    },
+                    ajaxResponse: {
+                        type: String,
+                        value: []
+                    },
+                    msg: {
+                        type: String,
+                        value: ""
+                    },
+                    bodyData: {
+                        type: String
+                    },
+                    pageValues: {
+                        type: Object
+                    }
+                };
+            }
+
+            _handleResponse(event, request) {
+                let response = request.response;
+                let status = response.status;
+                console.log(response);
+                if (status) {
+                    this.loginSuccess(response.data);
+                    this.username = "";
+                    this.password = "";
+                } else {
+                    this.$.username.invalid = true;
+                    this.$.password.invalid = true;
+                    this.username = "";
+                    this.password = "";
+                    this.msg = response.errors[0].errorMessage;
+                    this.$.toast.open();
+                }
+            }
+
+            _handleError(request, error) {
+                this.msg = "Server is down, please try again later";
                 this.$.toast.open();
             }
+
+            login() {
+                var userDetails = {
+                    loginId: this.username,
+                    password: this.password
+                }
+                if (this.username.length >= 1 && this.password.length >= 1) {
+                    this.bodyData = JSON.stringify(userDetails);
+                    var postRequest = this.$.xhr;
+                    postRequest.generateRequest();
+                } else if (this.username.length == "" || this.password.length == "") {
+                    this.$.username.invalid = true;
+                    this.$.password.invalid = true;
+                    this.username = "";
+                    this.password = "";
+                    this.msg = "Login or Password can not be blank";
+                    this.$.toast.open();
+                } else {
+                    this.$.username.invalid = true;
+                    this.$.password.invalid = true;
+                    this.username = "";
+                    this.password = "";
+                    this.msg = "Login and password should be minimum of 3 characters";
+                    this.$.toast.open();
+                }
+            }
+
+            _toggleLoginBtn(loginId, password) {
+                // FUNCTION: This function will validate loginId and password should
+                // have some value before they hit api 
+                //    if((loginId.length >= 2) && (password.length >= 2)) return false;
+                //    else return true;
+                return false;
+            }
+
+            _removeInvalid() {
+                // FUNCTION: This function will take care, if we have inputs in invalid state
+                // We need to remove that state when user changes the value
+                this.$.username.invalid = false;
+                this.$.password.invalid = false;
+            }
         }
 
-        _handleError(request, error) {
-            this.msg = "Server is down, please try again later";
-            this.$.toast.open();
-        }
-
-      login() {
-          var userDetails = {
-            loginId: this.username,
-            password: this.password
-          }
-        if(this.username.length >=1 && this.password.length >= 1){
-            this.bodyData = JSON.stringify(userDetails);
-            var postRequest = this.$.xhr;
-            postRequest.generateRequest();
-        } else if(this.username.length == "" || this.password.length == "") {
-            this.$.username.invalid = true;
-            this.$.password.invalid = true;
-            this.username = "";
-            this.password = "";
-            this.msg = "Login or Password can not be blank";
-            this.$.toast.open();
-        } else {
-            this.$.username.invalid = true;
-            this.$.password.invalid = true;
-            this.username = "";
-            this.password = "";
-            this.msg = "Login and password should be minimum of 3 characters";
-            this.$.toast.open();
-        }
-      }
-
-      _toggleLoginBtn(loginId, password){
-          // FUNCTION: This function will validate loginId and password should
-          // have some value before they hit api 
-        //    if((loginId.length >= 2) && (password.length >= 2)) return false;
-        //    else return true;
-        return false;
-      }
-
-      _removeInvalid(){
-        // FUNCTION: This function will take care, if we have inputs in invalid state
-        // We need to remove that state when user changes the value
-        this.$.username.invalid = false;
-        this.$.password.invalid = false;
-      }
-    }
-
-    window.customElements.define(LoginForm.is, LoginForm);
-  </script>
+        window.customElements.define(LoginForm.is, LoginForm);
+    </script>
 </dom-module>

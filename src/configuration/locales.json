@@ -1,0 +1,93 @@
+{
+  "en": {
+    "loginPage"       : {
+      "login"           : "Log in",
+      "loginUserid"     : "Enter user id",
+      "loginPassword"   : "Enter password"
+    },
+    "makePayment"     : {
+      "payments"        : "Payments",
+      "transactionType" : "Select transaction type",
+      "amount"          : "Enter amount",
+      "category"        : "Select payment category",
+      "description"     : "Enter description"
+    },
+    "commonHeader"    : {
+      "dashboard"       : "Dashboard",
+      "payments"        : "Payments",
+      "analyser"        : "Spend Analyzer",
+      "logout"          : "Logout",
+      "support"         : "Support",
+      "about"           : "About Us"
+    },
+    "paymentStatus"   : {
+      "transactionId"   : "Transaction ID",
+      "amount"          : "Amount",
+      "transactionType" : "Transaction Type",
+      "categoryType"    : "Category Type",
+      "makeNewPayment"  : "Make New Payment",
+      "spendAnalyzer"   : "Spend Analyzer",
+      "anotherPayment"  :"Make another payment",
+      "tryAgain"        :"Try once more",
+      "dashboard"       :"Dashboard",
+      "success"         : "Success",
+      "successMessage"  : "Successfully made the payment",
+      "failed"          : "Something went Wrong",
+      "failureMessage"  : "We could not make payment",
+      "status"          : "Payment Status"
+    },
+    "spendAnalyser"   : {
+      "selectPeriod"    : "Select Period",
+      "fromDate"        : "From Date",
+      "toDate"          : "To Date",
+      "selectCategory"  : "Select Category",
+      "analyse"         : "Analyse"
+    }
+  },
+
+  "nl": {
+    "loginPage"       : {
+      "login"           : "Log in",
+      "loginUserid"     : "Voer gebruikers-ID in",
+      "loginPassword"   : "Voer wachtwoord in"
+    },
+    "makePayment"     : {
+      "payments"        : "Betalingen",
+      "transactionType" : "Selecteer het transactietype",
+      "amount"          : "Voer een bedrag in",
+      "category"        : "Selecteer betalingscategorie",
+      "description"     : "Voer een beschrijving in"
+    },
+    "commonHeader"    : {
+      "dashboard"       : "Dashboard",      
+      "payments"        : "Betalingen",
+      "analyser"        : "Besteed Analyzer",
+      "logout"          : "Uitloggen",
+      "support"         : "Ondersteuning",
+      "about"           : "Over ons"
+    },
+    "paymentStatus"   : {
+      "transactionId"   : "Transactie ID",
+      "amount"          : "Bedrag",
+      "transactionType" : "Transactie Type",
+      "categoryType"    : "Categorie Type",
+      "makeNewPayment"  : "Maak Nieuwe Betaling",
+      "spendAnalyzer"   : "Besteed Analyzer",
+      "anotherPayment"  : "Nog een betaling doen",
+      "tryAgain"        : "Probeer nog een keer",
+      "dashboard"       : "Dashboard",
+      "success"         : "Succes",
+      "successMessage"  : "De betaling is voltooid",
+      "failed"          : "Er is iets fout gegaan",
+      "failureMessage"  :"We konden niet betalen",
+      "status"          : "Betalings Status"
+    },
+    "spendAnalyser"   : {
+      "selectPeriod"    : "Selecteer Periode",
+      "fromDate"        : "Van Datum",
+      "toDate"          : "Daten",
+      "selectCategory"  : "Selecteer Categorie",
+      "analyse"         : "analyseren"
+    }
+  }
+}

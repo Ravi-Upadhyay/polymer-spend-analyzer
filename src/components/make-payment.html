@@ -1,8 +1,13 @@
 <!-- 
 ** PAYMENT COMPONENT
-* This will be a component to make payment through debit or credit type.
+
+* This will contain payments screen
+* This will contain all logic and API call
 -->
+
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/paper-spinner/paper-spinner-lite.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
@@ -15,7 +20,9 @@
 <link rel="import" href="../components/sub-header.html">
 <script src="../../bower_components/web-animations-js/web-animations.min.js"></script>
 <link rel="import" href="common-styles.html">
+
 <dom-module id="make-payment">
+
     <template>
         <style include="common-styles">
             paper-dropdown-menu {
@@ -30,43 +37,48 @@
                 background-color: #dbdbdb;
             }
 
-            .paper-button {
-                margin-top: 1.25em
+            paper-button.secondaryButton {
+                min-width: 50%;
+                margin: auto;
+            }
+
+            .button-container{
+                margin: 40px 0px 0px;
             }
         </style>
+
         <sub-header></sub-header>
+
         <div class="container fntFamily boxShadow whiteBckgrnd">
-            <h2 class="heading">Make Payment</h2>
+            <h2 class="heading">[[pageValues.payments]]</h2>
             <hr>
 
-            <!-- localstorage compoment to store the transaction details -->
-            <!-- <iron-localstorage name="transactionDetails" value="{{transactionDetails}}" on-iron-localstorage-load="initializeStorage"></iron-localstorage> -->
-
-            <!-- Ajax component to make a post request to payment API -->
             <iron-ajax id="transaction" method="[[paymentApi.method]]" content-type="application/json" handle-as="json" on-response="_handleResponse"
                 loading="{{loading}}">
             </iron-ajax>
+
             <iron-ajax id="ajaxcategory" auto method="[[categoryApi.method]]" url="[[categoryApi.url]]" handle-as="json" last-response="{{categories}}"
-                on-response="handleCategoryResponse"></iron-ajax>
+                on-response="handleCategoryResponse">
+            </iron-ajax>
 
             <iron-form id="myForm">
                 <form>
-                    <!-- Dropdown component  -->
+
                     <div>
-                        <h4 class="label">Select transaction type</h4>
+                        <h4 class="label">[[pageValues.transactionType]]</h4>
                         <paper-dropdown-menu allow-outside-scroll="true" id="type" class="customWidth" no-label-float>
                             <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content customWidth" selected="{{selectedType}}"
                                 on-tap="_removeInvalid">
                                 <template is="dom-repeat" items="[[transactionType]]">
-                                    <paper-item value$="[[item.type]]" on-click="_changeType">[[item.type]]</paper-item>
+                                    <paper-item value$="[[item.type]]">[[item.display]]</paper-item>
                                 </template>
                             </paper-listbox>
                         </paper-dropdown-menu>
                     </div>
 
                     <div>
-                        <h4 class="label">Enter amount</h4>
-                        <paper-input on-keyup="_clearError" allowed-pattern="[0-9.]" minlength="1" maxlength="10" no-label-float id="amount" error-message="{{amountError}}"
+                        <h4 class="label">[[pageValues.amount]]</h4>
+                        <paper-input allowed-pattern="[0-9.]" minlength="1" maxlength="10" no-label-float id="amount" error-message="{{amountError}}"
                             value="{{amount}}" on-change="_removeInvalid">
                             <div slot="prefix">$ &nbsp</div>
                         </paper-input>
@@ -75,11 +87,12 @@
                     <template is="dom-if" if="[[isCategoryPresent]]">
                         <template is="dom-if" if="[[isCategoryFetched]]">
                             <div>
-                                <h4 class="label">Select payment category</h4>
+                                <h4 class="label">[[pageValues.category]]</h4>
                                 <paper-dropdown-menu allow-outside-scroll="true" id="category" class="customWidth" no-label-float>
-                                    <paper-listbox slot="dropdown-content" class="dropdown-content customWidth" selected="[[selectedCategory]]">
+                                    <paper-listbox slot="dropdown-content" class="dropdown-content customWidth" selected="{{selectedCategory}}">
                                         <template is="dom-repeat" items="[[categories]]">
-                                            <paper-item id="[[item.id]]" value$="[[item.id]]">[[item.value]]</paper-item>
+                                            <paper-item id="[[item.id]]" value$="[[item.id]]">
+                                                [[item.value]]</paper-item>
                                         </template>
                                     </paper-listbox>
                                 </paper-dropdown-menu>
@@ -88,23 +101,27 @@
                     </template>
 
                     <div>
-                        <h4 class="label">Enter description</h4>
+                        <h4 class="label">[[pageValues.description]]</h4>
                         <paper-input id="description" no-label-float error-message="{{amountError}}" value="{{description}}" on-change="_removeInvalid">
                             <div></div>
                         </paper-input>
                     </div>
-
-                    <app-location route="{{route}}"></app-location>
-                    <paper-spinner-lite active="[[loading]]"></paper-spinner-lite>
-                    <paper-button class="btnPrl" on-click="_makeTransaction">
-                        Make Payment
-                    </paper-button>
-                    <paper-toast id="toast" text="{{msg}}"></paper-toast>
+                    <div class="button-container">
+                        <paper-button class="secondaryButton button-med" on-click="_makeTransaction" id="paymentButton">
+                            <!-- This will be dynamic based on transaction type -->
+                        </paper-button>
+                    </div>
+                    
                 </form>
             </iron-form>
         </div>
+        <app-location route="{{route}}"></app-location>
+        <!-- <paper-toast id="toast" text="{{msg}}"></paper-toast> -->
+        <paper-spinner-lite active="[[loading]]"></paper-spinner-lite>
     </template>
+
     <script>
+
         class makePayment extends Polymer.Element {
             static get is() { return 'make-payment' }
             static get properties() {
@@ -113,10 +130,12 @@
                         type: Array,
                         value: [{
                             type: 'DEBIT',
+                            display: 'Make payment',
                             value: 0
                         }, {
                             type: 'CREDIT',
-                            value: 1,
+                            display: 'Receive payment',
+                            value: 1
                         }]
                     },
                     categories: {
@@ -139,12 +158,14 @@
                         value: ''
                     },
                     selectedType: {
+                        //DEBIT, is default
                         type: String,
-                        value: 'DEBIT' //Set debit as default
+                        value: 'DEBIT',
+                        observer: '_changeType'
                     },
                     selectedCategory: {
                         type: Number,
-                        value: ''  //set Other as default
+                        value: ''
                     },
                     transactionDetails: {
                         type: Object,
@@ -167,9 +188,13 @@
                     activated: {
                         type: Boolean,
                         observer: '_activationChanged'
+                    },
+                    pageValues:{
+                        type: Object
                     }
                 }
             }
+
 
             _activationChanged(newVal, oldVal) {
                 this.$.amount.invalid = false;
@@ -183,23 +208,18 @@
                 }
             }
 
-            //Initialize localstorage
             initializeStorage() {
                 this.transactionDetails = {};
             }
 
-            _clearError() {
-                this.$.amount.invalid = false; //remove error message
-            }
-
             _removeInvalid() {
-                // FUNCTION: This function will take care, if we have inputs in invalid state
-                // We need to remove that state when user changes the value
                 this.$.amount.invalid = false;
             }
 
-            _changeType() {
-                this.isCategoryPresent = (this.selectedType === 'CREDIT') ? false : true
+            _changeType(newValue, oldValue) {
+                this.isCategoryPresent = (this.selectedType === 'CREDIT') ? false : true;
+                const transactionType = this.transactionType.find(element => element.type === newValue);
+                if (newValue !== oldValue) this.$.paymentButton.textContent = transactionType.display;
             }
 
             handleCategoryResponse(event, request) {
@@ -207,61 +227,67 @@
                 let categories = request.response;
                 let isCategoryFetched = categories.length ? true : false;
                 this.set('isCategoryFetched', isCategoryFetched)
-                if(isCategoryFetched){
+                if (isCategoryFetched) {
                     this.selectedCategory = categories.map(e => e.value).indexOf('Misc');
                 }
             }
 
+            // METHOD: This Method Will be commiting transaction
+            // 1. Configure AJAX
+            // 2. Validation
+            // 3. Hit AJAX Request    ---> _handleResponse()
             _makeTransaction() {
+
                 localStorage.removeItem('transactionDetails');
+
                 var amount = this.amount
                 var paymentType = this.selectedType
                 var categoryId = this.selectedCategory
                 var description = this.description
                 var ajax = this.$.transaction;
                 let custId = JSON.parse(sessionStorage.user).customerId;
-                // ajax.url = 'http://192.168.43.118:8080/user/'+custId+'/makepayment';
+
                 ajax.url = this.paymentApi.url;
                 ajax.body = JSON.stringify({
                     "customerId": custId,
                     "amount": amount,
                     "paymentType": paymentType,
                     "description": description,
-                    "categoryId": parseInt(categoryId)
+                    "categoryId": (paymentType === 'DEBIT') ? parseInt(this.shadowRoot.querySelector('#category').selectedItem.id) : undefined
                 });
 
+                // Validate amount and hit API if it is all good
                 if (amount > 0) {
-                    ajax.generateRequest(); // triggers the iron-ajax
+                    ajax.generateRequest();
                 } else if (amount === null || amount === "") {
-                    //Set error message
                     this.amountError = "Amount should not be empty";
-                    this.$.amount.invalid = true; //show message error
+                    this.$.amount.invalid = true;
                 } else if (amount === '0') {
-                    //Set error message
                     this.amountError = "Amount should not be Zero";
-                    this.$.amount.invalid = true; //show message error   
+                    this.$.amount.invalid = true;
                 } else {
-                    //Set error message
                     this.amountError = "Please enter valid amount";
-                    this.$.amount.invalid = true; //show message error
+                    this.$.amount.invalid = true;
                 }
             }
 
+            // METHOD: This will handle response after payment is done.
+            // 1. Handle Payment Response
+            // 2. Redirect to status change
             _handleResponse(response) {
                 var data = response.detail.__data.response;
-                //spot data
+
                 if (data.status) {
-                    //this.transactionDetails = data.data
                     localStorage.setItem('transactionDetails', JSON.stringify(data.data))
-                    //Take care of routing
+
                     this.set("route.path", "/status");
+
                     window.location.hash = "no-back-button";
                     window.location.hash = "Again-No-back-button";
                     window.onhashchange = function () { window.location.hash = "no-back-button"; }
                 } else {
-                    //Set error message
                     this.amountError = data.errors[0].errorMessage
-                    this.$.amount.invalid = true; //show message error
+                    this.$.amount.invalid = true;
 
                 }
             }

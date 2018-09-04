@@ -41,7 +41,7 @@
                         <iron-pages selected="{{selectedTab}}">
                             <div>
                                 <template is="dom-if" if="{{isCurrentMonthSelected}}">
-                                    <piechart-component transactions=[[currentMonthData.totalCreditDebit]]></piechart-component>
+                                    <piechart-component transactions=[[currentMonthData.totalTxns]]></piechart-component>
                                 </template>
                                 <template is="dom-if" if="{{spendCategoryData.analysis}}">
                                     <piechart-component transactions=[[spendCategoryData.analysis]]></piechart-component>
@@ -49,7 +49,7 @@
                             </div>
                             <div>
                                 <template is="dom-if" if="{{isCurrentMonthSelected}}">
-                                    <barchart-component transactions=[[currentMonthData.totalCreditDebit]]></barchart-component>
+                                    <barchart-component transactions=[[currentMonthData.totalTxns]]></barchart-component>
                                 </template>
                                 <template is="dom-if" if="{{spendCategoryData.analysis}}">
                                     <barchart-component transactions=[[spendCategoryData.analysis]]></barchart-component>
@@ -116,12 +116,12 @@
 
                 }
                 this.makeFilters = ['a'];
-                this.tabFlag = this.spendCategoryData.analysis || this.isCurrentMonthSelected;
+                this.tabFlag = (this.spendCategoryData.analysis && this.spendCategoryData.analysis.length > 0) || this.isCurrentMonthSelected;
             }
 
             _periodChanged() {
                 console.log('i am in period', this.isCurrentMonthSelected);
-                this.tabFlag = this.spendCategoryData.analysis || this.isCurrentMonthSelected;
+                this.tabFlag = (this.spendCategoryData.analysis && this.spendCategoryData.analysis.length > 0) || this.isCurrentMonthSelected;
             }
 
             _currentMonthDataChanged() {
@@ -131,7 +131,7 @@
 
             _spendCategoryDataChanged() {
                 console.log('getting category data', this.spendCategoryData);
-                this.tabFlag = this.spendCategoryData.analysis || this.isCurrentMonthSelected;
+                this.tabFlag = (this.spendCategoryData.analysis && this.spendCategoryData.analysis.length > 0) || this.isCurrentMonthSelected;
             }
 
         };

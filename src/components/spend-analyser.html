@@ -10,7 +10,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/polymer/lib/utils/import-href.html">
 
-
 <!-- IMPORT DEPENDENCIES -->
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
@@ -19,19 +18,21 @@
 <link rel="import" href="../../bower_components/page-title/page-title.html">
 
 <!-- IMPORT COMPONENTS -->
-
+<!-- LAZY LOAD SOME COMPONENTS -->
 <link rel="lazy-import" href="./make-payment.html">
 <link rel="lazy-import" href="./payment-status.html">
 <link rel="lazy-import" href="./payment-history.html">
 <link rel="lazy-import" href="./payment-analyser.html">
 <link rel="lazy-import" href="./login-form.html">
+
 <link rel="import" href="./common-header.html">
 <link rel="import" href="./footer.html">
 <link rel="import" href="./copyright.html">
 <link rel="import" href="./view-404.html">
 <link rel="import" href="./bar-chart-component.html">
 
-<!--<link rel="import" href="../components/sub-header.html">-->
+<!-- IMPORT CONFIGURATIONS (COMPONENTS) -->
+<link rel="import" href="../configuration/translate.html">
 <link rel="import" href="../configuration/api-config.html">
 
 
@@ -50,7 +51,10 @@
       .scrollable-container {
         max-height: calc(100vh - 100px);
         overflow-y: scroll;
-        /* background-color: #e4e4e4 */
+      }
+
+      .translate {
+        display: hidden
       }
     </style>
 
@@ -62,36 +66,94 @@
     <app-location route="{{route}}">
     </app-location>
 
-    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" active="{{pageActive}}">
+    <app-route 
+    route="{{route}}" 
+    pattern="/:page" 
+    data="{{routeData}}" 
+    tail="{{subroute}}">
     </app-route>
 
-    <api-config root-path="[[rootPath]]" api-collection="{{apiCollection}}" user="[[user]]"></api-config>
+    <api-config 
+    root-path="[[rootPath]]" 
+    api-collection="{{apiCollection}}" 
+    user="[[user]]">
+    </api-config>
 
-    <!-- APP-STRUCTURE -->
+    <!-- FOR LOCALISATION PURPOSE -->
+    <spend-analyser-translate 
+    class="translate" 
+    language="{{language}}" 
+    resources="{{resources}}">
+    </spend-analyser-translate>
 
+    <!-- APP-STRUCTURE (VISIBLE COMPONENTS) -->
     <div class="main-container">
 
+      <!-- 1. HEADER-COMPONENT-STATIC -->
       <div>
-        <common-header is-logged-in="{{isLoggedIn}}" menu="[[myMenu]]" root-path="[[rootPath]]" selected="[[page]]" logout="[[_logout]]">
+        <common-header 
+        is-logged-in="{{isLoggedIn}}" 
+        menu="[[myMenu]]" 
+        root-path="[[rootPath]]" 
+        selected="[[page]]" 
+        logout="[[_logout]]"
+        page-values="[[pageValues.commonHeader]]">
         </common-header>
-
-
       </div>
 
+      <!-- 2. REST-BOBY-SCROLLABLE -->
       <div class="scrollable-container" on-scroll="scrolled">
+        
+        <template is="dom-if" if="{{resources}}">
 
-        <!--<sub-header  is-logged-in="{{isLoggedIn}}" ></sub-header>-->
-        <!-- PAGES/COMPONENTS BASED ON ROUTE     -->
-        <iron-pages selected="[[page]]" attr-for-selected="name" selected-attribute="activated" selected-item="{{selectedPage}}"
-          fallback-selection="view404" role="main">
-          <login-form title='Login' name="login" login-success="[[_loginSuccess]]" api={{apiCollection.login}}></login-form>
-          <make-payment title='Make Payment' name="payments" category-api="{{apiCollection.categories}}" payment-api="{{apiCollection.payment}}"></make-payment>
-          <payment-status title='Payment Status' name="status"></payment-status>
-          <payment-history user="[[user]]" title='Transactions' name="transactions" api={{apiCollection.transactions}}></payment-history>
-          <payment-analyser title='Spend Analyzer' name="analyser" api={{apiCollection}} is-scrolled="{{isScrolled}}"></payment-analyser>
-          <view-404 title='Not Found 404' name="view404"></view-404>
-        </iron-pages>
+          <!-- 2.1. PAGES/COMPONENTS BASED ON ROUTE     -->
+          <iron-pages 
+          selected="[[page]]" 
+          attr-for-selected="name" 
+          selected-attribute="activated" 
+          selected-item="{{selectedPage}}"
+          fallback-selection="view404" 
+          role="main">
+            
+          <login-form 
+            title='Login' 
+            name="login" 
+            page-values="[[pageValues.loginPage]]" 
+            login-success="[[_loginSuccess]]"
+            api={{apiCollection.login}}></login-form>
+            
+            <make-payment 
+            title='Make Payment' 
+            name="payments" 
+            category-api="{{apiCollection.categorieslist}}" 
+            payment-api="{{apiCollection.payment}}"
+            page-values=[[pageValues.makePayment]]></make-payment>
+            
+            <payment-status 
+            title='Payment Status' 
+            name="status" 
+            page-values="[[pageValues.paymentStatus]]"></payment-status>
+            
+            <payment-history 
+            user="[[user]]" 
+            title='Transactions' 
+            name="transactions" 
+            api={{apiCollection.transactions}}></payment-history>
+            
+            <payment-analyser 
+            title='Spend Analyzer' 
+            name="analyser" 
+            api={{apiCollection}} 
+            is-scrolled="{{isScrolled}}"></payment-analyser>
+            
+            <view-404 
+            title='Not Found 404' 
+            name="view404"></view-404>
 
+          </iron-pages>
+        </template>
+        
+        <!-- 2.2. FOOTERS -->
         <footer-component></footer-component>
         <copyright-component></copyright-component>
       </div>
@@ -102,11 +164,7 @@
     class SpendAnalyser extends Polymer.Element {
       constructor() {
         super();
-        //TODO: Removed tasks from here, May need in case of troubleshooting
-        // console.log(this.rootPath);
-        // setInterval(()=>{
-        //   console.log(this.apiCollection);
-        // },2000);
+        // setInterval(()=>console.log(this.pageValues),2000);
       }
 
       static get is() { return 'spend-analyser'; }
@@ -134,27 +192,56 @@
             type: Array,
             value: [
               {
+                "display": "Dashboard",
+                "name": "dashboard",
+                "slug": "dashboard"
+              },
+              {
                 "display": "Payments",
                 "name": "payments",
                 "slug": "payments"
               },
-              {
-                "display": "Transactions",
-                "name": "transactions",
-                "slug": "transactions"
-              },
+              // {
+              //   "display": "Transactions",
+              //   "name": "transactions",
+              //   "slug": "transactions"
+              // },
               {
                 "display": "Spend Analyser",
                 "name": "analyser",
                 "slug": "analyser"
+              },
+              {
+                "display": "Support",
+                "name": "support",
+                "slug": "support"
+              },
+              {
+                "display": "About Us",
+                "name": "about",
+                "slug": "about"
               }
             ]
           },
           isScrolled: {
             type: Array,
             notify: true
+          },
+          language: {
+            type: String
+          },
+          resources: {
+            type: Object,
+            observer: '_contentFetched'
+          },
+          pageValues: {
+            type: Object
           }
         }
+      }
+
+      _contentFetched() {
+        this.pageValues = this.resources[this.language];
       }
 
       static get observers() {

@@ -1,0 +1,99 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="common-styles.html">
+
+<dom-module id="under-construction">
+    <template>
+        <style include="common-styles">
+            .detailSec {
+                margin-bottom: 30px;
+            }
+            .detailSec div {
+                padding: 5px;
+                text-align: center;
+            }
+            .statusSec {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 30px;
+            }
+            .statusSec h3 {
+                margin: 5px 0px 5px 0px;
+            }
+            .statusSec h4 {
+                margin: 10px 0px 10px 0px;
+            }
+            .actionSec{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            paper-button {
+                margin-bottom: 10px;
+            }
+        </style>
+
+    <div class='container fntFamily'>
+        <div class="statusSec">
+            <image src="src/images/maintainance-128x128.png" alt="under-maintainance" 
+            width="100px" height="100px">
+            <h3 class="info-txt uppercase">{{pageValues.success}}</h3>
+            <h4>{{pageValues.successMessage}}</h4>
+        </div>
+
+        <div class="detailSec">
+            <div>
+                <span>{{pageValues.transactionId}}: </span>
+                <span>{{transactionId}}</span>
+            </div>
+            <div>
+                <span>{{pageValues.amount}}: </span>
+                <span>${{transactionAmount}}</span>
+            </div>
+            <div>
+                <span>{{pageValues.transactionType}}: </span>
+                <span>{{transactionType}}</span>
+            </div>
+            <template is="dom-if" if="[[isCategoryPresent]]">
+                <div>
+                    <span>{{pageValues.categoryType}}: </span>
+                    <span>{{category}}</span>
+                </div>
+            </template>
+        </div>
+
+        <div class="actionSec">
+            <app-location route="{{route}}"></app-location>
+            
+            <template is="dom-if" if="{{showSuccess}}">
+                <paper-button class="secondaryButton button-med" nolink on-click="_navigateToPayment">
+                    {{pageValues.anotherPayment}}
+                </paper-button>
+            </template>
+
+            <template is="dom-if" if="{{showError}}">
+                <paper-button class="secondaryButton button-med" nolink on-click="_navigateToPayment">
+                    {{pageValues.tryAgain}}
+                </paper-button>
+            </template>
+
+            <paper-button class="primaryButton button-med" id="transactionButton" nolink on-click="_navigateToDashboard">
+                {{pageValues.dashboard}}
+            </paper-button>
+        </div>
+    </div>
+
+    </template>
+    
+    <script>
+        class UnderConstruction extends Polymer.Element  {
+
+            static get is() { return 'under-construction' }
+
+        }
+
+        window.customElements.define(UnderConstruction.is,UnderConstruction);
+    </script>
+</dom-module>
