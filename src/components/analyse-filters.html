@@ -87,10 +87,11 @@ PART OF SPEND ANALYSER SCREEN
 
                     <div>
                         <h4 class="label">[[pageValues.selectPeriod]]</h4>
-                        <paper-dropdown-menu allow-outside-scroll="true" id="period" on-iron-select="_periodChanged" no-label-float>
+                        <paper-dropdown-menu allow-outside-scroll="true" id="period"  no-label-float>
                             <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content" selected="{{selectedPeriod}}">
                                 <template is="dom-repeat" items="[[periodList]]">
-                                    <paper-item value$="[[item]]">[[item]]</paper-item>
+                                    <!-- <paper-item value$="[[item]]">[[item]]</paper-item> -->
+                                    <paper-item value$="[[item]]">[[_capitalize(item)]]</paper-item>
                                 </template>
                             </paper-listbox>
                         </paper-dropdown-menu>
@@ -174,6 +175,7 @@ PART OF SPEND ANALYSER SCREEN
                     selectedPeriod: {
                         type: String,
                         value: 'CURRENT', //Set currentMonth as default value
+                        observer:"_periodChanged",
                         notify: true
                     },
                     selectedCategory: {
@@ -294,6 +296,10 @@ PART OF SPEND ANALYSER SCREEN
                 ajax.body = JSON.stringify(payload);
                 ajax.generateRequest();
             }
+            
+            _capitalize(string){
+                return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+            }
 
             //Handle current month response - history with debit/credit data
             _handleCurrentMonthResponse(event, request) {
@@ -306,20 +312,20 @@ PART OF SPEND ANALYSER SCREEN
 
             // User changes the period 
             _periodChanged() {
-                if (this.$.period.value == 'CURRENT') {
+                if (this.selectedPeriod == 'CURRENT') {
                     this.isCurrentMonthSelected = true;
                     this.isMonthlySelected = false;
                     this.isPeriodicSelected = false;
                     this.isFromToSelected = false;
                     this.spendCategoryData = {};
-                    this._resetFileds(this.$.period.value);
-                } else if (this.$.period.value == "MONTHLY") {
+                    this._resetFileds(this.selectedPeriod);
+                } else if (this.selectedPeriod == "MONTHLY") {
                     this.isCurrentMonthSelected = false;
                     this.isMonthlySelected = true;
                     this.isPeriodicSelected = false;
                     this.spendCategoryData = {};
                     this.isFromToSelected = false;
-                    this._resetFileds(this.$.period.value);
+                    this._resetFileds(this.selectedPeriod);
                     this._getPreviousMonthsList();
                 } else {
                     this.isCurrentMonthSelected = false;
@@ -327,7 +333,7 @@ PART OF SPEND ANALYSER SCREEN
                     this.isPeriodicSelected = true;
                     this.isFromToSelected = false;
                     this.spendCategoryData = {};
-                    this._resetFileds(this.$.period.value);
+                    this._resetFileds(this.selectedPeriod);
                 }
             }
 
@@ -472,7 +478,7 @@ PART OF SPEND ANALYSER SCREEN
                 ajax.url = this.api.spendcategory.url;
                 ajax.body = JSON.stringify(payload);
                 ajax.generateRequest();
-                this._resetFileds(this.$.period.value);
+                this._resetFileds(this.selectedPeriod);
 
                 console.log('analyser payload', payload)
             }
