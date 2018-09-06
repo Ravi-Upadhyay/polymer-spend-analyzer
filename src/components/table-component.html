@@ -31,12 +31,11 @@
         <!-- <iron-ajax id="transHistory" method="[[api.method]]" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax> -->
         <div class="container fntFamily">
             <h2 class="centerText"> Most Recent Transactions </h2>
-
-        <template is="dom-if" if="{{!dataAvailable}}"> 
+  <template is="dom-if" if="{{!dataAvailable}}"> 
             <no-data-found></no-data-found>
         </template> 
          <!-- <template is="dom-if" if="{{dataAvailable}}"> -->
-          <vaadin-grid id="grid" class="gridBorder" theme="row-dividers" items="[[tabledata]]" page-size="10" height-by-rows>
+          <vaadin-grid id="grid" class="gridBorder" theme="row-dividers" items="[[tabledata]]" page-size="5" height-by-rows>
            <vaadin-grid-column width="1em">
                 <template class="header">
                     <b>Transaction Id</b>
@@ -87,79 +86,60 @@
             </vaadin-grid-column>
         </vaadin-grid>
         <!-- </template> -->
-      <!--<div id="pages">
+      <div id="pages">
             <button on-click="_prev">&lt;</button>
             <template is="dom-repeat" items="[[pages]]">
             <button on-click="_select" selected$="[[_isSelected(page, item)]]">[[item]]</button>
             </template>
             <button on-click="_next">&gt;</button>
-        </div> -->
+        </div> 
       </div>
     </template>
 
   <script>
     class tableComponent extends Polymer.Element {
       static get is() { return 'table-component'; }
+
       static get properties () {
         return {
           items: {
-            type    : Array
-          },
-          dataAvailable: {
-              type: Boolean
-          },
-          api : {
-              type    : Object
+            type: Array
           },
           pages: {
-            type    : Array
+            type: Array
           },
           page: {
-            type    : Number
-          },
-          user: {
-            type    : Object
-          },
-		    custId:{
-            type    : String,
-            computed: '_getCustId(user)'
+            type: Number
           },
           tabledata: {
-                       type:Array,
-                       observer:'_itemsChanged'
-                   },
-		  activated: {
-              type: Boolean,
-              observer: '_activationChanged'
+              type:Array,
+              observer:'_tabledataChanged'
+          },
+          dataAvailable:{
+              type: Boolean
           }
         };
       }
 
-       constructor(){
-        super();
-        this.page = 0;
+      _tabledataChanged(){
+        this.items = this.tabledata;
       }
 
-      
       ready(){
             super.ready();
             this.page = 0;
       }
-            
 
-      _getCustId(user){
-        return user.customerId;
-      } 
-
-       _activationChanged(newVal, oldVal){
-         this.tabledata;
-         }
-	  
-
-      // Add currency
+            // Add currency
       addCurrency(amount){
         return '$' + amount;
       }
+
+				static get observers() {
+          return [
+            '_itemsChanged(items, page)'
+          ]
+        }
 
       _isSelected(page, item) {
         return page === item - 1;
@@ -178,7 +158,7 @@
       }
 
       _itemsChanged(items, page) {
-        if (items === undefined) {
+        if (items === undefined || page === undefined) {
           return;
         }
 
@@ -188,10 +168,10 @@
           });
         }
 
-        var start = this.page * this.$.grid.pageSize;
-        var end = (this.page + 1) * this.$.grid.pageSize;
+        var start = page * this.$.grid.pageSize;
+        var end = (page + 1) * this.$.grid.pageSize;
         this.$.grid.items = items.slice(start, end);
-      } 
+      }
     
     }
     window.customElements.define(tableComponent.is, tableComponent);

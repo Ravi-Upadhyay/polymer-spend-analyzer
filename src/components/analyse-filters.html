@@ -326,13 +326,13 @@ PART OF SPEND ANALYSER SCREEN
                     this.isMonthlySelected = false;
                     this.isPeriodicSelected = false;
                     this.isFromToSelected = false;
-                    this.spendCategoryData = {};
+                    //this.spendCategoryData = {};
                     this._resetFileds(this.selectedPeriod);
                 } else if (this.selectedPeriod == "MONTHLY") {
                     this.isCurrentMonthSelected = false;
                     this.isMonthlySelected = true;
                     this.isPeriodicSelected = false;
-                    this.spendCategoryData = {};
+                    //this.spendCategoryData = {};
                     this.isFromToSelected = false;
                     this._resetFileds(this.selectedPeriod);
                     this._getPreviousMonthsList();
@@ -341,7 +341,7 @@ PART OF SPEND ANALYSER SCREEN
                     this.isMonthlySelected = false;
                     this.isPeriodicSelected = true;
                     this.isFromToSelected = false;
-                    this.spendCategoryData = {};
+                    //this.spendCategoryData = {};
                     this._resetFileds(this.selectedPeriod);
                 }
             }
@@ -375,10 +375,14 @@ PART OF SPEND ANALYSER SCREEN
                 if (period == 'CURRENT') {
                     this.selectedCategory = 'All';
                     this.selectedMonth = '';
+                    this.selectedFromDate = false;
+                    this.selectedToDate = false;
                 } else if (period == 'PERIODIC') {
                     this.selectedCategory = 'All';
                     this.fromDateVal = '';
                     this.toDateVal = '';
+                    this.selectedFromDate = false;
+                    this.selectedToDate = false;
                 } else {
                     this.selectedMonth = '';
                     this.selectedCategory = 'All';
@@ -387,7 +391,7 @@ PART OF SPEND ANALYSER SCREEN
             //User selects the months duration
             _monthsChanged(e) {
                 // this.$.MonthsDropdown.render();
-                this.selectedMonth = e.target.innerText;//this.$.months.value;
+                //this.selectedMonth = e.target.innerText;  //this.$.months.value;
                 console.log('selectedMonth', this.selectedMonth);
                 if (this.selectedMonth) {
                     this.isFromToSelected = true;
@@ -418,7 +422,9 @@ PART OF SPEND ANALYSER SCREEN
             _handleCategoryResponse(event, request) {
                 console.log(request.response.data);
                 this.spendCategoryData = request.response.data;
-                this._addingCategoryColors();
+                if(this.spendCategoryData){
+                    this._addingCategoryColors();
+                }
             }
 
             _addingCategoryColors() {
