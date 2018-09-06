@@ -7,6 +7,30 @@
                 "amount": 200
             },
             {
+                "category": "Shopping",
+                "amount": 1200
+            },
+            {
+                "category": "Education",
+                "amount": 2000
+            },
+            {
+                "category": "Utility Bills",
+                "amount": 400
+            },
+            {
+                "category": "Loans",
+                "amount": 2200
+            },
+            {
+                "category": "Travel",
+                "amount": 1500
+            },
+            {
+                "category": "Medical",
+                "amount": 900
+            },
+            {
                 "category": "Grocery",
                 "amount": 200
             }

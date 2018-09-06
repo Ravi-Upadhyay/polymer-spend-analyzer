@@ -28,7 +28,44 @@
 
             .container-graph{
                 width: 100%;
-                
+                border-radius: 5px;
+            }
+            .graph-inner-container{
+                padding: 50px 0px;
+            }
+            .graph-outer-container{
+                padding: 10px 0px;
+            }
+            .graph-tabs {
+                /* --paper-tabs-selection-bar-color:#ff6600; */
+                --paper-tabs-selection-bar:	{
+                    color: #ff6600;
+                };
+                --paper-tabs: {};
+                --paper-tabs-content: {};
+                --paper-tabs-container: {};
+            }
+            .graph-tab {
+                --paper-tab-ink:#ff6600;
+                --paper-tab:	{
+                    min-width: 200px;
+                    height: 50px;
+                    /* border: 5px solid #ffffff; */
+                    /* border-radius: 10px; */
+                    
+                };
+                --paper-tab-content:	{
+                    background-color: #ff6600;
+                    color: #ffffff;
+                    font-weight: bold;
+                    border-radius: 5px;
+                };
+                --paper-tab-content-unselected:{
+                    background-color: #ffffff;
+                    color: #ff6600;
+                    font-weight: bold;
+                    border-radius: 5px;
+                }
             }
         </style>
         <style include="shared-styles">
@@ -60,16 +97,16 @@
                 <div class="container-graph">
                     <template is="dom-if" if="{{tabFlag}}">
                         <h2 class="centerText">Spend Analyser</h2>
-                        <div class="whiteBckgrnd boxShadow">
+                        <div class="whiteBckgrnd boxShadow graph-outer-container">
                             <div>
-                                <paper-tabs selected="{{selectedTab}}" scrollable>
-                                    <paper-tab>Pie chart</paper-tab>
+                                <paper-tabs selected="{{selectedTab}}" scrollable class="graph-tabs" no-bat="true">
+                                    <paper-tab class="graph-tab" >PIE Chart</paper-tab>
                                     <template is="dom-if" if="{{!isCurrentMonthSelected}}">
-                                        <paper-tab>Bar graph</paper-tab>
+                                        <paper-tab class="graph-tab" >BAR Chart</paper-tab>
                                     </template>
                                 </paper-tabs>
                             </div>
-                            <div>
+                            <div class="graph-inner-container">
                                 <iron-pages selected="{{selectedTab}}">
                                     <div>
                                         <template is="dom-if" if="{{isCurrentMonthSelected}}">
