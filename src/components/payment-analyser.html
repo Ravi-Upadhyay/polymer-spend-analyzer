@@ -28,6 +28,7 @@
 
             .container-graph{
                 width: 100%;
+                
             }
         </style>
         <style include="shared-styles">
@@ -92,12 +93,6 @@
                     </template>
                 </div>
 
-                
-                <!-- COMPONENT-4: No Data Found Component -->
-                <template is="dom-if" if="{{!dataAvailable}}"> 
-                     <no-data-found></no-data-found>
-                </template>
-
             </template>
         </div>
 
@@ -135,9 +130,6 @@
                         value: '',
                         observer: '_periodChanged'
                     },
-                    dataAvailable: {
-                        type: Boolean
-                    },
                     selectedTab: {
                         type: String,
                         value: '0'
@@ -156,34 +148,26 @@
             }
 
             _activationChanged(newVal, oldVal) {
+                if (newVal) {
+
+                }
                 this.makeFilters = ['a'];
                 this.tabFlag = (this.spendCategoryData.analysis && this.spendCategoryData.analysis.length > 0) || this.isCurrentMonthSelected;
-                this._checkDataStatus();
-            }
-
-            _checkDataStatus(){
-                let data1 = !(this.currentMonthData && this.currentMonthData.transactions && this.currentMonthData && this.currentMonthData.totalTxns)
-                
-                let data2 = !(this.spendCategoryData && this.spendCategoryData.analysis && this.spendCategoryData.analysis.length > 0)
-
-                this.dataAvailable = this.isCurrentMonthSelected && !data1 || !data2;
-                console.log('data avialable flag',this.dataAvailable)
             }
 
             _periodChanged() {
-                this.tabFlag = (this.spendCategoryData && this.spendCategoryData.analysis && this.spendCategoryData.analysis.length > 0) || this.isCurrentMonthSelected;
-                this._checkDataStatus();
+                console.log('i am in period', this.isCurrentMonthSelected);
+                this.tabFlag = (this.spendCategoryData.analysis && this.spendCategoryData.analysis.length > 0) || this.isCurrentMonthSelected;
             }
 
             _currentMonthDataChanged() {
-                this.tabFlag = this.isCurrentMonthSelected;
                 console.log(this.currentMonthData);
+                console.log('chart', this.currentMonthData.totalCreditDebit);
             }
 
             _spendCategoryDataChanged() {
                 console.log('getting category data', this.spendCategoryData);
-                this.tabFlag = (this.spendCategoryData && this.spendCategoryData.analysis && this.spendCategoryData.analysis.length > 0) || this.isCurrentMonthSelected;
-                this._checkDataStatus();
+                this.tabFlag = (this.spendCategoryData.analysis && this.spendCategoryData.analysis.length > 0) || this.isCurrentMonthSelected;
             }
 
         };
