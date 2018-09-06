@@ -24,6 +24,11 @@
             min-height: 0px !important;
             margin: 0px !important;
           }    
+          .primaryButton {
+            width: 2em !important;
+            height: 2em;
+            margin: 0.2em;
+          }
         </style>
         <style include="shared-styles">
          
@@ -31,9 +36,9 @@
         <!-- <iron-ajax id="transHistory" method="[[api.method]]" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax> -->
         <div class="container fntFamily">
             <h2 class="centerText"> Most Recent Transactions </h2>
-  <template is="dom-if" if="{{!dataAvailable}}"> 
-            <no-data-found></no-data-found>
-        </template> 
+            <template is="dom-if" if="{{!dataAvailable}}"> 
+                <no-data-found></no-data-found>
+            </template> 
          <!-- <template is="dom-if" if="{{dataAvailable}}"> -->
           <vaadin-grid id="grid" class="gridBorder" theme="row-dividers" items="[[tabledata]]" page-size="5" height-by-rows>
            <vaadin-grid-column width="1em">
@@ -86,12 +91,12 @@
             </vaadin-grid-column>
         </vaadin-grid>
         <!-- </template> -->
-      <div id="pages">
-            <button on-click="_prev">&lt;</button>
+      <div id="pages" class="pagination-container">
+            <button on-click="_prev" class="primaryButton">&lt;</button>
             <template is="dom-repeat" items="[[pages]]">
-            <button on-click="_select" selected$="[[_isSelected(page, item)]]">[[item]]</button>
+                <button on-click="_select" id="pb[[item]]" class="primaryButton" selected$="[[_isSelected(page, item)]]">[[item]]</button>
             </template>
-            <button on-click="_next">&gt;</button>
+            <button on-click="_next" class="primaryButton">&gt;</button>
         </div> 
       </div>
     </template>
@@ -112,8 +117,8 @@
             type: Number
           },
           tabledata: {
-              type:Array,
-              observer:'_tabledataChanged'
+            type:Array,
+            observer:'_tabledataChanged'
           },
           dataAvailable:{
               type: Boolean

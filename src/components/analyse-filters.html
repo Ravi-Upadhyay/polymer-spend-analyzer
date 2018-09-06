@@ -128,6 +128,7 @@ PART OF SPEND ANALYSER SCREEN
                                 <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content" selected="{{selectedMonth}}">
                                     <template is="dom-repeat" items="[[monthsList]]">
                                         <paper-item value$="[[item]]" on-click="_monthsChanged">[[_capitalize(item)]]</paper-item>
+                                        <!-- <paper-item value$="[[item]]" on-click="_monthsChanged">[[item]]</paper-item> -->
                                     </template>
                                 </paper-listbox>
                             </paper-dropdown-menu>
@@ -436,7 +437,7 @@ PART OF SPEND ANALYSER SCREEN
                             el.catcolor = "#FF5722";
                             break;
                         case "Medical":
-                            el.catcolor = "#689F38";
+                            el.catcolor = "#00796B";
                             break;
                         case "Travel":
                             el.catcolor = "#ff9800";
@@ -445,7 +446,7 @@ PART OF SPEND ANALYSER SCREEN
                             el.catcolor = "#7b1fa2";
                             break;
                         case "Utility Bills":
-                            el.catcolor = "#ffa000";
+                            el.catcolor = "#00BCD4";
                             break;
                         case "Education":
                             el.catcolor = "#1976d2";
