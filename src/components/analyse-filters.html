@@ -83,16 +83,16 @@ PART OF SPEND ANALYSER SCREEN
         <style include="shared-styles">
         </style>
 
+
         <div id="filter-container" class="container fntFamily">
             <iron-form id="myForm">
                 <form>
 
                     <div>
                         <h4 class="label">[[pageValues.selectPeriod]]</h4>
-                        <paper-dropdown-menu allow-outside-scroll="true" id="period" class="customWidth" no-label-float>
+                        <paper-dropdown-menu allow-outside-scroll="true" id="period" on-iron-select="_periodChanged" class="customWidth" no-label-float>
                             <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content customWidth" selected="{{selectedPeriod}}">
                                 <template is="dom-repeat" items="[[periodList]]">
-                                    <!-- <paper-item value$="[[item]]">[[item]]</paper-item> -->
                                     <paper-item value$="[[item]]">[[_capitalize(item)]]</paper-item>
                                 </template>
                             </paper-listbox>
@@ -159,12 +159,13 @@ PART OF SPEND ANALYSER SCREEN
             </iron-form>
         </div>
 
-        <!-- AJAX-CALLS -->
+        <!-- AJAX-CALLS --> 
         <iron-ajax id="getPeriod" method="[[api.method]]" handle-as="json" last-response="{{periods}}" on-response="_handlePeriodResponse"></iron-ajax>
         <iron-ajax id="getPreviousMonths" method="[[api.method]]" handle-as="json" on-response="_handlePreviousMonthResponse"></iron-ajax>
         <iron-ajax id="getCategories" auto url="[[api.categorieslist.url]]" method="[[api.categorieslist.method]]" handle-as="json" on-response="_handleCategoriesResponse"></iron-ajax>
         <iron-ajax id="getCurrentMonth" method="[[api.currentmonth.method]]" content-type="application/json" handle-as="json" on-response="_handleCurrentMonthResponse"></iron-ajax>
         <iron-ajax id="getSpendCategory" method="[[api.spendcategory.method]]" content-type="application/json" handle-as="json" on-response="_handleCategoryResponse"></iron-ajax>
+
     </template>
 
     <script>
@@ -184,7 +185,6 @@ PART OF SPEND ANALYSER SCREEN
                     selectedPeriod: {
                         type: String,
                         value: 'CURRENT', //Set currentMonth as default value
-                        observer:"_periodChanged",
                         notify: true
                     },
                     selectedCategory: {
@@ -305,7 +305,7 @@ PART OF SPEND ANALYSER SCREEN
                 ajax.body = JSON.stringify(payload);
                 ajax.generateRequest();
             }
-            
+
             _capitalize(string){
                 return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
             }
@@ -321,20 +321,21 @@ PART OF SPEND ANALYSER SCREEN
 
             // User changes the period 
             _periodChanged() {
-                if (this.selectedPeriod == 'CURRENT') {
+                var periodSelected = this.$.period.value.toUpperCase();
+                if (periodSelected == 'CURRENT') {
                     this.isCurrentMonthSelected = true;
                     this.isMonthlySelected = false;
                     this.isPeriodicSelected = false;
                     this.isFromToSelected = false;
                     //this.spendCategoryData = {};
-                    this._resetFileds(this.selectedPeriod);
-                } else if (this.selectedPeriod == "MONTHLY") {
+                    this._resetFileds(periodSelected);
+                } else if (periodSelected == "MONTHLY") {
                     this.isCurrentMonthSelected = false;
                     this.isMonthlySelected = true;
                     this.isPeriodicSelected = false;
                     //this.spendCategoryData = {};
                     this.isFromToSelected = false;
-                    this._resetFileds(this.selectedPeriod);
+                    this._resetFileds(periodSelected);
                     this._getPreviousMonthsList();
                 } else {
                     this.isCurrentMonthSelected = false;
@@ -342,7 +343,7 @@ PART OF SPEND ANALYSER SCREEN
                     this.isPeriodicSelected = true;
                     this.isFromToSelected = false;
                     //this.spendCategoryData = {};
-                    this._resetFileds(this.selectedPeriod);
+                    this._resetFileds(periodSelected);
                 }
             }
 
@@ -388,10 +389,11 @@ PART OF SPEND ANALYSER SCREEN
                     this.selectedCategory = 'All';
                 }
             }
+
             //User selects the months duration
             _monthsChanged(e) {
                 // this.$.MonthsDropdown.render();
-                //this.selectedMonth = e.target.innerText;  //this.$.months.value;
+                this.selectedMonth = e.target.innerText.toUpperCase();//this.$.months.value;
                 console.log('selectedMonth', this.selectedMonth);
                 if (this.selectedMonth) {
                     this.isFromToSelected = true;
@@ -493,7 +495,7 @@ PART OF SPEND ANALYSER SCREEN
                 ajax.url = this.api.spendcategory.url;
                 ajax.body = JSON.stringify(payload);
                 ajax.generateRequest();
-                this._resetFileds(this.selectedPeriod);
+                this._resetFileds(this.$.period.value);
 
                 console.log('analyser payload', payload)
             }

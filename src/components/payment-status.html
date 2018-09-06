@@ -155,6 +155,7 @@
             }
 
             _getTransactionStatus() {
+                this.isCategoryPresent = false;
                 this.transactionDetails = JSON.parse(localStorage.getItem('transactionDetails'));
                 if (this.transactionDetails) {
                     let status = this.transactionDetails;

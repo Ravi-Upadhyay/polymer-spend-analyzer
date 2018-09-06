@@ -1,6 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
-<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="common-styles.html">
@@ -11,7 +10,6 @@
 <link rel="import" href="analyse-filters.html">
 <link rel="import" href="table-component.html">
 <link rel="import" href="multi-select-dropdown.html">
-
 
 <dom-module id="payment-analyser">
     <template>
@@ -55,6 +53,10 @@
                         <table-component tabledata="[[currentMonthData.transactions]]"></table-component>
                     </template>
                 </div>
+
+                <template is="dom-if" if="{{!dataAvailable}}"> 
+                     <no-data-found></no-data-found>
+                </template>
 
                 <!-- COMPONENT-3: Graph Component -->
                 <div class="container-graph">
@@ -135,39 +137,49 @@
                         value: '0'
                     },
                     tabFlag: {
+                        type: Boolean,
+                        value: true
+                    },
+                    dataAvailable: {
                         type: Boolean
                     },
                     isScrolled: {
                         type: Array,
                         notify: true
-                    },
-                    pageValues: {
-                        type: Object
                     }
                 }
             }
 
-            _activationChanged(newVal, oldVal) {
-                if (newVal) {
+            testData(){
+                let data1 = !(this.currentMonthData && this.currentMonthData.transactions && this.currentMonthData && this.currentMonthData.totalTxns)
+                
+                let data2 = !(this.spendCategoryData && this.spendCategoryData.analysis && this.spendCategoryData.analysis.length > 0)
 
-                }
+                this.dataAvailable = this.isCurrentMonthSelected && !data1 || !data2;
+                console.log(this.dataAvailable)
+            }
+
+            _activationChanged(newVal, oldVal) {
                 this.makeFilters = ['a'];
                 this.tabFlag = (this.spendCategoryData.analysis && this.spendCategoryData.analysis.length > 0) || this.isCurrentMonthSelected;
+                this.testData();
             }
 
             _periodChanged() {
                 console.log('i am in period', this.isCurrentMonthSelected);
-                this.tabFlag = (this.spendCategoryData.analysis && this.spendCategoryData.analysis.length > 0) || this.isCurrentMonthSelected;
+                this.tabFlag = (this.spendCategoryData && this.spendCategoryData.analysis && this.spendCategoryData.analysis.length > 0) || this.isCurrentMonthSelected;
             }
 
             _currentMonthDataChanged() {
                 console.log(this.currentMonthData);
                 console.log('chart', this.currentMonthData.totalCreditDebit);
+                this.testData();
             }
 
             _spendCategoryDataChanged() {
                 console.log('getting category data', this.spendCategoryData);
-                this.tabFlag = (this.spendCategoryData.analysis && this.spendCategoryData.analysis.length > 0) || this.isCurrentMonthSelected;
+                this.tabFlag = (this.spendCategoryData && this.spendCategoryData.analysis && this.spendCategoryData.analysis.length > 0) || this.isCurrentMonthSelected;
+                this.testData();
             }
 
         };
