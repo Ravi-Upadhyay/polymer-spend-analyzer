@@ -114,6 +114,10 @@
                 this.selectedCatArr = this.preselected;
             }
 
+            _capitalize(string){
+                return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+            }
+
             //Called whenever a category change takes place.
             //selectedDropdown : Contains a list of elements which are selected
             //This uses a splice and a push for inserting or removing elements from the array to make array changes observable

@@ -13,7 +13,17 @@
 
 <dom-module id="table-component">
     <template>
-        <style include="common-styles">    
+        <style include="common-styles">
+          :host{
+              display: flex;
+              display: -webkit-flex;
+              flex-direction: row;
+              width: 100%;
+          }
+          .container{
+            min-height: 0px !important;
+            margin: 0px !important;
+          }    
         </style>
         <style include="shared-styles">
          

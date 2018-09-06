@@ -36,6 +36,14 @@ PART OF SPEND ANALYSER SCREEN
                 width: 100%;
             }
 
+            .customWidth {
+                width: 100%;
+            }
+
+            .customWidth paper-item:hover {
+                background-color: #dbdbdb;
+            }
+
             form{
                 margin: 0px;
                 padding: 0px;
@@ -74,12 +82,6 @@ PART OF SPEND ANALYSER SCREEN
         
         <style include="shared-styles">
         </style>
-        
-        <iron-ajax id="getPeriod" method="[[api.method]]" handle-as="json" last-response="{{periods}}" on-response="_handlePeriodResponse"></iron-ajax>
-        <iron-ajax id="getPreviousMonths" method="[[api.method]]" handle-as="json" on-response="_handlePreviousMonthResponse"></iron-ajax>
-        <iron-ajax id="getCategories" auto url="[[api.categorieslist.url]]" method="[[api.categorieslist.method]]" handle-as="json" on-response="_handleCategoriesResponse"></iron-ajax>
-        <iron-ajax id="getCurrentMonth" method="[[api.currentmonth.method]]" content-type="application/json" handle-as="json" on-response="_handleCurrentMonthResponse"></iron-ajax>
-        <iron-ajax id="getSpendCategory" method="[[api.spendcategory.method]]" content-type="application/json" handle-as="json" on-response="_handleCategoryResponse"></iron-ajax>
 
         <div id="filter-container" class="container fntFamily">
             <iron-form id="myForm">
@@ -87,8 +89,8 @@ PART OF SPEND ANALYSER SCREEN
 
                     <div>
                         <h4 class="label">[[pageValues.selectPeriod]]</h4>
-                        <paper-dropdown-menu allow-outside-scroll="true" id="period"  no-label-float>
-                            <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content" selected="{{selectedPeriod}}">
+                        <paper-dropdown-menu allow-outside-scroll="true" id="period" class="customWidth" no-label-float>
+                            <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content customWidth" selected="{{selectedPeriod}}">
                                 <template is="dom-repeat" items="[[periodList]]">
                                     <!-- <paper-item value$="[[item]]">[[item]]</paper-item> -->
                                     <paper-item value$="[[item]]">[[_capitalize(item)]]</paper-item>
@@ -125,7 +127,7 @@ PART OF SPEND ANALYSER SCREEN
                             <paper-dropdown-menu allow-outside-scroll="true" id="months" no-label-float placeholder="Select">
                                 <paper-listbox slot="dropdown-content" attr-for-selected="value" class="dropdown-content" selected="{{selectedMonth}}">
                                     <template is="dom-repeat" items="[[monthsList]]">
-                                        <paper-item value$="[[item]]" on-click="_monthsChanged">[[item]]</paper-item>
+                                        <paper-item value$="[[item]]" on-click="_monthsChanged">[[_capitalize(item)]]</paper-item>
                                     </template>
                                 </paper-listbox>
                             </paper-dropdown-menu>
@@ -156,6 +158,13 @@ PART OF SPEND ANALYSER SCREEN
                 </form>
             </iron-form>
         </div>
+
+        <!-- AJAX-CALLS -->
+        <iron-ajax id="getPeriod" method="[[api.method]]" handle-as="json" last-response="{{periods}}" on-response="_handlePeriodResponse"></iron-ajax>
+        <iron-ajax id="getPreviousMonths" method="[[api.method]]" handle-as="json" on-response="_handlePreviousMonthResponse"></iron-ajax>
+        <iron-ajax id="getCategories" auto url="[[api.categorieslist.url]]" method="[[api.categorieslist.method]]" handle-as="json" on-response="_handleCategoriesResponse"></iron-ajax>
+        <iron-ajax id="getCurrentMonth" method="[[api.currentmonth.method]]" content-type="application/json" handle-as="json" on-response="_handleCurrentMonthResponse"></iron-ajax>
+        <iron-ajax id="getSpendCategory" method="[[api.spendcategory.method]]" content-type="application/json" handle-as="json" on-response="_handleCategoryResponse"></iron-ajax>
     </template>
 
     <script>

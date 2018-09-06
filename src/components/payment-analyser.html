@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="common-styles.html">
@@ -17,6 +18,17 @@
         <style include="common-styles">
             .container {
                 min-width: 80%;
+                display: flex;
+                display: -webkit-flex;
+                flex-direction: column;
+            }
+            .container>div{
+                flex: 0 1 auto;
+            }
+
+            .container-graph{
+                width: 100%;
+                
             }
         </style>
         <style include="shared-styles">
@@ -25,43 +37,61 @@
 
         <div class="container fntFamily">
             <template is="dom-if" if="{{makeFilters}}">
+                
+                <!-- COMPONENT-1: Filters Component -->
+                <div>
+                    <analyse-filters api={{api}} 
+                    make-filters="{{makeFilters}}" 
+                    current-month-data="{{currentMonthData}}" 
+                    spend-category-data="{{spendCategoryData}}"
+                    is-current-month-selected={{isCurrentMonthSelected}} 
+                    is-scrolled="{{isScrolled}}" 
+                    page-values="[[pageValues.filtersSection]]"></analyse-filters>
+                </div>
 
-                <analyse-filters api={{api}} make-filters="{{makeFilters}}" current-month-data="{{currentMonthData}}" spend-category-data="{{spendCategoryData}}"
-                    is-current-month-selected={{isCurrentMonthSelected}} is-scrolled="{{isScrolled}}" page-values="[[pageValues.filtersSection]]"></analyse-filters>
-                <!--Table component-->
-                <template is="dom-if" if="{{isCurrentMonthSelected}}">
-                    <table-component tabledata="[[currentMonthData.transactions]]"></table-component>
-                </template>
-                <!--Tab component-->
-                <template is="dom-if" if="{{tabFlag}}">
-                    <div class="tabContainer">
-                        <paper-tabs selected="{{selectedTab}}" scrollable>
-                            <paper-tab>Pie chart</paper-tab>
-                            <template is="dom-if" if="{{!isCurrentMonthSelected}}">
-                                <paper-tab>Bar graph</paper-tab>
-                            </template>
-                        </paper-tabs>
-                        <iron-pages selected="{{selectedTab}}">
+                <!-- COMPONENT-2: Table Component -->
+                <div>
+                    <template is="dom-if" if="{{isCurrentMonthSelected}}">
+                        <table-component tabledata="[[currentMonthData.transactions]]"></table-component>
+                    </template>
+                </div>
+
+                <!-- COMPONENT-3: Graph Component -->
+                <div class="container-graph">
+                    <template is="dom-if" if="{{tabFlag}}">
+                        <h2 class="centerText">Spend Analyser</h2>
+                        <div class="whiteBckgrnd boxShadow">
                             <div>
-                                <template is="dom-if" if="{{isCurrentMonthSelected}}">
-                                    <piechart-component transactions=[[currentMonthData.totalTxns]]></piechart-component>
-                                </template>
-                                <template is="dom-if" if="{{spendCategoryData.analysis}}">
-                                    <piechart-component transactions=[[spendCategoryData.analysis]]></piechart-component>
-                                </template>
+                                <paper-tabs selected="{{selectedTab}}" scrollable>
+                                    <paper-tab>Pie chart</paper-tab>
+                                    <template is="dom-if" if="{{!isCurrentMonthSelected}}">
+                                        <paper-tab>Bar graph</paper-tab>
+                                    </template>
+                                </paper-tabs>
                             </div>
                             <div>
-                                <template is="dom-if" if="{{isCurrentMonthSelected}}">
-                                    <barchart-component transactions=[[currentMonthData.totalTxns]]></barchart-component>
-                                </template>
-                                <template is="dom-if" if="{{spendCategoryData.analysis}}">
-                                    <barchart-component transactions=[[spendCategoryData.analysis]]></barchart-component>
-                                </template>
+                                <iron-pages selected="{{selectedTab}}">
+                                    <div>
+                                        <template is="dom-if" if="{{isCurrentMonthSelected}}">
+                                            <piechart-component transactions=[[currentMonthData.totalTxns]]></piechart-component>
+                                        </template>
+                                        <template is="dom-if" if="{{spendCategoryData.analysis}}">
+                                            <piechart-component transactions=[[spendCategoryData.analysis]]></piechart-component>
+                                        </template>
+                                    </div>
+                                    <div>
+                                        <template is="dom-if" if="{{isCurrentMonthSelected}}">
+                                            <barchart-component transactions=[[currentMonthData.totalTxns]]></barchart-component>
+                                        </template>
+                                        <template is="dom-if" if="{{spendCategoryData.analysis}}">
+                                            <barchart-component transactions=[[spendCategoryData.analysis]]></barchart-component>
+                                        </template>
+                                    </div>
+                                </iron-pages>
                             </div>
-                        </iron-pages>
-                    </div>
-                </template>
-
+                        </div>
+                    </template>
+                </div>
 
             </template>
         </div>
