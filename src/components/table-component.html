@@ -35,7 +35,7 @@
         </style>
         <!-- <iron-ajax id="transHistory" method="[[api.method]]" handle-as="json" last-response="{{users}}" on-response="handleResponse"></iron-ajax> -->
         <div class="container fntFamily">
-            <h2 class="centerText"> Most Recent Transactions </h2>
+            <h2 class="centerText"> [[pageValues.recentTransactions]] </h2>
             <template is="dom-if" if="{{!dataAvailable}}"> 
                 <no-data-found></no-data-found>
             </template> 
@@ -43,49 +43,49 @@
           <vaadin-grid id="grid" class="gridBorder" theme="row-dividers" items="[[tabledata]]" page-size="5" height-by-rows>
            <vaadin-grid-column width="1em">
                 <template class="header">
-                    <b>Transaction Id</b>
+                    <b>[[pageValues.transactionId]]</b>
                 </template>
                 <template>[[item.transactionId]]</template>
             </vaadin-grid-column>
             
             <vaadin-grid-column width="2em">
                 <template class="header">
-                    <b>Transaction Description</b>
+                    <b>[[pageValues.transactionDesc]]</b>
                 </template>
                 <template>[[item.description]]</template>
             </vaadin-grid-column>
 
             <vaadin-grid-column width="1em">
                 <template class="header">
-                    <b>Transaction Type</b>
+                    <b>[[pageValues.transactionType]]</b>
                 </template>
                 <template>[[item.paymentType]]</template>
             </vaadin-grid-column>
     
             <vaadin-grid-column width="8em">
                 <template class="header">
-                    <b>Transaction Date</b>
+                    <b>[[pageValues.transactionDate]]</b>
                 </template>
                 <template>[[item.transactionDate]]</template>
             </vaadin-grid-column>
     
             <vaadin-grid-column width="1em">
                 <template class="header">
-                    <b path="amount">Amount</b>
+                    <b path="amount">[[pageValues.amount]]</b>
                 </template>
                 <template>[[addCurrency(item.amount)]]</template>
             </vaadin-grid-column>
 
             <vaadin-grid-column width="1em">
               <template class="header">
-                  <b path="amount">Category</b>
+                  <b path="amount">[[pageValues.category]]</b>
               </template>
               <template>[[item.category.value]]</template>
           </vaadin-grid-column>
 
             <vaadin-grid-column width="1em">
                 <template class="header">
-                    <b path="balance">Balance</b>
+                    <b path="balance">[[pageValues.balance]]</b>
                 </template>
                 <template>[[addCurrency(item.closingBalance)]]</template>
             </vaadin-grid-column>
@@ -122,6 +122,9 @@
           },
           dataAvailable:{
               type: Boolean
+          },
+          pageValues:{
+            type: Object
           }
         };
       }

@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="common-styles.html">
@@ -83,7 +84,8 @@
                 <!-- COMPONENT-2: Table Component -->
                 <div>
                     <template is="dom-if" if="{{isCurrentMonthSelected}}">
-                        <table-component tabledata="[[currentMonthData.transactions]]"></table-component>
+                        <table-component tabledata="[[currentMonthData.transactions]]" 
+                        page-values="[[pageValues.transactions]]"></table-component>
                     </template>
                 </div>
 
@@ -94,13 +96,13 @@
                 <!-- COMPONENT-3: Graph Component -->
                 <div class="container-graph">
                     <template is="dom-if" if="{{tabFlag}}">
-                        <h2 class="centerText">Spend Analyser</h2>
+                        <h2 class="centerText">[[pageValues.graph.spendAnalyser]]</h2>
                         <div class="whiteBckgrnd boxShadow graph-outer-container">
                             <div>
                                 <paper-tabs selected="{{selectedTab}}" scrollable class="graph-tabs" no-bat="true">
-                                    <paper-tab class="graph-tab" >PIE Chart</paper-tab>
+                                    <paper-tab class="graph-tab" >[[pageValues.graph.pieChart]]</paper-tab>
                                     <template is="dom-if" if="{{!isCurrentMonthSelected}}">
-                                        <paper-tab class="graph-tab" >BAR Chart</paper-tab>
+                                        <paper-tab class="graph-tab" >[[pageValues.graph.barChart]]</paper-tab>
                                     </template>
                                 </paper-tabs>
                             </div>
@@ -179,6 +181,9 @@
                     isScrolled: {
                         type: Array,
                         notify: true
+                    },
+                    pageValues: {
+                        type: Object
                     }
                 }
             }

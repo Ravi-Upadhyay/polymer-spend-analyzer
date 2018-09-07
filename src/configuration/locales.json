@@ -44,6 +44,21 @@
         "selectMonth"     : "Select month",
         "selectCategory"  : "Select category",
         "analyse"         : "Analyse"
+      },
+      "transactions"    : {
+        "recentTransactions"  : "Most recent transactions",
+        "transactionId"       : "Transaction id",
+        "transactionDesc"     : "Transaction description",
+        "transactionType"     : "Transaction type",
+        "transactionDate"     : "Transaction date",
+        "amount"              : "Amount",
+        "category"            : "Category",
+        "balance"             : "Balance"
+      },
+      "graph"           : {
+        "spendAnalyser"       : "Spend analyser",
+        "pieChart"            : "PIE Chart",
+        "barChart"            : "BAR Chart"
       }
     }
   },
@@ -93,6 +108,21 @@
         "selectMonth"     : "Selecteer maand",
         "selectCategory"  : "Selecteer categorie",
         "analyse"         : "analyseren"
+      },
+      "transactions"    : {
+        "recentTransactions"  : "Meest recente transacties",
+        "transactionId"       : "Transactie ID",
+        "transactionDesc"     : "Transactie beschrijving",
+        "transactionType"     : "Transactie type",
+        "transactionDate"     : "Transactie datum",
+        "amount"              : "Bedrag",
+        "category"            : "Categorie",
+        "balance"             : "Balans"
+      },
+      "graph"           : {
+        "spendAnalyser"       : "Besteed analyser",
+        "pieChart"            : "Cirkeldiagram",
+        "barChart"            : "Staafdiagram"
       }
     }
   }
