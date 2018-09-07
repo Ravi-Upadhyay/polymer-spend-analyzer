@@ -60,7 +60,11 @@
         "pieChart"            : "PIE Chart",
         "barChart"            : "BAR Chart"
       }
-    }
+    },
+    "notFound"            : {
+      "pageNotFound"          : "Page not found",
+      "Description"           : "This "
+    } 
   },
 
   "nl": {
@@ -124,6 +128,9 @@
         "pieChart"            : "Cirkeldiagram",
         "barChart"            : "Staafdiagram"
       }
-    }
+    },
+    "notFound"            : {
+
+    }                  
   }
 }
